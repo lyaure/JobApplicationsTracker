@@ -18,8 +18,6 @@ public class SplashActivity extends AppCompatActivity {
 
         // full screen parameters
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
-
 
         new Handler().postDelayed(new Runnable() {
             @Override
