@@ -1,7 +1,6 @@
 package com.lyaurese.jobsorganizer.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,7 +11,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.lyaurese.jobsorganizer.Fragments.BoardFragment;
-import com.lyaurese.jobsorganizer.Fragments.JobsFragment;
+import com.lyaurese.jobsorganizer.Fragments.CompaniesFragment;
 import com.lyaurese.jobsorganizer.R;
 
 public class MainBoardActivity extends FragmentActivity {
@@ -50,7 +49,7 @@ public class MainBoardActivity extends FragmentActivity {
                             loadFragment(fragment);
                             return true;
                         case R.id.nav_jobs:
-                            fragment = new JobsFragment();
+                            fragment = new CompaniesFragment();
                             loadFragment(fragment);
                             return true;
                     }

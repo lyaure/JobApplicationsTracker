@@ -16,12 +16,12 @@ import com.lyaurese.jobsorganizer.R;
 import java.util.ArrayList;
 
 
-public class JobsFragment extends Fragment {
+public class CompaniesFragment extends Fragment {
     private ArrayList<Company> companies = new ArrayList<>();
     private ListView companyList;
     private CompanyAdapter adapter;
 
-    public JobsFragment() {
+    public CompaniesFragment() {
         // Required empty public constructor
     }
 
@@ -30,7 +30,7 @@ public class JobsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_jobs, container, false);
+        View view =  inflater.inflate(R.layout.fragment_companies, container, false);
 
         companies.add(new Company("A", 1));
         companies.add(new Company("B", 2));

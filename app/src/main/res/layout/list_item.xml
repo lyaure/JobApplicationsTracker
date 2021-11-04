@@ -2,19 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:background="@drawable/gray_gradiant"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/companyName_ID"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:text="TextView" />
+        android:layout_weight="3"
+        android:text="TextView"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/numOfApplication_ID"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:gravity="end"
+        android:text="TextView"
+        android:textSize="20sp" />
 </LinearLayout>
