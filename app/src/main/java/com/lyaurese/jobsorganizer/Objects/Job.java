@@ -1,10 +1,10 @@
 package com.lyaurese.jobsorganizer.Objects;
 
 public class Job {
-    String jobTitle;
-    String jobName;
-    String companyName;
-    boolean isCVSent;
+    private String jobTitle;
+    private String jobName;
+    private String companyName;
+    private boolean isCVSent;
 
     public Job(String jobTitle, String jobName, String companyName, boolean isCVSent){
         this.jobTitle = jobTitle;
@@ -42,6 +42,6 @@ public class Job {
     }
 
     public void setCVSent(boolean CVSent) {
-        isCVSent = CVSent;
+        this.isCVSent = CVSent;
     }
 }
