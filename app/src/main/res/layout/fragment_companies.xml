@@ -19,11 +19,27 @@
         android:text="My applications"
         android:textSize="24sp" />
 
+    <LinearLayout
+        android:id="@+id/noDataLayout_ID"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No applications yet" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/companyList_ID"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5">
+        android:layout_weight="5"
+        android:visibility="gone">
 
     </ListView>
 

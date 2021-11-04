@@ -10,18 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.lyaurese.jobsorganizer.Objects.Company;
 import com.lyaurese.jobsorganizer.Objects.CompanyAdapter;
+import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class CompaniesFragment extends Fragment {
-    private ArrayList<Company> companies = new ArrayList<>();
+    private ArrayList<Company> companies;
     private ListView companyList;
+    private LinearLayout noData;
     private CompanyAdapter adapter;
     private ImageButton addApplicationBtn;
 
@@ -41,24 +46,30 @@ public class CompaniesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment addApplication = new AddApplicationFragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container_ID, addApplication ); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();
             }
         });
 
-
-        companies.add(new Company("A", 1));
-        companies.add(new Company("B", 2));
-        companies.add(new Company("C", 3));
-
+        noData = (LinearLayout) view.findViewById(R.id.noDataLayout_ID);
         companyList = (ListView) view.findViewById(R.id.companyList_ID);
 
-        adapter = new CompanyAdapter(getContext(), companies);
-        companyList.setAdapter(adapter);
+        Database db = new Database(getContext());
+        companies = db.getCompanyList();
 
+        if(companies != null){
+            companyList.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.GONE);
 
+            adapter = new CompanyAdapter(getContext(), companies);
+            companyList.setAdapter(adapter);
+        }
+        else{
+            companyList.setVisibility(View.GONE);
+            noData.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
