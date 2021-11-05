@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -30,6 +32,7 @@ public class MainBoardActivity extends FragmentActivity {
 
         fragment = new BoardFragment();
         loadFragment(fragment);
+        fragmentID = R.layout.fragment_board;
     }
 
     // load fragment
@@ -47,13 +50,35 @@ public class MainBoardActivity extends FragmentActivity {
                         case R.id.nav_board:
                             fragment = new BoardFragment();
                             loadFragment(fragment);
+                            fragmentID = R.layout.fragment_board;
                             return true;
                         case R.id.nav_jobs:
                             fragment = new CompaniesFragment();
                             loadFragment(fragment);
+                            fragmentID = R.layout.fragment_companies;
                             return true;
                     }
                     return false;
                 }
             };
+
+    public void setFragmentID(int id){
+        this.fragmentID = id;
+    }
+
+    @Override
+    public void onBackPressed(){
+        // doesn't close the app
+        if(fragmentID == R.layout.fragment_add_application){
+            fragment = new CompaniesFragment();
+            loadFragment(fragment);
+        }
+        else{ // close the app and go home
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
+    }
 }

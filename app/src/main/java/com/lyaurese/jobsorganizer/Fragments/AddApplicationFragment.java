@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
 import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.R;
 
@@ -55,6 +56,10 @@ public class AddApplicationFragment extends Fragment {
                 db.insertNewApplication(companyInput, jobTitleInput, jobNumberInput, appliedInput, 1, 1, 1, "no comment");
 
                 Fragment CompaniesFragment = new CompaniesFragment();
+
+                MainBoardActivity activity = (MainBoardActivity)getActivity();
+                activity.setFragmentID(R.layout.fragment_companies);
+
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container_ID, CompaniesFragment ); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack

@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
 import com.lyaurese.jobsorganizer.Objects.Company;
 import com.lyaurese.jobsorganizer.Objects.CompanyAdapter;
 import com.lyaurese.jobsorganizer.Objects.Database;
@@ -41,11 +42,18 @@ public class CompaniesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_companies, container, false);
 
+        MainBoardActivity activity = (MainBoardActivity)getActivity();
+        activity.setFragmentID(R.layout.fragment_companies);
+
         addApplicationBtn = (ImageButton) view.findViewById(R.id.addApplicationBtn_ID);
         addApplicationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment addApplication = new AddApplicationFragment();
+
+                MainBoardActivity activity = (MainBoardActivity)getActivity();
+                activity.setFragmentID(R.layout.fragment_add_application);
+
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container_ID, addApplication ); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
