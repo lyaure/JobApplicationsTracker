@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "JobOrganizerDB";
@@ -34,32 +35,32 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public void insertNewApplication(String company, String jobTitle, String jobNumber, int applied, int day, int month, int year, String comments){
+    public void insertNewApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("company", company);
-        values.put("jobTitle", jobTitle);
-        values.put("jobNumber", jobNumber);
-        values.put("applied", applied);
-        values.put("day", day);
-        values.put("month", month);
-        values.put("year", year);
-        values.put("comments", comments);
+        values.put("company", application.getCompanyName());
+        values.put("jobTitle", application.getJobTitle());
+        values.put("jobNumber", application.getJobNumber());
+        values.put("applied", application.applied() ? 1 : 0);
+//        values.put("day", application.getCalendar().get(Calendar.DAY_OF_MONTH));
+//        values.put("month", application.getCalendar().get(Calendar.MONTH));
+//        values.put("year", application.getCalendar().get(Calendar.YEAR));
+//        values.put("comments", application.getComment());
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
 
         values.clear();
-        values.put("company", company);
+        values.put("company", application.getCompanyName());
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " WHERE company = '" + company + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " WHERE company = '" + application.getCompanyName() + "'", null);
         if(!cursor.moveToFirst()){
             values.put("count", 1);
             db.insert(COMPANIES_TABLE_NAME, null, values);
         }
         else{
             values.put("count", cursor.getInt(1) + 1);
-            db.update(COMPANIES_TABLE_NAME, values, "company = ?", new String[]{company});
+            db.update(COMPANIES_TABLE_NAME, values, "company = ?", new String[]{application.getCompanyName()});
         }
 
         cursor.close();

@@ -14,6 +14,8 @@ import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
+import com.lyaurese.jobsorganizer.Objects.Application;
+import com.lyaurese.jobsorganizer.Objects.Company;
 import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.R;
 
@@ -51,9 +53,11 @@ public class AddApplicationFragment extends Fragment {
                 String companyInput = company.getText().toString();
                 String jobTitleInput = jobTitle.getText().toString();
                 String jobNumberInput = jobNumber.getText().toString();
-                int appliedInput = applied.isChecked()? 1 : 0;
+                boolean appliedInput = applied.isChecked();
 
-                db.insertNewApplication(companyInput, jobTitleInput, jobNumberInput, appliedInput, 1, 1, 1, "no comment");
+                Application application = new Application(companyInput, jobTitleInput, jobNumberInput, appliedInput);
+
+                db.insertNewApplication(application);
 
                 Fragment CompaniesFragment = new CompaniesFragment();
 
