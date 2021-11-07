@@ -1,23 +1,22 @@
 package com.lyaurese.jobsorganizer.Objects;
 
+import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
-public class Application {
+public class Application implements Serializable {
     private String jobTitle;
     private String jobNumber;
     private String companyName;
-    private boolean applied;
-    private Calendar calendar;
+    private boolean applied, interviewed;
+    private Calendar appliedDate, interviewedDate;
     private String comment;
 
-    public Application(String jobTitle, String jobNumber, String companyName, boolean applied, Calendar calendar, String comment){
+    public Application(String companyName, String jobTitle, String jobNumber, boolean applied, Calendar appliedDate, String comment){
         this.jobTitle = jobTitle;
         this.jobNumber = jobNumber;
         this.companyName = companyName;
         this.applied = applied;
-        this.calendar = calendar;
+        this.appliedDate = appliedDate;
         this.comment = comment;
     }
 
@@ -37,8 +36,16 @@ public class Application {
         return applied;
     }
 
-    public Calendar getCalendar() {
-        return calendar;
+    public boolean interviewed() {
+        return interviewed;
+    }
+
+    public Calendar getAppliedDate() {
+        return appliedDate;
+    }
+
+    public Calendar getInterviewedDate() {
+        return interviewedDate;
     }
 
     public String getComment() {
@@ -61,8 +68,16 @@ public class Application {
         this.applied = applied;
     }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+    public void setInterviewed(boolean interviewed) {
+        this.interviewed = interviewed;
+    }
+
+    public void setAppliedDate(Calendar appliedDate) {
+        this.appliedDate = appliedDate;
+    }
+
+    public void setInterviewedDate(Calendar interviewedDate) {
+        this.interviewedDate = interviewedDate;
     }
 
     public void setComment(String comment) {

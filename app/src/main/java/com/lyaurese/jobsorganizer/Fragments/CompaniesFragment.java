@@ -3,7 +3,6 @@ package com.lyaurese.jobsorganizer.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -12,16 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
 import com.lyaurese.jobsorganizer.Objects.Company;
-import com.lyaurese.jobsorganizer.Objects.CompanyAdapter;
+import com.lyaurese.jobsorganizer.Adapters.CompanyAdapter;
 import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.R;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 public class CompaniesFragment extends Fragment {
