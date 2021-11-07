@@ -69,7 +69,7 @@ public class MainBoardActivity extends FragmentActivity {
     @Override
     public void onBackPressed(){
         // doesn't close the app
-        if(fragmentID == R.layout.fragment_add_application){
+        if(fragmentID == R.layout.fragment_add_application || fragmentID == R.layout.fragment_application_pager){
             fragment = new CompaniesFragment();
             loadFragment(fragment);
         }

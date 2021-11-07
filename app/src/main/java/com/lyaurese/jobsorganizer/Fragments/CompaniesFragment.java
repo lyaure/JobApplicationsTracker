@@ -69,6 +69,7 @@ public class CompaniesFragment extends Fragment {
             noData.setVisibility(View.GONE);
 
             adapter = new CompanyAdapter(getContext(), companies);
+            adapter.setActivity((MainBoardActivity) getActivity());
             companyList.setAdapter(adapter);
         }
         else{
