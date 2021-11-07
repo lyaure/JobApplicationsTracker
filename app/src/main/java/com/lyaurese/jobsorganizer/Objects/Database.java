@@ -43,10 +43,10 @@ public class Database extends SQLiteOpenHelper {
         values.put("jobTitle", application.getJobTitle());
         values.put("jobNumber", application.getJobNumber());
         values.put("applied", application.applied() ? 1 : 0);
-//        values.put("day", application.getCalendar().get(Calendar.DAY_OF_MONTH));
-//        values.put("month", application.getCalendar().get(Calendar.MONTH));
-//        values.put("year", application.getCalendar().get(Calendar.YEAR));
-//        values.put("comments", application.getComment());
+        values.put("day", application.getCalendar().get(Calendar.DAY_OF_MONTH));
+        values.put("month", application.getCalendar().get(Calendar.MONTH));
+        values.put("year", application.getCalendar().get(Calendar.YEAR));
+        values.put("comments", application.getComment());
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
 

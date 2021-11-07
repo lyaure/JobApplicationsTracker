@@ -66,6 +66,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Applied" />
+
+        <LinearLayout
+            android:id="@+id/dateLayout_ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="On: "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/dateInputTxtv_ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/commentsInput_ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="top|left"
+            android:hint="Add comment"
+            android:inputType="textMultiLine"
+            android:lines="7"
+            android:overScrollMode="always"
+            android:padding="10dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:scrollHorizontally="false" />
     </LinearLayout>
 
     <LinearLayout

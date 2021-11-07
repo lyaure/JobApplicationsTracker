@@ -12,13 +12,13 @@ public class Application {
     private Calendar calendar;
     private String comment;
 
-    public Application(String jobTitle, String jobNumber, String companyName, boolean applied){ //, int day, int month, int year, String comment){
+    public Application(String jobTitle, String jobNumber, String companyName, boolean applied, Calendar calendar, String comment){
         this.jobTitle = jobTitle;
         this.jobNumber = jobNumber;
         this.companyName = companyName;
         this.applied = applied;
-//        this.calendar = new GregorianCalendar(year, month, day);
-//        this.comment = comment;
+        this.calendar = calendar;
+        this.comment = comment;
     }
 
     public String getJobTitle(){
