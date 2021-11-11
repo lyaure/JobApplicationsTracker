@@ -16,7 +16,9 @@ public class Application implements Serializable {
         this.jobNumber = jobNumber;
         this.companyName = companyName;
         this.applied = applied;
+        this.interviewed = false;
         this.appliedDate = appliedDate;
+        this.interviewedDate = null;
         this.comment = comment;
     }
 
@@ -36,7 +38,7 @@ public class Application implements Serializable {
         return applied;
     }
 
-    public boolean interviewed() {
+    public boolean interview() {
         return interviewed;
     }
 
@@ -44,7 +46,7 @@ public class Application implements Serializable {
         return appliedDate;
     }
 
-    public Calendar getInterviewedDate() {
+    public Calendar getInterviewDate() {
         return interviewedDate;
     }
 
@@ -68,16 +70,24 @@ public class Application implements Serializable {
         this.applied = applied;
     }
 
-    public void setInterviewed(boolean interviewed) {
+    public void setInterview(boolean interviewed) {
         this.interviewed = interviewed;
     }
 
     public void setAppliedDate(Calendar appliedDate) {
         this.appliedDate = appliedDate;
+        if(appliedDate != null)
+            this.applied = true;
+        else
+            this.applied = false;
     }
 
-    public void setInterviewedDate(Calendar interviewedDate) {
+    public void setInterviewDate(Calendar interviewedDate) {
         this.interviewedDate = interviewedDate;
+        if(interviewedDate != null)
+            this.interviewed = true;
+        else
+            this.interviewed = false;
     }
 
     public void setComment(String comment) {

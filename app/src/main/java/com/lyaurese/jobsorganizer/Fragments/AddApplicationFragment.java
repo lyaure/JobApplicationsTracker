@@ -18,17 +18,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
 import com.lyaurese.jobsorganizer.Objects.Application;
-import com.lyaurese.jobsorganizer.Objects.Company;
 import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobsorganizer.Utils.DateUtil;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Objects;
+
 
 public class AddApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private EditText company, jobTitle, jobNumber, comments;
@@ -53,14 +50,14 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         jobTitle = (EditText) view.findViewById(R.id.jobTitleInput_ID);
         jobNumber = (EditText) view.findViewById(R.id.jobNameInput_ID);
         applied = (CheckBox) view.findViewById(R.id.appliedCheckBox_ID);
-        dateLayout = (LinearLayout) view.findViewById(R.id.dateLayout_ID);
+        dateLayout = (LinearLayout) view.findViewById(R.id.appliedDateLayout_ID);
         date = (TextView) view.findViewById(R.id.dateInputTxtv_ID);
         comments = (EditText) view.findViewById(R.id.commentsInput_ID);
         add = (Button) view.findViewById(R.id.finishAddApplicationBtn_ID);
 
         db = new Database(getContext());
 
-        calendar = new GregorianCalendar();
+        calendar = Calendar.getInstance();
         calendar.setTime(Calendar.getInstance().getTime());
 
         applied.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -69,10 +66,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (applied.isChecked()) {
                     dateLayout.setVisibility(View.VISIBLE);
-
-                    String s = "%d/%d/%d";
-
-                    date.setText(String.format(s, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR)));
+                    showDatePickerDialog();
                 }
                 else
                     dateLayout.setVisibility(View.INVISIBLE);

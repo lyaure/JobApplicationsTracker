@@ -1,30 +1,37 @@
 package com.lyaurese.jobsorganizer.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
 import com.lyaurese.jobsorganizer.Objects.Application;
 import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobsorganizer.Utils.DateUtil;
 
 import java.util.Calendar;
 
-public class ApplicationFragment extends Fragment {
+
+public class ApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
     private ImageButton editButton;
     private TextView company, title, number, appliedDate, interviewedDate;
     private CheckBox interviewed;
     private EditText comments;
+    private Calendar calendar;
 
 
     public ApplicationFragment() {
@@ -49,6 +56,24 @@ public class ApplicationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
 
         editButton = (ImageButton) view.findViewById(R.id.editApplicationBtn_ID);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new EditApplicationFragment();
+
+                MainBoardActivity activity = (MainBoardActivity)getActivity();
+                activity.setFragmentID(R.layout.fragment_edit_application);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("application", application);
+                fragment.setArguments(bundle);
+
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
+            }
+        });
 
         company = (TextView) view.findViewById(R.id.companyNameTxtv_ID);
         company.setText(application.getCompanyName());
@@ -60,8 +85,7 @@ public class ApplicationFragment extends Fragment {
         number.setText(application.getJobNumber());
 
         appliedDate = (TextView) view.findViewById(R.id.appliedDateTxtv_ID);
-        String s = "Applied on: %d/%d/%d";
-        appliedDate.setText(String.format(s, application.getAppliedDate().get(Calendar.DAY_OF_MONTH), application.getAppliedDate().get(Calendar.MONTH), application.getAppliedDate().get(Calendar.YEAR)));
+        appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
 
         interviewedDate = (TextView) view.findViewById(R.id.interviewedDateTxtv_ID);
 
@@ -72,8 +96,7 @@ public class ApplicationFragment extends Fragment {
                 if(interviewed.isChecked()){
                     interviewed.setVisibility(View.GONE);
                     interviewedDate.setVisibility(View.VISIBLE);
-                    //----TODO-----
-                    // add date picker and change interviewed date value
+                    showDatePickerDialog();
                     String s = "Interviewed on: 01/01/2021";
                     interviewedDate.setText(s);
                 }
@@ -81,9 +104,27 @@ public class ApplicationFragment extends Fragment {
         });
 
         comments = (EditText) view.findViewById(R.id.commentsInput_ID);
-        s = application.getComment();
+        String s = application.getComment();
         comments.setText(s);
 
         return view;
+    }
+
+    private void showDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog
+                (getActivity(), this, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        String s = "Interview on: %d/%d/%d";
+
+        interviewedDate.setText(String.format(s, dayOfMonth, month + 1, year));
+
+        calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
     }
 }

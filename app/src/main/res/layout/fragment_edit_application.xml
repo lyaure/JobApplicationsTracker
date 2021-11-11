@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".Fragments.AddApplicationFragment">
+    tools:context=".Fragments.EditApplicationFragment">
 
     <TextView
         android:id="@+id/textView3"
@@ -15,7 +14,7 @@
         android:layout_marginBottom="20dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Add application"
+        android:text="Edit application"
         android:textSize="34sp" />
 
     <LinearLayout
@@ -29,7 +28,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/companyNameInput_ID"
+                android:id="@+id/editCompanyNameInput_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
@@ -42,7 +41,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/jobTitleInput_ID"
+                android:id="@+id/editJobTitleInput_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
@@ -54,7 +53,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/jobNameInput_ID"
+                android:id="@+id/editJobNameInput_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
@@ -62,41 +61,96 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
-            android:id="@+id/appliedCheckBox_ID"
+            android:id="@+id/editAppliedCheckBox_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Applied" />
 
         <LinearLayout
-            android:id="@+id/appliedDateLayout_ID"
+            android:id="@+id/editAppliedDateLayout_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:visibility="invisible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:text="On: "
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/dateInputTxtv_ID"
-                android:layout_width="wrap_content"
+                android:id="@+id/editAppliedDateInputTxtv_ID"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:text="TextView"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/appliedChangeDateBtn_ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
+                android:text="CHANGE DATE"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
         </LinearLayout>
 
-
-        <EditText
-            android:id="@+id/commentsInput_ID"
+        <CheckBox
+            android:id="@+id/editInterviewCheckBox_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:text="Got interview date" />
+
+
+        <LinearLayout
+            android:id="@+id/editInterviewDateLayout_ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Interview on: "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/editInterviewDateInputTxtv_ID"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="TextView"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/interviewChangeDateBtn_ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
+                android:text="CHANGE DATE"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editCommentsInput_ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_black"
             android:gravity="top|left"
             android:hint="Add comment"
             android:inputType="textMultiLine"
@@ -116,9 +170,10 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/finishAddApplicationBtn_ID"
+            android:id="@+id/finishEditApplicationBtn_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
             android:text="ADD" />
     </LinearLayout>
 
