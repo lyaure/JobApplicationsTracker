@@ -1,6 +1,7 @@
 package com.lyaurese.jobsorganizer.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -204,21 +205,40 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
             @Override
             public void onClick(View v) {
                 Database db = new Database(getContext());
-                db.editApplication(application, oldJobNumber);
 
-                Fragment fragment = new ApplicationFragment();
+                if(application.getJobNumber() != oldJobNumber){
+                    if(db.isJobExists(application.getJobNumber())){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Error")
+                                .setMessage("Application with the same job number already exists.\nPlease insert a new job number.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
 
-                MainBoardActivity activity = (MainBoardActivity)getActivity();
-                activity.setFragmentID(R.layout.fragment_application);
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
+                else{
+                    db.editApplication(application, oldJobNumber);
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("application", application);
-                fragment.setArguments(bundle);
+                    Fragment fragment = new ApplicationFragment();
 
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
-                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                transaction.commit();
+                    MainBoardActivity activity = (MainBoardActivity) getActivity();
+                    activity.setFragmentID(R.layout.fragment_application);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("application", application);
+                    fragment.setArguments(bundle);
+
+                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_ID, fragment); // give your fragment container id in first parameter
+                    transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                    transaction.commit();
+                }
             }
         });
 

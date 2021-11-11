@@ -178,4 +178,15 @@ public class Database extends SQLiteOpenHelper {
             return null;
         }
     }
+
+    public boolean isJobExists(String jobNumber){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
+
+        boolean exists = cursor.moveToFirst();
+        db.close();
+        cursor.close();
+
+        return exists;
+    }
 }
