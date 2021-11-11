@@ -69,26 +69,20 @@ public class Database extends SQLiteOpenHelper {
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
 
-        values.clear();
-        values.put("company", application.getCompanyName());
+        updateCompany(application.getCompanyName(), 1);
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " WHERE company = '" + application.getCompanyName() + "'", null);
-        if(!cursor.moveToFirst()){
-            values.put("count", 1);
-            db.insert(COMPANIES_TABLE_NAME, null, values);
-        }
-        else{
-            values.put("count", cursor.getInt(1) + 1);
-            db.update(COMPANIES_TABLE_NAME, values, "company = ?", new String[]{application.getCompanyName()});
-        }
-
-        cursor.close();
         db.close();
     }
 
     public void editApplication(Application application, String jobNumber){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
+        String oldCompanyName;
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
+        cursor.moveToFirst();
+
+        oldCompanyName = cursor.getString(COMPANY_COL_NUM);
 
         values.put("company", application.getCompanyName());
         values.put("jobTitle", application.getJobTitle());
@@ -117,13 +111,16 @@ public class Database extends SQLiteOpenHelper {
         }
         values.put("comments", application.getComment());
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
-
-        cursor.moveToFirst();
         db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
+
+        if(!application.getCompanyName().equals(oldCompanyName)){
+            updateCompany(cursor.getString(COMPANY_COL_NUM), -1);
+        }
 
         cursor.close();
         db.close();
+
+        updateCompany(application.getCompanyName(), 1);
     }
 
 
@@ -188,5 +185,31 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
 
         return exists;
+    }
+
+    private void updateCompany(String name, int update){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " WHERE company = '" + name + "'", null);
+
+        if(!cursor.moveToFirst()){
+            values.put("company", name);
+            values.put("count", 1);
+            db.insert(COMPANIES_TABLE_NAME, null, values);
+        }
+        else{
+            int count = cursor.getInt(JOB_TITLE_COL_NUM) + update;
+            if(count == 0){
+                db.delete(COMPANIES_TABLE_NAME, "company = ?", new String[]{name});
+            }
+            else{
+                values.put("company", name);
+                values.put("count", count);
+                db.update(COMPANIES_TABLE_NAME, values, "company = ?", new String[]{name});
+            }
+        }
+        cursor.close();
+        db.close();
     }
 }
