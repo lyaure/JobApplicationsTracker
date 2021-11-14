@@ -91,7 +91,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                 boolean appliedInput = applied.isChecked();
                 String commentsInput = comments.getText().toString();
 
-                if(commentsInput.equals("") || jobNumberInput.equals("")){
+                if(companyInput.equals("") || jobNumberInput.equals("")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error")
                             .setMessage("Company name and job number are required fields.")

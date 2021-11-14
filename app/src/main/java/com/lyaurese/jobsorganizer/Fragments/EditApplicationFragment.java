@@ -127,7 +127,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked && !application.applied()){
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       changeAppliedDate = true;
+                    changeAppliedDate = true;
                     showDatePickerDialog();
                 }
                 else if(!isChecked && application.applied()){
@@ -173,8 +173,6 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                     interviewDate.setText("");
                     changeInterviewDate = false;
                 }
-
-                changeInterviewDate = false;
             }
         });
 
