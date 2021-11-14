@@ -198,6 +198,22 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
 
         comments = (EditText) view.findViewById(R.id.editCommentsInput_ID);
         comments.setText(application.getComment());
+        comments.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                application.setComment(s.toString());
+            }
+        });
 
         edit = (Button) view.findViewById(R.id.finishEditApplicationBtn_ID);
 

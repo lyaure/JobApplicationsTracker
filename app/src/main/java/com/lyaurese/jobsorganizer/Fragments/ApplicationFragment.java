@@ -28,9 +28,8 @@ import java.util.Calendar;
 public class ApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
     private ImageButton editButton;
-    private TextView company, title, number, appliedDate, interviewedDate;
+    private TextView company, title, number, appliedDate, interviewedDate, comments;
     private CheckBox interviewed;
-    private EditText comments;
     private Calendar calendar;
 
 
@@ -103,8 +102,8 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
             }
         });
 
-        comments = (EditText) view.findViewById(R.id.commentsInput_ID);
-        String s = application.getComment();
+        comments = (TextView) view.findViewById(R.id.commentsInput_ID);
+        String s = "Comments:\n" + application.getComment();
         comments.setText(s);
 
         return view;
