@@ -91,10 +91,10 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                 boolean appliedInput = applied.isChecked();
                 String commentsInput = comments.getText().toString();
 
-                if(db.isJobExists(jobNumberInput)){
+                if(commentsInput.equals("") || jobNumberInput.equals("")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error")
-                            .setMessage("Application with the same job number already exists.\nPlease insert a new job number.")
+                            .setMessage("Company name and job number are required fields.")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -106,20 +106,38 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                     alert.show();
                 }
                 else{
-                    Application application = new Application(companyInput, jobTitleInput, jobNumberInput, appliedInput, calendar, commentsInput);
+                    if(db.isJobExists(jobNumberInput)){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Error")
+                                .setMessage("Application with the same job number already exists.\nPlease insert a new job number.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
 
-                    db.insertNewApplication(application);
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                    else{
+                        Application application = new Application(companyInput, jobTitleInput, jobNumberInput, appliedInput, calendar, commentsInput);
 
-                    Fragment CompaniesFragment = new CompaniesFragment();
+                        db.insertNewApplication(application);
 
-                    MainBoardActivity activity = (MainBoardActivity) getActivity();
-                    activity.setFragmentID(R.layout.fragment_companies);
+                        Fragment CompaniesFragment = new CompaniesFragment();
 
-                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container_ID, CompaniesFragment); // give your fragment container id in first parameter
-                    transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                    transaction.commit();
+                        MainBoardActivity activity = (MainBoardActivity) getActivity();
+                        activity.setFragmentID(R.layout.fragment_companies);
+
+                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container_ID, CompaniesFragment); // give your fragment container id in first parameter
+                        transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                        transaction.commit();
+                    }
                 }
+
+
             }
         });
 
