@@ -48,6 +48,7 @@ public class CompanyAdapter extends ArrayAdapter<Company> {
                 ApplicationPagerFragment fragment = new ApplicationPagerFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("company", company.getName());
+                bundle.putString("application", "none");
                 fragment.setArguments(bundle);
 
                 FragmentActivity fragmentActivity = (FragmentActivity) v.getContext();

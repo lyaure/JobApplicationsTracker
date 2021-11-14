@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ApplicationPagerFragment extends Fragment {
     private ViewPager2 viewPager;
     private ViewPagerAdapter adapter;
-    private String companyName;
+    private String companyName, jobNumber;
     ArrayList<Application> applicationsList = new ArrayList<>();
 
     public ApplicationPagerFragment() {
@@ -33,6 +33,7 @@ public class ApplicationPagerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             companyName = getArguments().getString("company");
+            jobNumber = getArguments().getString("application");
         }
     }
 
@@ -55,7 +56,11 @@ public class ApplicationPagerFragment extends Fragment {
 
         applicationsList = db.getApplicationList(companyName);
 
+        int index = -1;
+
         for(Application application : applicationsList){
+            if(jobNumber.equals(application.getJobNumber()))
+                index = applicationsList.indexOf(application);
             ApplicationFragment fragment = new ApplicationFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable("application", application);
@@ -64,6 +69,9 @@ public class ApplicationPagerFragment extends Fragment {
             adapter.addFrag(fragment);
             adapter.notifyDataSetChanged();
         }
+
+        if(index != -1)
+            viewPager.setCurrentItem(index);
 
 
         return view;

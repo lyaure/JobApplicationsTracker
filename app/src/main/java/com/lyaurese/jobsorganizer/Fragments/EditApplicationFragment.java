@@ -225,13 +225,14 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                 else{
                     db.editApplication(application, oldJobNumber);
 
-                    Fragment fragment = new ApplicationFragment();
+                    Fragment fragment = new ApplicationPagerFragment();
 
                     MainBoardActivity activity = (MainBoardActivity) getActivity();
                     activity.setFragmentID(R.layout.fragment_application);
 
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("application", application);
+                    bundle.putSerializable("company", application.getCompanyName());
+                    bundle.putString("application", application.getJobNumber());
                     fragment.setArguments(bundle);
 
                     FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
