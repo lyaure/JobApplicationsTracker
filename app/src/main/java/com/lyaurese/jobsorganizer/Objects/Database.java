@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.lyaurese.jobsorganizer.Utils.GraphUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -15,7 +17,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String APPLICATIONS_TABLE_NAME = "Applications";
     private static final String COMPANIES_TABLE_NAME = "Companies";
     private static final int DB_VERSION = 1;
-    public static Database instance;
+
 
     private final int COMPANY_COL_NUM = 0;
     private final int JOB_TITLE_COL_NUM = 1;
@@ -65,6 +67,7 @@ public class Database extends SQLiteOpenHelper {
             values.put("appliedMonth", application.getAppliedDate().get(Calendar.MONTH));
             values.put("appliedYear", application.getAppliedDate().get(Calendar.YEAR));
         }
+        values.put("interview", 0);
         values.put("comments", application.getComment());
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
@@ -87,24 +90,28 @@ public class Database extends SQLiteOpenHelper {
         values.put("company", application.getCompanyName());
         values.put("jobTitle", application.getJobTitle());
         values.put("jobNumber", application.getJobNumber());
-        values.put("applied", application.applied() ? 1 : 0);
-        if(application.getAppliedDate() != null) {
+
+        if(application.applied() && application.getAppliedDate() != null) {
+            values.put("applied",1);
             values.put("appliedDay", application.getAppliedDate().get(Calendar.DAY_OF_MONTH));
             values.put("appliedMonth", application.getAppliedDate().get(Calendar.MONTH));
             values.put("appliedYear", application.getAppliedDate().get(Calendar.YEAR));
         }
         else {
+            values.put("applied",0);
             values.putNull("appliedDay");
             values.putNull("appliedMonth");
             values.putNull("appliedYear");
         }
-        values.put("interview", application.applied() ? 1 : 0);
-        if(application.getInterviewDate() != null) {
+
+        if(application.interview() && application.getInterviewDate() != null) {
+            values.put("interview", 1);
             values.put("interviewDay", application.getInterviewDate().get(Calendar.DAY_OF_MONTH));
             values.put("interviewMonth", application.getInterviewDate().get(Calendar.MONTH));
             values.put("interviewYear", application.getInterviewDate().get(Calendar.YEAR));
         }
-        else{
+        else {
+            values.put("interview", 0);
             values.putNull("interviewDay");
             values.putNull("interviewMonth");
             values.putNull("interviewYear");
@@ -115,12 +122,11 @@ public class Database extends SQLiteOpenHelper {
 
         if(!application.getCompanyName().equals(oldCompanyName)){
             updateCompany(cursor.getString(COMPANY_COL_NUM), -1);
+            updateCompany(application.getCompanyName(), 1);
         }
 
         cursor.close();
         db.close();
-
-        updateCompany(application.getCompanyName(), 1);
     }
 
 
@@ -211,5 +217,85 @@ public class Database extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
+    }
+
+    public int getNoResponseApplications(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 0", null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        return count;
+    }
+
+    public int getInterviewApplications(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 1", null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        return count;
+    }
+
+    public GraphEntry[] getApplicationsByMonth(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1", null);
+
+        if(cursor.moveToFirst()){
+            GraphEntry[] byMonth = GraphUtil.getInitializedArrayByMonths();
+
+            do{
+                byMonth[cursor.getInt(APPLIED_MONTH_COL_NUM)].incData(1);
+            }while(cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+
+            return byMonth;
+        }
+
+        cursor.close();
+        db.close();
+
+        return null;
+    }
+
+    public GraphEntry[] getApplicationsByCompany(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 GROUP BY company ORDER BY company ASC", null);
+
+        if(cursor.moveToFirst()){
+            int count = cursor.getCount();
+
+            String[] companies = new String[count];
+
+            for(int i=0; i<count; i++) {
+                companies[i] = cursor.getString(0);
+                cursor.moveToNext();
+            }
+
+            GraphEntry[] byCompany = GraphUtil.getInitializedArrayByCompanies(count, companies);
+
+            for(int i=0; i<count; i++){
+                cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 AND company = '" + companies[i] + "'", null);
+                byCompany[i].incData(cursor.getCount());
+            }
+
+            cursor.close();
+            db.close();
+
+            return byCompany;
+        }
+
+        cursor.close();
+        db.close();
+
+        return null;
     }
 }
