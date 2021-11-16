@@ -39,6 +39,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="15dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         android:visibility="gone">
 
     </ListView>

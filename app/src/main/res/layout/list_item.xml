@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/gray_gradiant"
+    android:layout_height="60dp"
+    android:background="@drawable/border_black"
+    android:gravity="center"
     android:padding="10dp">
 
     <TextView
         android:id="@+id/companyName_ID"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="5"
         android:text="TextView"
         android:textSize="20sp" />
 
@@ -18,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="end"
-        android:text="TextView"
+        android:drawableLeft="@drawable/ic_baseline_assignment_turned_in_24"
+        android:gravity="center"
         android:textSize="20sp" />
 </LinearLayout>
