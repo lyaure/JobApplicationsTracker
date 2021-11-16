@@ -67,7 +67,6 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (applied.isChecked()) {
-                    dateLayout.setVisibility(View.VISIBLE);
                     showDatePickerDialog();
                 }
                 else
@@ -157,6 +156,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         String s = "%d/%d/%d";
 
         date.setText(String.format(s, dayOfMonth, month + 1, year));
+        dateLayout.setVisibility(View.VISIBLE);
 
         calendar.set(year, month, dayOfMonth);
     }

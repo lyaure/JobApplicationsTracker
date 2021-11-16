@@ -118,6 +118,7 @@
             android:id="@+id/finishAddApplicationBtn_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
             android:text="ADD" />
     </LinearLayout>
 
