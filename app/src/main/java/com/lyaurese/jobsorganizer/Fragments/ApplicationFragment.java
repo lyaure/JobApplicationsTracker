@@ -29,7 +29,6 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
     private Application application;
     private ImageButton editButton;
     private TextView company, title, number, appliedDate, interviewedDate, comments;
-    private CheckBox interviewed;
     private Calendar calendar;
 
 
@@ -84,26 +83,19 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         number.setText(application.getJobNumber());
 
         appliedDate = (TextView) view.findViewById(R.id.appliedDateTxtv_ID);
-        appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
+        if(application.getAppliedDate() != null)
+            appliedDate.setText("Applied on: " +DateUtil.getDate(application.getAppliedDate()));
+        else
+            appliedDate.setText("Didn't applied yet");
 
-        interviewedDate = (TextView) view.findViewById(R.id.interviewedDateTxtv_ID);
-
-        interviewed = (CheckBox) view.findViewById(R.id.gotInterviewedCheckbox_ID);
-        interviewed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(interviewed.isChecked()){
-                    interviewed.setVisibility(View.GONE);
-                    interviewedDate.setVisibility(View.VISIBLE);
-                    showDatePickerDialog();
-                    String s = "Interviewed on: 01/01/2021";
-                    interviewedDate.setText(s);
-                }
-            }
-        });
+        interviewedDate = (TextView) view.findViewById(R.id.interviewDateTxtv_ID);
+        if(application.getInterviewDate() != null)
+            interviewedDate.setText("Got an interview on: " + DateUtil.getDate(application.getInterviewDate()));
+        else
+            interviewedDate.setText("Didn't get a response");
 
         comments = (TextView) view.findViewById(R.id.commentsInput_ID);
-        String s = "Comments:\n" + application.getComment();
+        String s = application.getComment();
         comments.setText(s);
 
         return view;
