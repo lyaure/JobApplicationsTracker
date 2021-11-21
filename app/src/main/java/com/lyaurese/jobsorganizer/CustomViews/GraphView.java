@@ -6,20 +6,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import androidx.core.internal.view.SupportMenu;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
+
 import com.lyaurese.jobsorganizer.Objects.GraphEntry;
 import com.lyaurese.jobsorganizer.R;
 
 public class GraphView extends View {
-    private final Paint pWhite, pRED, pPrimary, pBlack;
+    private Paint pWhite, pRED, pBottom, pBlack, pBars;
     private int canvasHeight, canvasWidth;
     private int screenWidth, screenHeight;
     private GraphEntry[] entries;
     private int width, height, graphHeight, barWidth, space;
     private int max;
     private Context context;
+    private int[] barsColors;
 
     public GraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,21 +33,25 @@ public class GraphView extends View {
         pRED.setTextAlign(Paint.Align.CENTER);
 
         pWhite = new Paint();
-        pWhite.setColor(Color.WHITE);
+        pWhite.setColor(getResources().getColor(R.color.white));
         pWhite.setTextAlign(Paint.Align.CENTER);
         pWhite.setStrokeWidth(5);
 
         pBlack = new Paint();
-        pBlack.setColor(Color.BLACK);
+        pBlack.setColor(getResources().getColor(R.color.lightGray));
         pBlack.setTextAlign(Paint.Align.CENTER);
 
-        pPrimary = new Paint();
-        pPrimary.setColor(getResources().getColor(R.color.primary));
+
+        pBars = new Paint();
+        pBars.setStrokeWidth(5);
+        pBars.setColor(getResources().getColor(R.color.dark_grey));
+
+
     }
 
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
-        canvas.drawColor(this.context.getResources().getColor(R.color.lightGray));
+//        canvas.drawColor(this.context.getResources().getColor(R.color.lightGray));
 
         pWhite.setTextAlign(Paint.Align.CENTER);
 
@@ -65,8 +68,6 @@ public class GraphView extends View {
             entry.setPoint((screenWidth / 8) + (space * index), tmp);
             index++;
         }
-
-        canvas.drawRect(0, (float)(canvasHeight - (canvasHeight / 10)), (float)canvasWidth, (float)canvasHeight, pPrimary);
 
         if (entries != null) {
             drawBars(canvas);
@@ -119,13 +120,27 @@ public class GraphView extends View {
     }
 
     private void drawBars(Canvas canvas) {
+        int colorIdx = 0;
         for (GraphEntry entry : entries) {
-            canvas.drawRect(entry.getPoint().x - barWidth, (canvasHeight/10) +(graphHeight - entry.getPoint().y), entry.getPoint().x + barWidth, canvasHeight - (canvasHeight / 10) * 2, pWhite);
+            if(barsColors != null && entry.getData() != 0){
+                pBars.setColor(barsColors[colorIdx]);
+
+                colorIdx++;
+
+                if(colorIdx == barsColors.length)
+                    colorIdx = 0;
+            }
+
+            canvas.drawRect(entry.getPoint().x - barWidth, (canvasHeight/10) +(graphHeight - entry.getPoint().y), entry.getPoint().x + barWidth, canvasHeight - (canvasHeight / 10) * 2, pBars);
             canvas.drawText(entry.getLabel(), entry.getPoint().x, canvasHeight - (canvasHeight / 30), pWhite);
 
             if (entry.getData() != 0) {
                 canvas.drawText(Integer.toString((int)entry.getData()), entry.getPoint().x, (canvasHeight/10) + (graphHeight - entry.getPoint().y) - 20, pBlack);
             }
         }
+    }
+
+    public void setBarsColors(int[] barsColors) {
+        this.barsColors = barsColors;
     }
 }

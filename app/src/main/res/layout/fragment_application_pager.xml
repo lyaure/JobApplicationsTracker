@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_grey"
     android:orientation="vertical"
     tools:context=".Fragments.ApplicationPagerFragment">
 
@@ -42,5 +43,5 @@
         app:dotsColor="#CCC"
         app:dotsSize="7dp"
         app:dotsWidthFactor="3"
-        app:selectedDotColor="@color/purple_200" />
+        app:selectedDotColor="@color/yellow" />
 </LinearLayout>

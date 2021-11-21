@@ -2,52 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey"
+    android:orientation="vertical">
 
     <ScrollView
+        android:id="@+id/mainScrollView_ID"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:gravity="center"
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:gravity="center"
                 android:text="My Board"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textColor="@color/lightGray"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:textSize="20sp"
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="Summary"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart_ID"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:layout_marginBottom="25dp"/>
+                android:layout_marginBottom="25dp" />
 
             <TextView
-                android:textSize="20sp"
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="Last applications by month"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp" />
 
             <HorizontalScrollView
                 android:id="@+id/applicationsGraphViewHSV_ID"
@@ -56,28 +63,29 @@
                 android:layout_marginBottom="25dp">
 
                 <LinearLayout
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.lyaurese.jobsorganizer.CustomViews.GraphView
                         android:id="@+id/applicationsGraphView_ID"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                 </LinearLayout>
 
             </HorizontalScrollView>
 
             <TextView
-                android:textSize="20sp"
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="Last applications by company"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp" />
 
             <HorizontalScrollView
                 android:id="@+id/companiesGraphViewHSV_ID"
@@ -86,15 +94,15 @@
                 android:layout_marginBottom="25dp">
 
                 <LinearLayout
-                    android:gravity="center"
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.lyaurese.jobsorganizer.CustomViews.GraphView
                         android:id="@+id/companiesGraphView_ID"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                 </LinearLayout>
 

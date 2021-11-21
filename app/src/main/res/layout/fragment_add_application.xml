@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_grey"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".Fragments.AddApplicationFragment">
@@ -16,6 +18,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="Add application"
+        android:textColor="@color/lightGray"
         android:textSize="34sp" />
 
     <LinearLayout
@@ -26,46 +29,62 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/blue"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/companyNameInput_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
-                android:hint="Company name" />
+                android:hint="Company name"
+                android:textColor="@android:color/darker_gray"
+                android:textColorHint="@color/lightGray"
+                android:textCursorDrawable="@color/blue" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/blue"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/jobTitleInput_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
-                android:hint="Job title" />
+                android:hint="Job title"
+                android:textColor="@android:color/darker_gray"
+                android:textColorHint="@color/lightGray"
+                android:textCursorDrawable="@color/blue" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/blue"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/jobNameInput_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
-                android:hint="Job name/number" />
+                android:hint="Job name/number"
+                android:textColor="@android:color/darker_gray"
+                android:textColorHint="@color/lightGray"
+                android:textCursorDrawable="@color/blue" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
             android:id="@+id/appliedCheckBox_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Applied" />
+            android:text="Applied"
+            android:textColor="@android:color/darker_gray" />
 
         <LinearLayout
             android:id="@+id/appliedDateLayout_ID"
@@ -80,12 +99,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="On: "
+                android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/dateInputTxtv_ID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -104,7 +125,9 @@
             android:padding="10dp"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
-            android:scrollHorizontally="false" />
+            android:scrollHorizontally="false"
+            android:textColor="@android:color/darker_gray"
+            android:textColorHint="@color/lightGray" />
     </LinearLayout>
 
     <LinearLayout
@@ -118,7 +141,7 @@
             android:id="@+id/finishAddApplicationBtn_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00FFFFFF"
+            android:background="@color/green"
             android:text="ADD" />
     </LinearLayout>
 

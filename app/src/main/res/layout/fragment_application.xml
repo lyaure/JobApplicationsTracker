@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="@color/dark_grey"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".Fragments.ApplicationFragment">
@@ -15,7 +16,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_weight="1"
-        android:background="@drawable/border_black"
         android:orientation="vertical"
         android:padding="5dp">
 
@@ -50,6 +50,7 @@
                 android:gravity="center"
                 android:text="TextView"
                 android:textAlignment="center"
+                android:textColor="@color/lightGray"
                 android:textSize="34sp"
                 android:textStyle="bold" />
 
@@ -61,6 +62,7 @@
                 android:gravity="center"
                 android:text="TextView"
                 android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="24sp" />
 
             <TextView
@@ -72,6 +74,7 @@
                 android:gravity="center"
                 android:text="TextView"
                 android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="20sp" />
 
         </LinearLayout>
@@ -82,7 +85,7 @@
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:layout_weight="0.5"
-            android:textColor="@color/black"
+            android:textColor="@android:color/darker_gray"
             android:textSize="16sp" />
 
         <TextView
@@ -90,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textColor="@color/black"
+            android:textColor="@android:color/darker_gray"
             android:textSize="16sp" />
 
         <TextView
@@ -101,6 +104,7 @@
             android:layout_marginTop="20dp"
             android:layout_weight="0.5"
             android:text="Comments:"
+            android:textColor="@android:color/darker_gray"
             android:textSize="14sp" />
 
         <TextView
@@ -110,7 +114,7 @@
             android:layout_margin="10dp"
             android:layout_weight="3.5"
             android:lines="7"
-            android:textColor="@color/black"
+            android:textColor="@android:color/darker_gray"
             android:textSize="14sp" />
 
     </LinearLayout>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -52,6 +53,9 @@ public class BoardFragment extends Fragment {
 
         db = new Database(getContext());
 
+        ScrollView VSV = (ScrollView) view.findViewById(R.id.mainScrollView_ID);
+        VSV.setVerticalScrollBarEnabled(false);
+
         pieChart = (PieChart)view.findViewById(R.id.pieChart_ID);
         applicationsGraphView = (GraphView)view.findViewById(R.id.applicationsGraphView_ID);
         companiesGraphView = (GraphView)view.findViewById(R.id.companiesGraphView_ID);
@@ -72,7 +76,12 @@ public class BoardFragment extends Fragment {
 
         applicationsGraphView.setScreenDimensions(width, height);
         applicationsGraphView.setMax(GraphUtil.getMax(applicationsEntries));
+
+        int[] colors = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)};
+
+        applicationsGraphView.setBarsColors(colors);
         applicationsGraphView.setEntries(applicationsEntries);
+
 
         applicationsHSV.post(new Runnable() {
             @Override
@@ -85,6 +94,7 @@ public class BoardFragment extends Fragment {
 
         companiesGraphView.setScreenDimensions(width, height);
         companiesGraphView.setMax(GraphUtil.getMax(companiesEntries));
+        companiesGraphView.setBarsColors(colors);
         companiesGraphView.setEntries(companiesEntries);
 
         applicationsHSV.post(new Runnable() {

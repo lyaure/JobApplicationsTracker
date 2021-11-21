@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_grey"
     android:orientation="vertical"
     tools:context=".Fragments.EditApplicationFragment">
 
@@ -15,6 +17,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="Edit application"
+        android:textColor="@color/blue"
         android:textSize="34sp" />
 
     <LinearLayout
@@ -25,7 +28,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/blue"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editCompanyNameInput_ID"
@@ -38,7 +43,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/blue"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editJobTitleInput_ID"
@@ -50,7 +57,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/blue"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editJobNameInput_ID"
@@ -64,7 +73,8 @@
             android:id="@+id/editAppliedCheckBox_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Applied" />
+            android:text="Applied"
+            android:textColor="@android:color/darker_gray" />
 
         <LinearLayout
             android:id="@+id/editAppliedDateLayout_ID"
@@ -106,7 +116,8 @@
             android:id="@+id/editInterviewCheckBox_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Got interview date" />
+            android:text="Got interview date"
+            android:textColor="@android:color/darker_gray" />
 
 
         <LinearLayout
@@ -157,7 +168,8 @@
             android:padding="10dp"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
-            android:scrollHorizontally="false" />
+            android:scrollHorizontally="false"
+            android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 
     <LinearLayout
@@ -171,7 +183,7 @@
             android:id="@+id/finishEditApplicationBtn_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00FFFFFF"
+            android:background="@color/green"
             android:text="EDIT" />
     </LinearLayout>
 
