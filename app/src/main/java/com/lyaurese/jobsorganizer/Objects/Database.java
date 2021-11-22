@@ -298,4 +298,13 @@ public class Database extends SQLiteOpenHelper {
 
         return null;
     }
+
+    public void removeApplication(Application application){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(APPLICATIONS_TABLE_NAME, "jobNumber = ?", new String[]{application.getJobNumber()});
+
+        updateCompany(application.getCompanyName(), -1);
+
+        db.close();
+    }
 }

@@ -53,25 +53,25 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_application, container, false);
 
-        editButton = (ImageButton) view.findViewById(R.id.editApplicationBtn_ID);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new EditApplicationFragment();
-
-                MainBoardActivity activity = (MainBoardActivity)getActivity();
-                activity.setFragmentID(R.layout.fragment_edit_application);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("application", application);
-                fragment.setArguments(bundle);
-
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
-                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                transaction.commit();
-            }
-        });
+//        editButton = (ImageButton) view.findViewById(R.id.editApplicationBtn_ID);
+//        editButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Fragment fragment = new EditApplicationFragment();
+//
+//                MainBoardActivity activity = (MainBoardActivity)getActivity();
+//                activity.setFragmentID(R.layout.fragment_edit_application);
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("application", application);
+//                fragment.setArguments(bundle);
+//
+//                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
+//                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+//                transaction.commit();
+//            }
+//        });
 
         company = (TextView) view.findViewById(R.id.companyNameTxtv_ID);
         company.setText(application.getCompanyName());

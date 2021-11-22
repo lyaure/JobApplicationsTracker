@@ -75,7 +75,8 @@ public class BoardFragment extends Fragment {
         GraphEntry[] applicationsEntries = db.getApplicationsByMonth();
 
         applicationsGraphView.setScreenDimensions(width, height);
-        applicationsGraphView.setMax(GraphUtil.getMax(applicationsEntries));
+        if(applicationsEntries != null)
+            applicationsGraphView.setMax(GraphUtil.getMax(applicationsEntries));
 
         int[] colors = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)};
 
@@ -93,7 +94,8 @@ public class BoardFragment extends Fragment {
         GraphEntry[] companiesEntries = db.getApplicationsByCompany();
 
         companiesGraphView.setScreenDimensions(width, height);
-        companiesGraphView.setMax(GraphUtil.getMax(companiesEntries));
+        if(companiesEntries != null)
+            companiesGraphView.setMax(GraphUtil.getMax(companiesEntries));
         companiesGraphView.setBarsColors(colors);
         companiesGraphView.setEntries(companiesEntries);
 

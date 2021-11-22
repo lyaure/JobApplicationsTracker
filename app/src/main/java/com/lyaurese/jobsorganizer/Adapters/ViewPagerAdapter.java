@@ -15,8 +15,6 @@ import java.util.ArrayList;
 // adapter for multiple fragments in the same activity or fragment
 public class ViewPagerAdapter extends FragmentStateAdapter {
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
-    Context context;
-    ViewPager viewPager;
 
     public ViewPagerAdapter(FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -39,4 +37,5 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public void addFrag(Fragment fragment) {
         mFragmentList.add(fragment);
     }
+
 }

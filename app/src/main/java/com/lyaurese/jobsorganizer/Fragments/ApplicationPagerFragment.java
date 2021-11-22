@@ -3,6 +3,7 @@ package com.lyaurese.jobsorganizer.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -26,7 +27,8 @@ public class ApplicationPagerFragment extends Fragment {
     private ViewPagerAdapter adapter;
     private String companyName, jobNumber;
     private ImageButton backButton;
-    ArrayList<Application> applicationsList = new ArrayList<>();
+    private ArrayList<Application> applicationsList = new ArrayList<>();
+    private Database db;
 
     public ApplicationPagerFragment() {
         // Required empty public constructor
@@ -46,6 +48,43 @@ public class ApplicationPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_application_pager, container, false);
+
+        db = new Database(getContext());
+
+        ImageButton editButton = (ImageButton) view.findViewById(R.id.editApplicationBtn_ID);
+        ImageButton deleteButton = (ImageButton) view.findViewById(R.id.deleteFragmentBtn_ID);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = viewPager.getCurrentItem();
+                db.removeApplication(applicationsList.get(index));
+
+                if(applicationsList.size() == 1){
+                    CompaniesFragment fragment = new CompaniesFragment();
+
+                    FragmentActivity fragmentActivity = (FragmentActivity) v.getContext();
+                    MainBoardActivity activity = new MainBoardActivity();
+                    activity.setFragmentID(R.layout.fragment_companies);
+
+                    FragmentTransaction transaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_ID, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                else{
+                    ApplicationPagerFragment fragment = new ApplicationPagerFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("company", applicationsList.get(index).getCompanyName());
+                    bundle.putString("application", applicationsList.get(index == 0? index+1 : index-1).getJobNumber());
+                    fragment.setArguments(bundle);
+
+                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_ID, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            }
+        });
 
         // multiple fragments in this fragment
         viewPager = (ViewPager2) view.findViewById(R.id.applicationsViewpager_ID);
@@ -76,6 +115,27 @@ public class ApplicationPagerFragment extends Fragment {
 
         if(index != -1)
             viewPager.setCurrentItem(index);
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = viewPager.getCurrentItem();
+
+                Fragment fragment = new EditApplicationFragment();
+
+                MainBoardActivity activity = (MainBoardActivity)getActivity();
+                activity.setFragmentID(R.layout.fragment_edit_application);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("application", applicationsList.get(index));
+                fragment.setArguments(bundle);
+
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
+            }
+        });
 
 
         backButton = (ImageButton)view.findViewById(R.id.pagerBackBtn_ID);

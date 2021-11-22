@@ -24,14 +24,38 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/editApplicationBtn_ID"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="right"
+        android:layout_marginRight="35dp"
+        android:layout_weight="0.5"
+        android:backgroundTint="#00FFFFFF"
+        android:src="@drawable/ic_baseline_edit_24" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/applicationsViewpager_ID"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="15dp"
         android:layout_weight="5">
 
     </androidx.viewpager2.widget.ViewPager2>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/deleteFragmentBtn_ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/ic_baseline_delete_24" />
+    </LinearLayout>
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/applicationsDotsIndicator_ID"

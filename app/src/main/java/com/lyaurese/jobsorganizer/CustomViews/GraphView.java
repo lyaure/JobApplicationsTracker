@@ -59,17 +59,18 @@ public class GraphView extends View {
 
         int index = 0;
 
-        // calculates the coordinates of the object to draw according to data
-        for (GraphEntry entry : entries) {
-            int tmp = Math.round((((float) entry.getData()) / ((float)max)) * ((float)graphHeight));
-            if (tmp > graphHeight) {
-                tmp = graphHeight;
-            }
-            entry.setPoint((screenWidth / 8) + (space * index), tmp);
-            index++;
-        }
-
         if (entries != null) {
+
+            // calculates the coordinates of the object to draw according to data
+            for (GraphEntry entry : entries) {
+                int tmp = Math.round((((float) entry.getData()) / ((float)max)) * ((float)graphHeight));
+                if (tmp > graphHeight) {
+                    tmp = graphHeight;
+                }
+                entry.setPoint((screenWidth / 8) + (space * index), tmp);
+                index++;
+            }
+            
             drawBars(canvas);
         } else {
             canvas.drawText("No data yet", (float)(canvasWidth / 2), (float)(canvasHeight / 2), pBlack);

@@ -3,7 +3,7 @@
     package="com.lyaurese.jobsorganizer">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -11,7 +11,9 @@
         android:theme="@style/Theme.JobsOrganizer">
         <activity
             android:name=".Activities.MainBoardActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true">
