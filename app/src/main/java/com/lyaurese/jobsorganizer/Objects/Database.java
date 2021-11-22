@@ -157,8 +157,12 @@ public class Database extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             ArrayList<Application> list = new ArrayList<>();
             do{
-                Calendar appliedCalendar = Calendar.getInstance();
-                appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM),cursor.getInt(APPLIED_DAY_COL_NUM));
+                Calendar appliedCalendar = null;
+
+                if(cursor.getInt(APPLIED_COL_NUM) == 1){
+                    appliedCalendar = Calendar.getInstance();
+                    appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM),cursor.getInt(APPLIED_DAY_COL_NUM));
+                }
 
                 Application application = new Application(cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getInt(APPLIED_COL_NUM) == 1,
                         appliedCalendar, cursor.getString(COMMENTS_COL_NUM));

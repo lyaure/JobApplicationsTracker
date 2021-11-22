@@ -287,12 +287,14 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                     applied.setChecked(false);
                     appliedDateLayout.setVisibility(View.GONE);
                     changeAppliedDate = false;
+                    application.setAppliedDate(null);
                 }
 
                 if(!application.interview() && changeInterviewDate){
                     interview.setChecked(false);
                     interviewDateLayout.setVisibility(View.GONE);
                     changeInterviewDate = false;
+                    application.setInterviewDate(null);
                 }
             }
         });

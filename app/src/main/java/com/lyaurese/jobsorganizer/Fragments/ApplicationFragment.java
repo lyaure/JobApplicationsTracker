@@ -2,6 +2,7 @@ package com.lyaurese.jobsorganizer.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,7 +29,7 @@ import java.util.Calendar;
 public class ApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
     private ImageButton editButton;
-    private TextView company, title, number, appliedDate, interviewedDate, comments;
+    private TextView company, title, number, appliedDate, interviewedDate, appliedTxt, interviewTxt, comments;
     private Calendar calendar;
 
 
@@ -53,26 +54,6 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_application, container, false);
 
-//        editButton = (ImageButton) view.findViewById(R.id.editApplicationBtn_ID);
-//        editButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Fragment fragment = new EditApplicationFragment();
-//
-//                MainBoardActivity activity = (MainBoardActivity)getActivity();
-//                activity.setFragmentID(R.layout.fragment_edit_application);
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("application", application);
-//                fragment.setArguments(bundle);
-//
-//                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-//                transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
-//                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-//                transaction.commit();
-//            }
-//        });
-
         company = (TextView) view.findViewById(R.id.companyNameTxtv_ID);
         company.setText(application.getCompanyName());
 
@@ -81,16 +62,19 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
 
         number = (TextView) view.findViewById(R.id.jobNumberTxtv_ID);
         number.setText(application.getJobNumber());
+        appliedTxt = (TextView) view.findViewById(R.id.appliedTxt_ID);
 
         appliedDate = (TextView) view.findViewById(R.id.appliedDateTxtv_ID);
         if(application.getAppliedDate() != null)
-            appliedDate.setText("Applied on: " +DateUtil.getDate(application.getAppliedDate()));
+            appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
         else
             appliedDate.setText("Didn't applied yet");
 
+        interviewTxt = (TextView) view.findViewById(R.id.interviewTxt_ID);
+
         interviewedDate = (TextView) view.findViewById(R.id.interviewDateTxtv_ID);
         if(application.getInterviewDate() != null)
-            interviewedDate.setText("Got an interview on: " + DateUtil.getDate(application.getInterviewDate()));
+            interviewedDate.setText(DateUtil.getDate(application.getInterviewDate()));
         else
             interviewedDate.setText("Didn't get a response");
 
