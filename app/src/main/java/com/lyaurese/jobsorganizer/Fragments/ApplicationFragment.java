@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
             interviewedDate.setText("Didn't get a response");
 
         comments = (TextView) view.findViewById(R.id.commentsInput_ID);
+        comments.setMovementMethod(new ScrollingMovementMethod());
         String s = application.getComment();
         comments.setText(s);
 
