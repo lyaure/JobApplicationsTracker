@@ -147,6 +147,13 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog
                 (getActivity(), this, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                applied.setChecked(false);
+            }
+        });
+
         datePickerDialog.show();
     }
 
