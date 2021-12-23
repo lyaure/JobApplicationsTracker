@@ -1,6 +1,11 @@
 package com.lyaurese.jobsorganizer.Utils;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.lyaurese.jobsorganizer.Objects.GraphEntry;
+
+import java.util.Random;
 
 public abstract class GraphUtil {
     private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -31,6 +36,40 @@ public abstract class GraphUtil {
         }
         return max;
     }
+
+//    public static void shuffleColors(int[] colors){
+//        int n = colors.length;
+//        int rounds = (int)(Math.random()*10);
+//
+//        for(int i=0; i<rounds; i++){
+//            int index1 = 0, index2 = 0;
+//
+//            while(index1 == index2){
+//                index1 = (int)(Math.random()*n);
+//                index2 = (int)(Math.random()*n);
+//
+////                Toast.makeText(context, ""+ index1 + "  " + index2, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            swap(colors, index1, index2);
+//        }
+//
+////        int n = colors.length;
+////        int randNum = (int)(Math.random()*10);
+////        Random random = new Random(System.currentTimeMillis() * randNum);
+////        random.nextInt();
+////
+////        for(int i=0; i<n; i++){
+////            int change = i + random.nextInt(n-i);
+////            swap(colors, i, change);
+////        }
+//    }
+//
+//    private static void swap(int[] arr, int a, int b){
+//        int temp = arr[a];
+//        arr[a] = arr[b];
+//        arr[b] = temp;
+//    }
 
 
 }

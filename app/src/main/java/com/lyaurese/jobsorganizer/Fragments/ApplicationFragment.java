@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
 import com.lyaurese.jobsorganizer.Objects.Application;
+import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.R;
 import com.lyaurese.jobsorganizer.Utils.DateUtil;
 
@@ -32,6 +33,7 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
     private ImageButton editButton;
     private TextView company, title, number, appliedDate, interviewedDate, appliedTxt, interviewTxt, comments;
     private Calendar calendar;
+    private CheckBox active;
 
 
     public ApplicationFragment() {
@@ -77,7 +79,19 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         if(application.getInterviewDate() != null)
             interviewedDate.setText(DateUtil.getDate(application.getInterviewDate()));
         else
-            interviewedDate.setText("Didn't get a response");
+            interviewedDate.setText("-");
+
+        active = (CheckBox) view.findViewById(R.id.activeChkbx_ID);
+        active.setChecked(application.isActive());
+
+        active.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Database db = new Database(getContext());
+                application.setActive(isChecked);
+                db.setActive(application.getJobNumber(), isChecked);
+            }
+        });
 
         comments = (TextView) view.findViewById(R.id.commentsInput_ID);
         comments.setMovementMethod(new ScrollingMovementMethod());

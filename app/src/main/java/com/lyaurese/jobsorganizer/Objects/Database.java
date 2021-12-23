@@ -16,7 +16,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "JobOrganizerDB";
     private static final String APPLICATIONS_TABLE_NAME = "Applications";
     private static final String COMPANIES_TABLE_NAME = "Companies";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
 
     private final int COMPANY_COL_NUM = 0;
@@ -31,6 +31,7 @@ public class Database extends SQLiteOpenHelper {
     private final int INTERVIEW_MONTH_COL_NUM = 9;
     private final int INTERVIEW_YEAR_COL_NUM = 10;
     private final int COMMENTS_COL_NUM = 11;
+    private final int ACTIVE_COL_NUM = 12;
 
 
 
@@ -51,7 +52,9 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if(newVersion > oldVersion){
+            db.execSQL("ALTER TABLE " + APPLICATIONS_TABLE_NAME + " ADD COLUMN active INTEGER DEFAULT 1");
+        }
     }
 
     public void insertNewApplication(Application application){
@@ -173,6 +176,9 @@ public class Database extends SQLiteOpenHelper {
                     application.setInterviewDate(interviewCalendar);
                 }
 
+                if(cursor.getInt(ACTIVE_COL_NUM) == 0)
+                    application.setActive(false);
+
                 list.add(application);
             }while(cursor.moveToNext());
 
@@ -268,6 +274,19 @@ public class Database extends SQLiteOpenHelper {
         db.close();
 
         return null;
+    }
+
+    public void setActive(String jobNumber, boolean active){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
+
+        ContentValues values = new ContentValues();
+        values.put("active", active ? 1 : 0);
+
+        db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
+
+        cursor.close();
+        db.close();
     }
 
     public GraphEntry[] getApplicationsByCompany(){

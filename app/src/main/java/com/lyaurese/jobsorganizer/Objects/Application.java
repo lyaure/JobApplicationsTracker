@@ -10,6 +10,7 @@ public class Application implements Serializable {
     private boolean applied, interviewed;
     private Calendar appliedDate, interviewedDate;
     private String comment;
+    private boolean active;
 
     public Application(String companyName, String jobTitle, String jobNumber, boolean applied, Calendar appliedDate, String comment){
         this.jobTitle = jobTitle;
@@ -20,6 +21,7 @@ public class Application implements Serializable {
         this.appliedDate = appliedDate;
         this.interviewedDate = null;
         this.comment = comment;
+        this.active = true;
     }
 
     public String getJobTitle(){
@@ -92,5 +94,13 @@ public class Application implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

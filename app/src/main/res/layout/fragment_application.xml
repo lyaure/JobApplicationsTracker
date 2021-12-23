@@ -70,13 +70,13 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="15dp"
-            android:layout_weight="0.75"
+            android:layout_weight="0.5"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/appliedTxt_ID"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="center_vertical"
                 android:text="Applied on: "
@@ -99,7 +99,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_weight="0.75"
+            android:layout_weight="0.5"
             android:orientation="horizontal">
 
             <TextView
@@ -123,12 +123,21 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <CheckBox
+            android:id="@+id/activeChkbx_ID"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_weight="0.5"
+            android:text="Active"
+            android:textColor="@android:color/darker_gray" />
+
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="0.5"
             android:text="Comments:"
             android:textColor="@android:color/darker_gray"

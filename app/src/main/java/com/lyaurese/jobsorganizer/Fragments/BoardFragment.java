@@ -23,6 +23,7 @@ import com.lyaurese.jobsorganizer.R;
 import com.lyaurese.jobsorganizer.Utils.GraphUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BoardFragment extends Fragment {
@@ -30,6 +31,7 @@ public class BoardFragment extends Fragment {
     private GraphView applicationsGraphView, companiesGraphView;
     private final String months[] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private Database db;
+    private int[] colors;
 
 
     public BoardFragment() {
@@ -78,7 +80,7 @@ public class BoardFragment extends Fragment {
         if(applicationsEntries != null)
             applicationsGraphView.setMax(GraphUtil.getMax(applicationsEntries));
 
-        int[] colors = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)};
+        colors = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)};
 
         applicationsGraphView.setBarsColors(colors);
         applicationsGraphView.setEntries(applicationsEntries);
@@ -118,7 +120,8 @@ public class BoardFragment extends Fragment {
         entries.add(new PieEntry((float)db.getInterviewApplications(), "Interview"));
 
         PieDataSet set = new PieDataSet(entries, "Applications");
-        set.setColors(ColorTemplate.COLORFUL_COLORS);
+//        GraphUtil.shuffleColors(colors);
+        set.setColors(colors);
         set.setValueTextSize(16f);
 
         PieData data = new PieData(set);
@@ -127,6 +130,8 @@ public class BoardFragment extends Fragment {
         pieChart.getDescription().setEnabled(false);
         pieChart.setDrawEntryLabels(false);
         pieChart.setCenterText("My\napplications");
+        pieChart.setCenterTextColor(getResources().getColor(R.color.lightGray));
+        pieChart.setHoleColor(getResources().getColor(R.color.dark_grey));
         pieChart.animate();
     }
 
