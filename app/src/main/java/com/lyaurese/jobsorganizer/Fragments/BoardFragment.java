@@ -15,7 +15,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.lyaurese.jobsorganizer.CustomViews.GraphView;
 import com.lyaurese.jobsorganizer.Objects.Database;
 import com.lyaurese.jobsorganizer.Objects.GraphEntry;
@@ -23,11 +22,10 @@ import com.lyaurese.jobsorganizer.R;
 import com.lyaurese.jobsorganizer.Utils.GraphUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BoardFragment extends Fragment {
-    private PieChart pieChart;
+    private PieChart sumPieChart, interviewsPieChart;
     private GraphView applicationsGraphView, companiesGraphView;
     private final String months[] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private Database db;
@@ -58,7 +56,8 @@ public class BoardFragment extends Fragment {
         ScrollView VSV = (ScrollView) view.findViewById(R.id.mainScrollView_ID);
         VSV.setVerticalScrollBarEnabled(false);
 
-        pieChart = (PieChart)view.findViewById(R.id.pieChart_ID);
+        sumPieChart = (PieChart)view.findViewById(R.id.sumPieChart_ID);
+        interviewsPieChart = (PieChart)view.findViewById(R.id.interviewsPieChart_ID);
         applicationsGraphView = (GraphView)view.findViewById(R.id.applicationsGraphView_ID);
         companiesGraphView = (GraphView)view.findViewById(R.id.companiesGraphView_ID);
 
@@ -109,6 +108,7 @@ public class BoardFragment extends Fragment {
         });
 
         drawSummaryPieChart();
+        drawInterviewsPieChart();
 
         return view;
     }
@@ -116,23 +116,56 @@ public class BoardFragment extends Fragment {
     private void drawSummaryPieChart(){
         List<PieEntry> entries = new ArrayList<>();
 
-        entries.add(new PieEntry((float)db.getNoResponseApplications(), "No response"));
-        entries.add(new PieEntry((float)db.getInterviewApplications(), "Interview"));
+        int appSum = db.getApplicationsCount();
+        int active = db.getActiveCount();
+        int inactive = appSum - active;
 
-        PieDataSet set = new PieDataSet(entries, "Applications");
+        entries.add(new PieEntry((float)active, "Active"));
+        entries.add(new PieEntry((float)inactive, "Inactive"));
+
+        PieDataSet set = new PieDataSet(entries, " ");
 //        GraphUtil.shuffleColors(colors);
-        set.setColors(colors);
+        set.setColors(new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green)});
         set.setValueTextSize(16f);
 
         PieData data = new PieData(set);
 
-        pieChart.setData(data);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setDrawEntryLabels(false);
-        pieChart.setCenterText("My\napplications");
-        pieChart.setCenterTextColor(getResources().getColor(R.color.lightGray));
-        pieChart.setHoleColor(getResources().getColor(R.color.dark_grey));
-        pieChart.animate();
+        sumPieChart.setData(data);
+        sumPieChart.getDescription().setEnabled(false);
+        sumPieChart.setDrawEntryLabels(false);
+        sumPieChart.getLegend().setTextColor(getResources().getColor(R.color.lightGray));
+        sumPieChart.setCenterText(appSum + "\nApplications");
+        sumPieChart.setCenterTextSize(18f);
+        sumPieChart.setCenterTextColor(getResources().getColor(R.color.lightGray));
+        sumPieChart.setHoleColor(getResources().getColor(R.color.dark_grey));
+        sumPieChart.animate();
     }
+
+    private void drawInterviewsPieChart(){
+        List<PieEntry> entries = new ArrayList<>();
+
+        int appSum = db.getApplicationsCount();
+
+        entries.add(new PieEntry((float)db.getNoResponseApplications(), "Applications"));
+        entries.add(new PieEntry((float)db.getInterviewApplications(), "Interviews"));
+
+        PieDataSet set = new PieDataSet(entries, " ");
+//        GraphUtil.shuffleColors(colors);
+        set.setColors(new int[]{getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)});
+        set.setValueTextSize(16f);
+
+        PieData data = new PieData(set);
+
+        interviewsPieChart.setData(data);
+        interviewsPieChart.getDescription().setEnabled(false);
+        interviewsPieChart.setDrawEntryLabels(false);
+        interviewsPieChart.getLegend().setTextColor(getResources().getColor(R.color.lightGray));
+        interviewsPieChart.setCenterText(appSum + "\nApplications");
+        interviewsPieChart.setCenterTextSize(18f);
+        interviewsPieChart.setCenterTextColor(getResources().getColor(R.color.lightGray));
+        interviewsPieChart.setHoleColor(getResources().getColor(R.color.dark_grey));
+        interviewsPieChart.animate();
+    }
+
 
 }

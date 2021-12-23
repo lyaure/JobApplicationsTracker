@@ -229,6 +229,30 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    public int getApplicationsCount(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME, null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        return count;
+    }
+
+    public int getActiveCount(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1", null);
+
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        return count;
+    }
+
     public int getNoResponseApplications(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 0", null);
