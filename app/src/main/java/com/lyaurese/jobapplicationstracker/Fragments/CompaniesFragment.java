@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Fragments;
+package com.lyaurese.jobapplicationstracker.Fragments;
 
 import android.os.Bundle;
 
@@ -12,11 +12,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
-import com.lyaurese.jobsorganizer.Objects.Company;
-import com.lyaurese.jobsorganizer.Adapters.CompanyAdapter;
-import com.lyaurese.jobsorganizer.Objects.Database;
-import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
+import com.lyaurese.jobapplicationstracker.Objects.Company;
+import com.lyaurese.jobapplicationstracker.Adapters.CompanyAdapter;
+import com.lyaurese.jobapplicationstracker.Objects.Database;
+import com.lyaurese.jobapplicationstracker.R;
 
 import java.util.ArrayList;
 

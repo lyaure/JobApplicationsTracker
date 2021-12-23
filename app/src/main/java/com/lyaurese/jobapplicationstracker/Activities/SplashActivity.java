@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Activities;
+package com.lyaurese.jobapplicationstracker.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
-import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobapplicationstracker.R;
 
 public class SplashActivity extends AppCompatActivity {
 

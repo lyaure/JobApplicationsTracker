@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Activities;
+package com.lyaurese.jobapplicationstracker.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -8,13 +8,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.lyaurese.jobsorganizer.Fragments.BoardFragment;
-import com.lyaurese.jobsorganizer.Fragments.CompaniesFragment;
-import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobapplicationstracker.Fragments.BoardFragment;
+import com.lyaurese.jobapplicationstracker.Fragments.CompaniesFragment;
+import com.lyaurese.jobapplicationstracker.R;
 
 public class MainBoardActivity extends FragmentActivity {
     private BottomNavigationView bottomNavigation;

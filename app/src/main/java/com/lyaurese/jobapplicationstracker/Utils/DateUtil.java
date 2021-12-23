@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Utils;
+package com.lyaurese.jobapplicationstracker.Utils;
 
 import android.annotation.SuppressLint;
 

@@ -1,12 +1,10 @@
-package com.lyaurese.jobsorganizer.Fragments;
+package com.lyaurese.jobapplicationstracker.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -15,15 +13,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
-import com.lyaurese.jobsorganizer.Objects.Application;
-import com.lyaurese.jobsorganizer.Objects.Database;
-import com.lyaurese.jobsorganizer.R;
-import com.lyaurese.jobsorganizer.Utils.DateUtil;
+import com.lyaurese.jobapplicationstracker.Objects.Application;
+import com.lyaurese.jobapplicationstracker.Objects.Database;
+import com.lyaurese.jobapplicationstracker.R;
+import com.lyaurese.jobapplicationstracker.Utils.DateUtil;
 
 import java.util.Calendar;
 

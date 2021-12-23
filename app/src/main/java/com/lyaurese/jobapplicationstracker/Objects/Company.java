@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Objects;
+package com.lyaurese.jobapplicationstracker.Objects;
 
 public class Company {
     private String name;

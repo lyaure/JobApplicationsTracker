@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Fragments;
+package com.lyaurese.jobapplicationstracker.Fragments;
 
 import android.os.Bundle;
 
@@ -13,11 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
-import com.lyaurese.jobsorganizer.Adapters.ViewPagerAdapter;
-import com.lyaurese.jobsorganizer.Objects.Application;
-import com.lyaurese.jobsorganizer.Objects.Database;
-import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
+import com.lyaurese.jobapplicationstracker.Adapters.ViewPagerAdapter;
+import com.lyaurese.jobapplicationstracker.Objects.Application;
+import com.lyaurese.jobapplicationstracker.Objects.Database;
+import com.lyaurese.jobapplicationstracker.R;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer;
+package com.lyaurese.jobapplicationstracker;
 
 import org.junit.Test;
 

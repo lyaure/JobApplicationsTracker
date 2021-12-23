@@ -1,11 +1,6 @@
-package com.lyaurese.jobsorganizer.Utils;
+package com.lyaurese.jobapplicationstracker.Utils;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.lyaurese.jobsorganizer.Objects.GraphEntry;
-
-import java.util.Random;
+import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
 
 public abstract class GraphUtil {
     private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};

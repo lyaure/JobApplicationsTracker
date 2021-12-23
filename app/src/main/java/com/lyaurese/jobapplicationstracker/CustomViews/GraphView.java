@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.CustomViews;
+package com.lyaurese.jobapplicationstracker.CustomViews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,8 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.lyaurese.jobsorganizer.Objects.GraphEntry;
-import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
+import com.lyaurese.jobapplicationstracker.R;
 
 public class GraphView extends View {
     private Paint pWhite, pRED, pBottom, pBlack, pBars;

@@ -1,6 +1,5 @@
-package com.lyaurese.jobsorganizer.Adapters;
+package com.lyaurese.jobapplicationstracker.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,19 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
-import com.lyaurese.jobsorganizer.Fragments.ApplicationPagerFragment;
-import com.lyaurese.jobsorganizer.Objects.Company;
-import com.lyaurese.jobsorganizer.R;
+import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
+import com.lyaurese.jobapplicationstracker.Fragments.ApplicationPagerFragment;
+import com.lyaurese.jobapplicationstracker.Objects.Company;
+import com.lyaurese.jobapplicationstracker.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 

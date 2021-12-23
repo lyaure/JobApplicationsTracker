@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Fragments;
+package com.lyaurese.jobapplicationstracker.Fragments;
 
 import android.os.Bundle;
 
@@ -15,11 +15,11 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.lyaurese.jobsorganizer.CustomViews.GraphView;
-import com.lyaurese.jobsorganizer.Objects.Database;
-import com.lyaurese.jobsorganizer.Objects.GraphEntry;
-import com.lyaurese.jobsorganizer.R;
-import com.lyaurese.jobsorganizer.Utils.GraphUtil;
+import com.lyaurese.jobapplicationstracker.CustomViews.GraphView;
+import com.lyaurese.jobapplicationstracker.Objects.Database;
+import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
+import com.lyaurese.jobapplicationstracker.R;
+import com.lyaurese.jobapplicationstracker.Utils.GraphUtil;
 
 import java.util.ArrayList;
 import java.util.List;

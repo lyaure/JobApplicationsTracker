@@ -1,4 +1,4 @@
-package com.lyaurese.jobsorganizer.Fragments;
+package com.lyaurese.jobapplicationstracker.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -20,11 +20,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lyaurese.jobsorganizer.Activities.MainBoardActivity;
-import com.lyaurese.jobsorganizer.Objects.Application;
-import com.lyaurese.jobsorganizer.Objects.Database;
-import com.lyaurese.jobsorganizer.R;
-import com.lyaurese.jobsorganizer.Utils.DateUtil;
+import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
+import com.lyaurese.jobapplicationstracker.Objects.Application;
+import com.lyaurese.jobapplicationstracker.Objects.Database;
+import com.lyaurese.jobapplicationstracker.R;
 
 import java.util.Calendar;
 
