@@ -100,12 +100,12 @@ public class BoardFragment extends Fragment {
         companiesGraphView.setBarsColors(colors);
         companiesGraphView.setEntries(companiesEntries);
 
-        applicationsHSV.post(new Runnable() {
-            @Override
-            public void run() {
-                companiesHSV.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-            }
-        });
+//        applicationsHSV.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                companiesHSV.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+//            }
+//        });
 
         drawSummaryPieChart();
         drawInterviewsPieChart();
