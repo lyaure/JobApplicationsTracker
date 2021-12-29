@@ -67,11 +67,12 @@ public class Database extends SQLiteOpenHelper {
         values.put("applied", application.applied() ? 1 : 0);
         if(application.getAppliedDate() != null) {
             values.put("appliedDay", application.getAppliedDate().get(Calendar.DAY_OF_MONTH));
-            values.put("appliedMonth", application.getAppliedDate().get(Calendar.MONTH));
+            values.put("appliedMonth", application.getAppliedDate().get(Calendar.MONTH) + 1);
             values.put("appliedYear", application.getAppliedDate().get(Calendar.YEAR));
         }
         values.put("interview", 0);
         values.put("comments", application.getComment());
+        values.put("active", 1);
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
 
@@ -97,7 +98,7 @@ public class Database extends SQLiteOpenHelper {
         if(application.applied() && application.getAppliedDate() != null) {
             values.put("applied",1);
             values.put("appliedDay", application.getAppliedDate().get(Calendar.DAY_OF_MONTH));
-            values.put("appliedMonth", application.getAppliedDate().get(Calendar.MONTH));
+            values.put("appliedMonth", application.getAppliedDate().get(Calendar.MONTH) + 1);
             values.put("appliedYear", application.getAppliedDate().get(Calendar.YEAR));
         }
         else {
@@ -110,7 +111,7 @@ public class Database extends SQLiteOpenHelper {
         if(application.interview() && application.getInterviewDate() != null) {
             values.put("interview", 1);
             values.put("interviewDay", application.getInterviewDate().get(Calendar.DAY_OF_MONTH));
-            values.put("interviewMonth", application.getInterviewDate().get(Calendar.MONTH));
+            values.put("interviewMonth", application.getInterviewDate().get(Calendar.MONTH) + 1);
             values.put("interviewYear", application.getInterviewDate().get(Calendar.YEAR));
         }
         else {
@@ -119,7 +120,8 @@ public class Database extends SQLiteOpenHelper {
             values.putNull("interviewMonth");
             values.putNull("interviewYear");
         }
-        values.put("comments", application.getComment());
+        values.put("comments", application.getComment()); 
+        values.put("active", application.isActive() ? 1 : 0);
 
         db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
 
@@ -164,7 +166,7 @@ public class Database extends SQLiteOpenHelper {
 
                 if(cursor.getInt(APPLIED_COL_NUM) == 1){
                     appliedCalendar = Calendar.getInstance();
-                    appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM),cursor.getInt(APPLIED_DAY_COL_NUM));
+                    appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM) - 1,cursor.getInt(APPLIED_DAY_COL_NUM));
                 }
 
                 Application application = new Application(cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getInt(APPLIED_COL_NUM) == 1,
@@ -172,7 +174,7 @@ public class Database extends SQLiteOpenHelper {
 
                 if(cursor.getInt(INTERVIEW_COL_NUM) == 1){
                     Calendar interviewCalendar = Calendar.getInstance();
-                    interviewCalendar.set(cursor.getInt(INTERVIEW_YEAR_COL_NUM), cursor.getInt(INTERVIEW_MONTH_COL_NUM), cursor.getInt(INTERVIEW_DAY_COL_NUM));
+                    interviewCalendar.set(cursor.getInt(INTERVIEW_YEAR_COL_NUM), cursor.getInt(INTERVIEW_MONTH_COL_NUM) - 1, cursor.getInt(INTERVIEW_DAY_COL_NUM));
                     application.setInterviewDate(interviewCalendar);
                 }
 
@@ -285,7 +287,7 @@ public class Database extends SQLiteOpenHelper {
             GraphEntry[] byMonth = GraphUtil.getInitializedArrayByMonths();
 
             do{
-                byMonth[cursor.getInt(APPLIED_MONTH_COL_NUM)].incData(1);
+                byMonth[cursor.getInt(APPLIED_MONTH_COL_NUM) - 1].incData(1);
             }while(cursor.moveToNext());
 
             cursor.close();
