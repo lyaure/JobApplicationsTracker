@@ -120,7 +120,7 @@ public class Database extends SQLiteOpenHelper {
             values.putNull("interviewMonth");
             values.putNull("interviewYear");
         }
-        values.put("comments", application.getComment()); 
+        values.put("comments", application.getComment());
         values.put("active", application.isActive() ? 1 : 0);
 
         db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
@@ -159,7 +159,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "'", null);
 
-        if(cursor.moveToFirst()){
+        if(cursor.moveToLast()){
             ArrayList<Application> list = new ArrayList<>();
             do{
                 Calendar appliedCalendar = null;
@@ -182,7 +182,7 @@ public class Database extends SQLiteOpenHelper {
                     application.setActive(false);
 
                 list.add(application);
-            }while(cursor.moveToNext());
+            }while(cursor.moveToPrevious());
 
             return list;
         }
