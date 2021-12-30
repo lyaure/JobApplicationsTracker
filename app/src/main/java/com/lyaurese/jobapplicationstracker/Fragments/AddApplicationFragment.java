@@ -29,7 +29,7 @@ import java.util.Calendar;
 
 
 public class AddApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
-    private EditText company, jobTitle, jobNumber, comments;
+    private EditText company, jobTitle, jobNumber, comments, jobLocation;
     private CheckBox applied;
     private LinearLayout dateLayout;
     private TextView date;
@@ -50,6 +50,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         company = (EditText) view.findViewById(R.id.companyNameInput_ID);
         jobTitle = (EditText) view.findViewById(R.id.jobTitleInput_ID);
         jobNumber = (EditText) view.findViewById(R.id.jobNameInput_ID);
+        jobLocation = (EditText) view.findViewById(R.id.jobNLocationInput_ID);
         applied = (CheckBox) view.findViewById(R.id.appliedCheckBox_ID);
         dateLayout = (LinearLayout) view.findViewById(R.id.appliedDateLayout_ID);
         date = (TextView) view.findViewById(R.id.dateInputTxtv_ID);
@@ -88,11 +89,12 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                 String jobNumberInput = jobNumber.getText().toString();
                 boolean appliedInput = applied.isChecked();
                 String commentsInput = comments.getText().toString();
+                String locationInput = jobLocation.getText().toString();
 
-                if(companyInput.equals("") || jobNumberInput.equals("")){
+                if(companyInput.equals("")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error")
-                            .setMessage("Company name and job number are required fields.")
+                            .setMessage("Company name is a required field.")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -103,11 +105,24 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                     AlertDialog alert = builder.create();
                     alert.show();
                 }
-                else{
-                    if(db.isJobExists(jobNumberInput)){
+                else if(jobTitleInput.equals("")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Error")
+                            .setMessage("Job Position is a required field.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else if(db.isJobExists(jobNumberInput)){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Error")
-                                .setMessage("Application with the same job number already exists.\nPlease insert a new job number.")
+                                .setMessage("Job ID already exists.\nPlease insert a new job ID.")
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
@@ -119,7 +134,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                         alert.show();
                     }
                     else{
-                        Application application = new Application(companyInput, jobTitleInput, jobNumberInput, appliedInput, calendar, commentsInput);
+                        Application application = new Application(companyInput, jobTitleInput, jobNumberInput, locationInput, appliedInput, calendar, commentsInput);
 
                         db.insertNewApplication(application);
 
@@ -133,9 +148,6 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                         transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                         transaction.commit();
                     }
-                }
-
-
             }
         });
 

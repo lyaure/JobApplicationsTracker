@@ -27,7 +27,7 @@ import java.util.Calendar;
 public class ApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
     private ImageButton editButton;
-    private TextView company, title, number, appliedDate, interviewedDate, appliedTxt, interviewTxt, comments;
+    private TextView company, title, number, appliedDate, interviewedDate, appliedTxt, interviewTxt, comments, location;
     private Calendar calendar;
     private CheckBox active;
 
@@ -61,6 +61,10 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
 
         number = (TextView) view.findViewById(R.id.jobNumberTxtv_ID);
         number.setText(application.getJobNumber());
+
+        location = (TextView) view.findViewById(R.id.jobLocationTxtv_ID);
+        location.setText(application.getLocation());
+
         appliedTxt = (TextView) view.findViewById(R.id.appliedTxt_ID);
 
         appliedDate = (TextView) view.findViewById(R.id.appliedDateTxtv_ID);

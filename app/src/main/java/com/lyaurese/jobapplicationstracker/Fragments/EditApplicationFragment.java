@@ -32,7 +32,7 @@ import java.util.Calendar;
 
 public class EditApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
-    private EditText company, jobTitle, jobNumber, comments;
+    private EditText company, jobTitle, jobNumber, comments, jobLocation;
     private CheckBox applied, interview;
     private LinearLayout appliedDateLayout, interviewDateLayout;
     private TextView appliedDate, interviewDate;
@@ -117,6 +117,25 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
             @Override
             public void afterTextChanged(Editable s) {
                 application.setJobNumber(s.toString());
+            }
+        });
+
+        jobLocation = (EditText) view.findViewById(R.id.editJobLocationInput_ID);
+        jobLocation.setText(application.getLocation());
+        jobLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                application.setLocation(s.toString());
             }
         });
 
@@ -218,10 +237,24 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(company.getText().toString().equals("") || jobNumber.getText().toString().equals("")){
+                if(company.getText().toString().equals("")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error")
-                            .setMessage("Company name and job number are required fields.")
+                            .setMessage("Company name is a required field.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else if(jobTitle.getText().toString().equals("")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Error")
+                            .setMessage("Job position is a required field.")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -236,10 +269,10 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                     Database db = new Database(getContext());
 
                     if(application.getJobNumber() != oldJobNumber){
-                        if(db.isJobExists(application.getJobNumber())){
+                        if(db.isJobExists(application.getJobNumber()) && !application.getJobNumber().equals("")){
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Error")
-                                    .setMessage("Application with the same job number already exists.\nPlease insert a new job number.")
+                                    .setMessage("Job ID already exists.\nPlease insert a new job ID.")
                                     .setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override

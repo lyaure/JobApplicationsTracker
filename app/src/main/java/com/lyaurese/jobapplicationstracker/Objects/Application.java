@@ -9,10 +9,10 @@ public class Application implements Serializable {
     private String companyName;
     private boolean applied, interviewed;
     private Calendar appliedDate, interviewedDate;
-    private String comment;
+    private String comment, location;
     private boolean active;
 
-    public Application(String companyName, String jobTitle, String jobNumber, boolean applied, Calendar appliedDate, String comment){
+    public Application(String companyName, String jobTitle, String jobNumber, String location, boolean applied, Calendar appliedDate, String comment){
         this.jobTitle = jobTitle;
         this.jobNumber = jobNumber;
         this.companyName = companyName;
@@ -22,6 +22,7 @@ public class Application implements Serializable {
         this.interviewedDate = null;
         this.comment = comment;
         this.active = true;
+        this.location = location;
     }
 
     public String getJobTitle(){
@@ -54,6 +55,10 @@ public class Application implements Serializable {
 
     public String getComment() {
         return comment;
+    }
+
+    public String getLocation(){
+        return this.location;
     }
 
     public void setJobTitle(String jobTitle) {
@@ -102,5 +107,9 @@ public class Application implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

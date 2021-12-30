@@ -17,7 +17,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "JobOrganizerDB";
     private static final String APPLICATIONS_TABLE_NAME = "Applications";
     private static final String COMPANIES_TABLE_NAME = "Companies";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
 
     private final int COMPANY_COL_NUM = 0;
@@ -33,6 +33,7 @@ public class Database extends SQLiteOpenHelper {
     private final int INTERVIEW_YEAR_COL_NUM = 10;
     private final int COMMENTS_COL_NUM = 11;
     private final int ACTIVE_COL_NUM = 12;
+    private final int LOCATION_COL_NUM = 13;
 
 
 
@@ -44,7 +45,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE IF NOT EXISTS " + APPLICATIONS_TABLE_NAME +
                 "(company TEXT, jobTitle TEXT, jobNumber TEXT, applied INTEGER, appliedDay INTEGER, appliedMonth INTEGER, appliedYear INTEGER, " +
-                "interview INTEGER, interviewDay INTEGER, interviewMonth INTEGER, interviewYear INTEGER, comments TEXT, active INTEGER)";
+                "interview INTEGER, interviewDay INTEGER, interviewMonth INTEGER, interviewYear INTEGER, comments TEXT, active INTEGER, location TEXT)";
         db.execSQL(query);
 
         query = "CREATE TABLE IF NOT EXISTS " + COMPANIES_TABLE_NAME + "(company TEXT, count INTEGER)";
@@ -54,7 +55,7 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(newVersion > oldVersion){
-            db.execSQL("ALTER TABLE " + APPLICATIONS_TABLE_NAME + " ADD COLUMN active INTEGER DEFAULT 1");
+            db.execSQL("ALTER TABLE " + APPLICATIONS_TABLE_NAME + " ADD COLUMN location TEXT DEFAULT NULL");
         }
     }
 
@@ -74,6 +75,7 @@ public class Database extends SQLiteOpenHelper {
         values.put("interview", 0);
         values.put("comments", application.getComment());
         values.put("active", 1);
+        values.put("location", application.getLocation());
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
 
@@ -123,6 +125,7 @@ public class Database extends SQLiteOpenHelper {
         }
         values.put("comments", application.getComment());
         values.put("active", application.isActive() ? 1 : 0);
+        values.put("location", application.getLocation());
 
         db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
 
@@ -193,7 +196,7 @@ public class Database extends SQLiteOpenHelper {
                     appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM) - 1,cursor.getInt(APPLIED_DAY_COL_NUM));
                 }
 
-                Application application = new Application(cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getInt(APPLIED_COL_NUM) == 1,
+                Application application = new Application(cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM), cursor.getInt(APPLIED_COL_NUM) == 1,
                         appliedCalendar, cursor.getString(COMMENTS_COL_NUM));
 
                 if(cursor.getInt(INTERVIEW_COL_NUM) == 1){
