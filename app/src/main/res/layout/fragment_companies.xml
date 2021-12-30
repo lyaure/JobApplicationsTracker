@@ -11,16 +11,41 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="15dp"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:text="My applications"
-        android:textColor="@color/lightGray"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_weight="1.5"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="My applications"
+            android:textColor="@color/lightGray"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/filterTxtv_ID"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/filterBtn_ID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="15dp"
+        android:drawableEnd="@drawable/ic_baseline_filter_alt_24"
+        android:text="Filter"
+        android:textColor="@color/lightGray" />
 
     <LinearLayout
         android:id="@+id/noDataLayout_ID"
@@ -34,7 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No applications yet" />
+            android:text="No applications yet"
+            android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 
     <ListView

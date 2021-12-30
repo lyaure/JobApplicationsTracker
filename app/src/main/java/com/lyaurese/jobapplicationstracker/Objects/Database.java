@@ -10,6 +10,7 @@ import com.lyaurese.jobapplicationstracker.Utils.GraphUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 
 public class Database extends SQLiteOpenHelper {
@@ -135,7 +136,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<Company> getCompanyList(){
+    public ArrayList<Company> getCompaniesListAll(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " ORDER BY company ASC", null);
 
@@ -143,6 +144,29 @@ public class Database extends SQLiteOpenHelper {
             ArrayList<Company> list = new ArrayList<>();
             do{
                 list.add(new Company(cursor.getString(COMPANY_COL_NUM), cursor.getInt(JOB_TITLE_COL_NUM)));
+            }while(cursor.moveToNext());
+
+            return list;
+        }
+        else{
+            cursor.close();
+            db.close();
+
+            return null;
+        }
+    }
+
+
+    public ArrayList<Company> getCompaniesListWithFilter(int filter){
+        if(filter == -1)
+            return getCompaniesListAll();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC" , null);
+        if(cursor.moveToFirst()){
+            ArrayList<Company> list = new ArrayList<>();
+            do{
+                list.add(new Company(cursor.getString(0), cursor.getInt(1)));
             }while(cursor.moveToNext());
 
             return list;
