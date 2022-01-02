@@ -73,7 +73,7 @@ public class BoardFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels, height = dm.heightPixels;
 
-        GraphEntry[] applicationsEntries = db.getApplicationsByMonth();
+        GraphEntry[] applicationsEntries = GraphUtil.getInitializedArray(db.getApplicationsByMonth());
 
         applicationsGraphView.setScreenDimensions(width, height);
         if(applicationsEntries != null)
@@ -92,7 +92,7 @@ public class BoardFragment extends Fragment {
             }
         });
 
-        GraphEntry[] companiesEntries = db.getApplicationsByCompany();
+        GraphEntry[] companiesEntries = GraphUtil.getInitializedArray(db.getApplicationsByCompany());
 
         companiesGraphView.setScreenDimensions(width, height);
         if(companiesEntries != null)

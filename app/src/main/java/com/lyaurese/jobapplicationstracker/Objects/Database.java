@@ -10,7 +10,9 @@ import com.lyaurese.jobapplicationstracker.Utils.GraphUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 
 public class Database extends SQLiteOpenHelper {
@@ -34,6 +36,8 @@ public class Database extends SQLiteOpenHelper {
     private final int COMMENTS_COL_NUM = 11;
     private final int ACTIVE_COL_NUM = 12;
     private final int LOCATION_COL_NUM = 13;
+
+    private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 
 
@@ -74,7 +78,7 @@ public class Database extends SQLiteOpenHelper {
         }
         values.put("interview", 0);
         values.put("comments", application.getComment());
-        values.put("active", 1);
+        values.put("active", application.applied() ? 1 : 0);
         values.put("location", application.getLocation());
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
@@ -221,9 +225,9 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public boolean isJobExists(String jobNumber){
+    public boolean isJobExists(String jobNumber, String company){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "' AND company = '" + company + "'", null);
 
         boolean exists = cursor.moveToFirst();
         db.close();
@@ -272,7 +276,7 @@ public class Database extends SQLiteOpenHelper {
 
     public int getActiveCount(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1 AND applied = 1", null);
 
         int count = cursor.getCount();
 
@@ -306,21 +310,40 @@ public class Database extends SQLiteOpenHelper {
         return count;
     }
 
-    public GraphEntry[] getApplicationsByMonth(){
+    public LinkedHashMap<String, Integer> getApplicationsByMonth(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 ORDER BY appliedYear ASC, appliedMonth ASC ", null);
 
         if(cursor.moveToFirst()){
-            GraphEntry[] byMonth = GraphUtil.getInitializedArrayByMonths();
+            LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+
+            int lastMonth = cursor.getInt(APPLIED_MONTH_COL_NUM), year = cursor.getInt(APPLIED_YEAR_COL_NUM) - 2000;
 
             do{
-                byMonth[cursor.getInt(APPLIED_MONTH_COL_NUM) - 1].incData(1);
+                if(lastMonth == cursor.getInt(APPLIED_MONTH_COL_NUM)){
+                    String key = MONTHS_NAMES[cursor.getInt(APPLIED_MONTH_COL_NUM) - 1] + " " + (cursor.getInt(APPLIED_YEAR_COL_NUM) - 2000);
+                    if(!map.containsKey(key))
+                        map.put(key, 1);
+                    else
+                        map.put(key, map.get(key)+1);
+                }
+                else{
+                    cursor.moveToPrevious();
+                    lastMonth++;
+                    if(lastMonth == 13){
+                        lastMonth = 1;
+                        year ++;
+                    }
+
+                    String key = MONTHS_NAMES[lastMonth-1] + " " + year;
+                    map.put(key, 0);
+                }
             }while(cursor.moveToNext());
 
             cursor.close();
             db.close();
 
-            return byMonth;
+            return map;
         }
 
         cursor.close();
@@ -342,42 +365,32 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public GraphEntry[] getApplicationsByCompany(){
+    public LinkedHashMap<String,Integer> getApplicationsByCompany(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 GROUP BY company ORDER BY company ASC", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1", null);
+
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
         if(cursor.moveToFirst()){
-            int count = cursor.getCount();
-
-            String[] companies = new String[count];
-
-            for(int i=0; i<count; i++) {
-                companies[i] = cursor.getString(0);
-                cursor.moveToNext();
+            do{
+                String key = cursor.getString(COMPANY_COL_NUM);
+                if(!map.containsKey(key))
+                    map.put(key, 1);
+                else
+                    map.put(key, map.get(key)+1);
             }
-
-            GraphEntry[] byCompany = GraphUtil.getInitializedArrayByCompanies(count, companies);
-
-            for(int i=0; i<count; i++){
-                cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 AND company = '" + companies[i] + "'", null);
-                byCompany[i].incData(cursor.getCount());
-            }
-
-            cursor.close();
-            db.close();
-
-            return byCompany;
+            while(cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
 
-        return null;
+        return map;
     }
 
     public void removeApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(APPLICATIONS_TABLE_NAME, "jobNumber = ?", new String[]{application.getJobNumber()});
+        db.delete(APPLICATIONS_TABLE_NAME, "company = ? AND jobTitle = ?", new String[]{application.getCompanyName(), application.getJobTitle()});
 
         updateCompany(application.getCompanyName(), -1);
 

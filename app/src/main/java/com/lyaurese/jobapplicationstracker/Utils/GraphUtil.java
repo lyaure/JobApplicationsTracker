@@ -2,23 +2,39 @@ package com.lyaurese.jobapplicationstracker.Utils;
 
 import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class GraphUtil {
-    private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    private static final int MONTHS_NUMBERS = 12;
+//    private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
+//    private static final int MONTHS_NUMBERS = 12;
 
-    public static GraphEntry[] getInitializedArrayByMonths() {
-        GraphEntry[] entries = new GraphEntry[12];
-        for (int i = 0; i < 12; i++) {
-            entries[i] = new GraphEntry(0, MONTHS_NAMES[i]);
-        }
-        return entries;
-    }
+//    public static GraphEntry[] getInitializedArrayByMonths() {
+//        GraphEntry[] entries = new GraphEntry[12];
+//        for (int i = 0; i < 12; i++) {
+//            entries[i] = new GraphEntry(0, MONTHS_NAMES[i]);
+//        }
+//        return entries;
+//    }
+//
+//    public static GraphEntry[] getInitializedArrayByCompanies(int size, String[] labels) {
+//        GraphEntry[] entries = new GraphEntry[size];
+//        for (int i = 0; i < size; i++) {
+//            entries[i] = new GraphEntry(0, labels[i]);
+//        }
+//        return entries;
+//    }
 
-    public static GraphEntry[] getInitializedArrayByCompanies(int size, String[] labels) {
-        GraphEntry[] entries = new GraphEntry[size];
-        for (int i = 0; i < size; i++) {
-            entries[i] = new GraphEntry(0, labels[i]);
+
+    public static GraphEntry[] getInitializedArray(HashMap<String, Integer> map){
+        GraphEntry[] entries = new GraphEntry[map.size()];
+        int index = 0;
+
+        for(Map.Entry entry : map.entrySet()){
+            entries[index] = new GraphEntry((int)entry.getValue(), (String)entry.getKey());
+            index ++;
         }
+
         return entries;
     }
 
