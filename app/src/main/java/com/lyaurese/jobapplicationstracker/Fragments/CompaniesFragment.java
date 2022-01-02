@@ -37,7 +37,7 @@ public class CompaniesFragment extends Fragment {
     private ImageButton addApplicationBtn;
     private TextView filterBtn, filterTxtv;
     private SharedPreferences sp;
-    private int filter;
+    private int filter, filterOption;
     private Database db;
 
     public CompaniesFragment() {
@@ -55,7 +55,8 @@ public class CompaniesFragment extends Fragment {
         activity.setFragmentID(R.layout.fragment_companies);
 
         sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
-        int filterOption = sp.getInt("filterOption", 0);
+        filterOption = sp.getInt("filterOption", 0);
+//        int filterOption = 0;
 
         addApplicationBtn = (ImageButton) view.findViewById(R.id.addApplicationBtn_ID);
         addApplicationBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +84,7 @@ public class CompaniesFragment extends Fragment {
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filterOption = sp.getInt("filterOption", 0);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MaterialThemeDialog);
                 builder.setTitle("Filter")
                         .setIcon(R.drawable.ic_baseline_filter_alt_24)

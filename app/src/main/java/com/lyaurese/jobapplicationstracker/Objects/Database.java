@@ -367,7 +367,7 @@ public class Database extends SQLiteOpenHelper {
 
     public LinkedHashMap<String,Integer> getApplicationsByCompany(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 ORDER BY company ASC" , null);
 
         LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
