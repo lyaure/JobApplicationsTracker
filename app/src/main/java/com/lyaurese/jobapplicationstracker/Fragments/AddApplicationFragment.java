@@ -119,7 +119,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                     AlertDialog alert = builder.create();
                     alert.show();
                 }
-                else if(db.isJobExists(jobNumberInput)){
+                else if(db.isJobExists(jobNumberInput, companyInput) && !jobNumberInput.equals("")){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Error")
                                 .setMessage("Job ID already exists.\nPlease insert a new job ID.")

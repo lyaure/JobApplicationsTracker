@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
                 android:hint="Job position"
-                android:inputType="textCapSentences"
+                android:inputType="textCapWords"
                 android:textColor="@android:color/darker_gray"
                 android:textColorHint="@color/lightGray"
                 android:textCursorDrawable="@color/blue" />

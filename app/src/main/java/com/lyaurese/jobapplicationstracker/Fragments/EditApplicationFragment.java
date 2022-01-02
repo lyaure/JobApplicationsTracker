@@ -268,21 +268,19 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                 else{
                     Database db = new Database(getContext());
 
-                    if(application.getJobNumber() != oldJobNumber){
-                        if(db.isJobExists(application.getJobNumber()) && !application.getJobNumber().equals("")){
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Error")
-                                    .setMessage("Job ID already exists.\nPlease insert a new job ID.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    });
+                    if(application.getJobNumber() != oldJobNumber && db.isJobExists(application.getJobNumber(), application.getCompanyName()) && !application.getJobNumber().equals("")){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Error")
+                                .setMessage("Job ID already exists.\nPlease insert a new job ID.")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
 
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                        }
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }
                     else{
                         db.editApplication(application, oldJobNumber);
