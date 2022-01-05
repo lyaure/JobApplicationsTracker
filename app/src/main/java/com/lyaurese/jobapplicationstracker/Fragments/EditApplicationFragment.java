@@ -83,7 +83,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
         });
 
         jobTitle = (EditText) view.findViewById(R.id.editJobTitleInput_ID);
-        jobTitle.setText(application.getJobTitle());
+        jobTitle.setText(application.getJobPosition());
         jobTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -97,7 +97,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
 
             @Override
             public void afterTextChanged(Editable s) {
-                application.setJobTitle(s.toString());
+                application.setJobPosition(s.toString());
             }
         });
 

@@ -20,7 +20,7 @@ public class Database extends SQLiteOpenHelper {
 
     private final int ID_COL_NUM = 0;
     private final int COMPANY_COL_NUM = 1;
-    private final int JOB_TITLE_COL_NUM = 2;
+    private final int JOB_POSITION_COL_NUM = 2;
     private final int JOB_NUMBER_COL = 3;
     private final int LOCATION_COL_NUM = 4;
     private final int ACTIVE_COL_NUM = 5;
@@ -48,7 +48,7 @@ public class Database extends SQLiteOpenHelper {
         String query = "CREATE TABLE IF NOT EXISTS " + APPLICATIONS_TABLE_NAME +
                 "(id INTEGER, " +
                 "company TEXT, " +
-                "jobTitle TEXT, " +
+                "jobPosition TEXT, " +
                 "jobNumber TEXT, " +
                 "location TEXT, " +
                 "active INTEGER, " +
@@ -80,7 +80,7 @@ public class Database extends SQLiteOpenHelper {
 
         values.put("id", application.getId());
         values.put("company", application.getCompanyName());
-        values.put("jobTitle", application.getJobTitle());
+        values.put("jobPosition", application.getJobPosition());
         values.put("jobNumber", application.getJobNumber());
         values.put("applied", application.applied() ? 1 : 0);
         if(application.getAppliedDate() != null) {
@@ -123,7 +123,7 @@ public class Database extends SQLiteOpenHelper {
         oldCompanyName = cursor.getString(COMPANY_COL_NUM);
 
         values.put("company", application.getCompanyName());
-        values.put("jobTitle", application.getJobTitle());
+        values.put("jobPosition", application.getJobPosition());
         values.put("jobNumber", application.getJobNumber());
 
         if(application.applied() && application.getAppliedDate() != null) {
@@ -225,7 +225,7 @@ public class Database extends SQLiteOpenHelper {
                     appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM) - 1,cursor.getInt(APPLIED_DAY_COL_NUM));
                 }
 
-                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM), cursor.getInt(APPLIED_COL_NUM) == 1,
+                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM), cursor.getInt(APPLIED_COL_NUM) == 1,
                         appliedCalendar, cursor.getString(COMMENTS_COL_NUM));
 
                 if(cursor.getInt(INTERVIEW_COL_NUM) == 1){

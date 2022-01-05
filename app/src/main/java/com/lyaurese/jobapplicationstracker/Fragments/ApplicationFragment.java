@@ -57,7 +57,7 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         company.setText(application.getCompanyName());
 
         title = (TextView) view.findViewById(R.id.jobTitleTxtv_ID);
-        title.setText(application.getJobTitle());
+        title.setText(application.getJobPosition());
 
         number = (TextView) view.findViewById(R.id.jobNumberTxtv_ID);
         number.setText(application.getJobNumber());
