@@ -144,8 +144,6 @@ public class BoardFragment extends Fragment {
     private void drawInterviewsPieChart(){
         List<PieEntry> entries = new ArrayList<>();
 
-        int appSum = db.getApplicationsCount();
-
         entries.add(new PieEntry((float)db.getNoResponseApplications(), "Applications"));
         entries.add(new PieEntry((float)db.getInterviewApplications(), "Interviews"));
 
@@ -160,7 +158,7 @@ public class BoardFragment extends Fragment {
         interviewsPieChart.getDescription().setEnabled(false);
         interviewsPieChart.setDrawEntryLabels(false);
         interviewsPieChart.getLegend().setTextColor(getResources().getColor(R.color.lightGray));
-        interviewsPieChart.setCenterText(appSum + "\nApplications");
+        interviewsPieChart.setCenterText(db.getInterviewApplications() + "\nInterviews");
         interviewsPieChart.setCenterTextSize(18f);
         interviewsPieChart.setCenterTextColor(getResources().getColor(R.color.lightGray));
         interviewsPieChart.setHoleColor(getResources().getColor(R.color.dark_grey));
