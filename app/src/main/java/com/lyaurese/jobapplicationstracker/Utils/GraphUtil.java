@@ -27,6 +27,9 @@ public abstract class GraphUtil {
 
 
     public static GraphEntry[] getInitializedArray(HashMap<String, Integer> map){
+        if(map == null)
+            return new GraphEntry[0];
+
         GraphEntry[] entries = new GraphEntry[map.size()];
         int index = 0;
 

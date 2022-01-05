@@ -3,7 +3,9 @@ package com.lyaurese.jobapplicationstracker.Fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -134,13 +136,22 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                         alert.show();
                     }
                     else{
-                        Application application = new Application(companyInput, jobTitleInput, jobNumberInput, locationInput, appliedInput, calendar, commentsInput);
+                        MainBoardActivity activity = (MainBoardActivity)getActivity();
+                        activity.setFragmentID(R.layout.fragment_companies);
+
+                        SharedPreferences sp = activity.getSharedPreferences("id", Context.MODE_PRIVATE);
+                        int id = sp.getInt("lastId", -1) + 1;
+
+                        Application application = new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, appliedInput, calendar, commentsInput);
 
                         db.insertNewApplication(application);
 
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putInt("lastId", id);
+                        editor.commit();
+
                         Fragment CompaniesFragment = new CompaniesFragment();
 
-                        MainBoardActivity activity = (MainBoardActivity) getActivity();
                         activity.setFragmentID(R.layout.fragment_companies);
 
                         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

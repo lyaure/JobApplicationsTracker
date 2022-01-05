@@ -118,8 +118,6 @@ public class CompaniesFragment extends Fragment {
                                 companies.addAll(db.getCompaniesListWithFilter(filter));
                                 adapter.notifyDataSetChanged();
 
-                                checkEmptyCompaniesList();
-
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -142,26 +140,26 @@ public class CompaniesFragment extends Fragment {
         filter = sp.getInt("filter", -1);
         companies = db.getCompaniesListWithFilter(filter);
 
+        checkEmptyCompaniesList();
+
         adapter = new CompanyAdapter(getContext(), companies);
         adapter.setActivity((MainBoardActivity) getActivity());
         companyList.setAdapter(adapter);
-
-        checkEmptyCompaniesList();
 
         return view;
     }
 
     private void checkEmptyCompaniesList(){
 
-        if(companies != null){
+        if(companies.size() != 0){
             companyList.setVisibility(View.VISIBLE);
             noData.setVisibility(View.GONE);
+
         }
         else{
             companyList.setVisibility(View.GONE);
             noData.setVisibility(View.VISIBLE);
         }
-
     }
 }
 

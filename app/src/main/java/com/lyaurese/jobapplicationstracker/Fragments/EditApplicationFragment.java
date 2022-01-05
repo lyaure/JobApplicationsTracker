@@ -283,7 +283,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                         alert.show();
                     }
                     else{
-                        db.editApplication(application, oldJobNumber);
+                        db.editApplication(application);
 
                         Fragment fragment = new ApplicationPagerFragment();
 

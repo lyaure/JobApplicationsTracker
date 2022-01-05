@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 public class Application implements Serializable {
+    private int id;
     private String jobTitle;
     private String jobNumber;
     private String companyName;
@@ -12,7 +13,8 @@ public class Application implements Serializable {
     private String comment, location;
     private boolean active;
 
-    public Application(String companyName, String jobTitle, String jobNumber, String location, boolean applied, Calendar appliedDate, String comment){
+    public Application(int id, String companyName, String jobTitle, String jobNumber, String location, boolean applied, Calendar appliedDate, String comment){
+        this.id = id;
         this.jobTitle = jobTitle;
         this.jobNumber = jobNumber;
         this.companyName = companyName;
@@ -23,6 +25,10 @@ public class Application implements Serializable {
         this.comment = comment;
         this.active = true;
         this.location = location;
+    }
+
+    public int getId(){
+        return this.id;
     }
 
     public String getJobTitle(){

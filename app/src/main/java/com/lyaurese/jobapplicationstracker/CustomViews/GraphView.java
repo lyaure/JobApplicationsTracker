@@ -59,7 +59,7 @@ public class GraphView extends View {
 
         int index = 0;
 
-        if (entries != null) {
+        if (entries.length != 0) {
 
             // calculates the coordinates of the object to draw according to data
             for (GraphEntry entry : entries) {

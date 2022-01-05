@@ -6,12 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.lyaurese.jobapplicationstracker.Utils.GraphUtil;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 
@@ -19,23 +15,25 @@ public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "JobOrganizerDB";
     private static final String APPLICATIONS_TABLE_NAME = "Applications";
     private static final String COMPANIES_TABLE_NAME = "Companies";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 1;
 
 
-    private final int COMPANY_COL_NUM = 0;
-    private final int JOB_TITLE_COL_NUM = 1;
-    private final int JOB_NUMBER_COL = 2;
-    private final int APPLIED_COL_NUM = 3;
-    private final int APPLIED_DAY_COL_NUM = 4;
-    private final int APPLIED_MONTH_COL_NUM = 5;
-    private final int APPLIED_YEAR_COL_NUM = 6;
-    private final int INTERVIEW_COL_NUM = 7;
-    private final int INTERVIEW_DAY_COL_NUM = 8;
-    private final int INTERVIEW_MONTH_COL_NUM = 9;
-    private final int INTERVIEW_YEAR_COL_NUM = 10;
-    private final int COMMENTS_COL_NUM = 11;
-    private final int ACTIVE_COL_NUM = 12;
-    private final int LOCATION_COL_NUM = 13;
+    private final int ID_COL_NUM = 0;
+    private final int COMPANY_COL_NUM = 1;
+    private final int JOB_TITLE_COL_NUM = 2;
+    private final int JOB_NUMBER_COL = 3;
+    private final int LOCATION_COL_NUM = 4;
+    private final int ACTIVE_COL_NUM = 5;
+    private final int APPLIED_COL_NUM = 6;
+    private final int APPLIED_DAY_COL_NUM = 7;
+    private final int APPLIED_MONTH_COL_NUM = 8;
+    private final int APPLIED_YEAR_COL_NUM = 9;
+    private final int INTERVIEW_COL_NUM = 10;
+    private final int INTERVIEW_DAY_COL_NUM = 11;
+    private final int INTERVIEW_MONTH_COL_NUM = 12;
+    private final int INTERVIEW_YEAR_COL_NUM = 13;
+    private final int COMMENTS_COL_NUM = 14;
+
 
     private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
@@ -48,8 +46,21 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE IF NOT EXISTS " + APPLICATIONS_TABLE_NAME +
-                "(company TEXT, jobTitle TEXT, jobNumber TEXT, applied INTEGER, appliedDay INTEGER, appliedMonth INTEGER, appliedYear INTEGER, " +
-                "interview INTEGER, interviewDay INTEGER, interviewMonth INTEGER, interviewYear INTEGER, comments TEXT, active INTEGER, location TEXT)";
+                "(id INTEGER, " +
+                "company TEXT, " +
+                "jobTitle TEXT, " +
+                "jobNumber TEXT, " +
+                "location TEXT, " +
+                "active INTEGER, " +
+                "applied INTEGER, " +
+                "appliedDay INTEGER, " +
+                "appliedMonth INTEGER, " +
+                "appliedYear INTEGER, " +
+                "interview INTEGER, " +
+                "interviewDay INTEGER, " +
+                "interviewMonth INTEGER, " +
+                "interviewYear INTEGER, " +
+                "comments TEXT)";
         db.execSQL(query);
 
         query = "CREATE TABLE IF NOT EXISTS " + COMPANIES_TABLE_NAME + "(company TEXT, count INTEGER)";
@@ -67,6 +78,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        values.put("id", application.getId());
         values.put("company", application.getCompanyName());
         values.put("jobTitle", application.getJobTitle());
         values.put("jobNumber", application.getJobNumber());
@@ -88,12 +100,24 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void editApplication(Application application, String jobNumber){
+//    private int getNextId(){
+//        SQLiteDatabase db = getReadableDatabase();
+//        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME, null);
+//
+//        int nextId = cursor.getCount();
+//
+//        cursor.close();
+//        db.close();
+//
+//        return nextId;
+//    }
+
+    public void editApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         String oldCompanyName;
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + application.getId() + "'", null);
         cursor.moveToFirst();
 
         oldCompanyName = cursor.getString(COMPANY_COL_NUM);
@@ -131,10 +155,10 @@ public class Database extends SQLiteOpenHelper {
         values.put("active", application.isActive() ? 1 : 0);
         values.put("location", application.getLocation());
 
-        db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
+        db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" +application.getId()});
 
         if(!application.getCompanyName().equals(oldCompanyName)){
-            updateCompany(cursor.getString(COMPANY_COL_NUM), -1);
+            updateCompany(oldCompanyName, -1);
             updateCompany(application.getCompanyName(), 1);
         }
 
@@ -147,20 +171,20 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " ORDER BY company ASC", null);
 
+        ArrayList<Company> list = new ArrayList<>();
+
         if(cursor.moveToFirst()){
-            ArrayList<Company> list = new ArrayList<>();
             do{
-                list.add(new Company(cursor.getString(COMPANY_COL_NUM), cursor.getInt(JOB_TITLE_COL_NUM)));
+                list.add(new Company(cursor.getString(0), cursor.getInt(1)));
             }while(cursor.moveToNext());
 
-            return list;
         }
         else{
             cursor.close();
             db.close();
-
-            return null;
         }
+
+        return list;
     }
 
 
@@ -170,20 +194,21 @@ public class Database extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC" , null);
+
+        ArrayList<Company> list = new ArrayList<>();
+
         if(cursor.moveToFirst()){
-            ArrayList<Company> list = new ArrayList<>();
             do{
                 list.add(new Company(cursor.getString(0), cursor.getInt(1)));
             }while(cursor.moveToNext());
 
-            return list;
         }
         else{
             cursor.close();
             db.close();
-
-            return null;
         }
+
+        return list;
     }
 
     public ArrayList<Application> getApplicationList(String companyName){
@@ -200,7 +225,7 @@ public class Database extends SQLiteOpenHelper {
                     appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM) - 1,cursor.getInt(APPLIED_DAY_COL_NUM));
                 }
 
-                Application application = new Application(cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM), cursor.getInt(APPLIED_COL_NUM) == 1,
+                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_TITLE_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM), cursor.getInt(APPLIED_COL_NUM) == 1,
                         appliedCalendar, cursor.getString(COMMENTS_COL_NUM));
 
                 if(cursor.getInt(INTERVIEW_COL_NUM) == 1){
@@ -248,7 +273,7 @@ public class Database extends SQLiteOpenHelper {
             db.insert(COMPANIES_TABLE_NAME, null, values);
         }
         else{
-            int count = cursor.getInt(JOB_TITLE_COL_NUM) + update;
+            int count = cursor.getInt(1) + update;
             if(count == 0){
                 db.delete(COMPANIES_TABLE_NAME, "company = ?", new String[]{name});
             }
@@ -369,9 +394,9 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE applied = 1 ORDER BY company ASC" , null);
 
-        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-
         if(cursor.moveToFirst()){
+            LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+
             do{
                 String key = cursor.getString(COMPANY_COL_NUM);
                 if(!map.containsKey(key))
@@ -380,17 +405,19 @@ public class Database extends SQLiteOpenHelper {
                     map.put(key, map.get(key)+1);
             }
             while(cursor.moveToNext());
+
+            return map;
         }
 
         cursor.close();
         db.close();
 
-        return map;
+        return null;
     }
 
     public void removeApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(APPLICATIONS_TABLE_NAME, "company = ? AND jobTitle = ?", new String[]{application.getCompanyName(), application.getJobTitle()});
+        db.delete(APPLICATIONS_TABLE_NAME, "id = ?", new String[]{"" + application.getId()});
 
         updateCompany(application.getCompanyName(), -1);
 
