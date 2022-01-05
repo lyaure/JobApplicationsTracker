@@ -89,7 +89,7 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Database db = new Database(getContext());
                 application.setActive(isChecked);
-                db.setActive(application.getJobNumber(), isChecked);
+                db.setActive(application.getId(), isChecked);
             }
         });
 

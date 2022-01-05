@@ -377,14 +377,14 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public void setActive(String jobNumber, boolean active){
+    public void setActive(int id, boolean active){
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + id + "'", null);
 
         ContentValues values = new ContentValues();
         values.put("active", active ? 1 : 0);
 
-        db.update(APPLICATIONS_TABLE_NAME, values, "jobNumber = ?", new String[]{jobNumber});
+        db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" + id});
 
         cursor.close();
         db.close();
