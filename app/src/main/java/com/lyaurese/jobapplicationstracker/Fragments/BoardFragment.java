@@ -15,6 +15,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
 import com.lyaurese.jobapplicationstracker.CustomViews.GraphView;
 import com.lyaurese.jobapplicationstracker.Objects.Database;
 import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
@@ -50,6 +51,9 @@ public class BoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_board, container, false);
+
+        MainBoardActivity activity = (MainBoardActivity)getActivity();
+        activity.setFragmentID(R.layout.fragment_board);
 
         db = new Database(getContext());
 

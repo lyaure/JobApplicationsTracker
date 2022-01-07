@@ -72,6 +72,10 @@ public class MainBoardActivity extends FragmentActivity {
             fragment = new CompaniesFragment();
             loadFragment(fragment);
         }
+        else if(fragmentID == R.layout.fragment_companies){
+            fragment = new BoardFragment();
+            loadFragment(fragment);
+        }
         else{ // close the app and go home
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
