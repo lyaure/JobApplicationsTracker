@@ -211,9 +211,27 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Application> getApplicationList(String companyName){
+    public ArrayList<Application> getAllApplicationsList(String companyName){
+        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "'";
+
+        return getApplicationsList(query);
+    }
+
+    public ArrayList<Application> getActiveApplicationsList(String companyName){
+        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = 1";
+
+        return getApplicationsList(query);
+    }
+
+    public ArrayList<Application> getInactiveApplicationsList(String companyName){
+        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = 0";
+
+        return getApplicationsList(query);
+    }
+
+    private ArrayList<Application> getApplicationsList(String query){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "'", null);
+        Cursor cursor = db.rawQuery(query, null);
 
         if(cursor.moveToLast()){
             ArrayList<Application> list = new ArrayList<>();

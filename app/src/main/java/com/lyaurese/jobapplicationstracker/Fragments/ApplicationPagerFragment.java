@@ -1,5 +1,7 @@
 package com.lyaurese.jobapplicationstracker.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +31,7 @@ public class ApplicationPagerFragment extends Fragment {
     private ImageButton backButton;
     private ArrayList<Application> applicationsList = new ArrayList<>();
     private Database db;
+    private MainBoardActivity activity;
 
     public ApplicationPagerFragment() {
         // Required empty public constructor
@@ -50,6 +53,8 @@ public class ApplicationPagerFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_application_pager, container, false);
 
         db = new Database(getContext());
+
+        activity = (MainBoardActivity)getActivity();
 
         ImageButton editButton = (ImageButton) view.findViewById(R.id.editApplicationBtn_ID);
         ImageButton deleteButton = (ImageButton) view.findViewById(R.id.deleteFragmentBtn_ID);
@@ -95,9 +100,12 @@ public class ApplicationPagerFragment extends Fragment {
         DotsIndicator dotsIndicator = (DotsIndicator) view.findViewById(R.id.applicationsDotsIndicator_ID);
         dotsIndicator.setViewPager2(viewPager);
 
-        Database db = new Database(getContext());
+//        Database db = new Database(getContext());
 
-        applicationsList = db.getApplicationList(companyName);
+        SharedPreferences sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
+        int filter = sp.getInt("filter", 0);
+
+        applicationsList = getList(companyName, filter);
 
         int index = -1;
 
@@ -144,7 +152,6 @@ public class ApplicationPagerFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = new CompaniesFragment();
 
-                MainBoardActivity activity = (MainBoardActivity)getActivity();
                 activity.setFragmentID(R.layout.fragment_companies);
 
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -156,5 +163,16 @@ public class ApplicationPagerFragment extends Fragment {
 
 
         return view;
+    }
+
+    private ArrayList<Application> getList(String companyName, int filter){
+        switch (filter){
+            case 0:
+                return db.getInactiveApplicationsList(companyName);
+            case 1:
+                return db.getActiveApplicationsList(companyName);
+            default:
+                return db.getAllApplicationsList(companyName);
+        }
     }
 }
