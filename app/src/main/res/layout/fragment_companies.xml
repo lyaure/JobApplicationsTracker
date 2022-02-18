@@ -9,7 +9,6 @@
     android:padding="10dp"
     tools:context=".Fragments.CompaniesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,6 +27,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/displayTxtv_ID"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/filterTxtv_ID"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -37,15 +45,33 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/filterBtn_ID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="15dp"
-        android:drawableEnd="@drawable/ic_baseline_filter_alt_24"
-        android:text="Filter"
-        android:textColor="@color/lightGray" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+        <TextView
+            android:id="@+id/displayBtn_ID"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_baseline_tune_24"
+            android:gravity="center|start"
+            android:text=" Display"
+            android:textColor="@color/lightGray" />
+
+        <TextView
+            android:id="@+id/filterBtn_ID"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/ic_baseline_filter_alt_24"
+            android:gravity="center|end"
+            android:text="Filter"
+            android:textColor="@color/lightGray" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/noDataLayout_ID"

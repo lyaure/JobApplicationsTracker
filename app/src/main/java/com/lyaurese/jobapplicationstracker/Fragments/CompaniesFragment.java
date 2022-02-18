@@ -34,10 +34,10 @@ public class CompaniesFragment extends Fragment {
     private ListView companyList;
     private LinearLayout noData;
     private CompanyAdapter adapter;
-    private ImageButton addApplicationBtn;
-    private TextView filterBtn, filterTxtv;
+    private TextView filterTxtv, displayTxtv;
     private SharedPreferences sp;
-    private int filter, filterOption;
+    private int filter, filterOption, displayOption;
+    private String display;
     private Database db;
 
     public CompaniesFragment() {
@@ -56,9 +56,10 @@ public class CompaniesFragment extends Fragment {
 
         sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
         filterOption = sp.getInt("filterOption", 0);
+        displayOption = sp.getInt("displayOption", 0);
 //        int filterOption = 0;
 
-        addApplicationBtn = (ImageButton) view.findViewById(R.id.addApplicationBtn_ID);
+        ImageButton addApplicationBtn = (ImageButton) view.findViewById(R.id.addApplicationBtn_ID);
         addApplicationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,61 +75,30 @@ public class CompaniesFragment extends Fragment {
             }
         });
 
+        displayTxtv = (TextView) view.findViewById(R.id.displayTxtv_ID);
         filterTxtv = (TextView) view.findViewById(R.id.filterTxtv_ID);
 
+        String displayOptions[] = new String[]{"Company", "Location", "Date"};
         String filterOptions[] = new String[]{"All", "Active", "Inactive"};
 
+        displayTxtv.setText("by " + displayOptions[displayOption]);
         filterTxtv.setText(filterOptions[filterOption]);
 
-        filterBtn = (TextView) view.findViewById(R.id.filterBtn_ID);
+        TextView displayBtn = (TextView) view.findViewById(R.id.displayBtn_ID);
+        displayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayOption = sp.getInt("displayOption", 0);
+                showOptions("sort", R.drawable.ic_baseline_tune_24, displayOptions, displayOption, displayTxtv);
+            }
+        });
+
+        TextView filterBtn = (TextView) view.findViewById(R.id.filterBtn_ID);
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterOption = sp.getInt("filterOption", 0);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MaterialThemeDialog);
-                builder.setTitle("Filter")
-                        .setIcon(R.drawable.ic_baseline_filter_alt_24)
-                        .setSingleChoiceItems(filterOptions, filterOption, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt("filterOption", which);
-
-                                switch (which){
-                                    case 0:
-                                        editor.putInt("filter", -1);
-                                        filter = -1;
-                                        filterTxtv.setText(filterOptions[which]);
-                                        break;
-                                    case 1:
-                                        editor.putInt("filter", 1);
-                                        filter = 1;
-                                        filterTxtv.setText(filterOptions[which]);
-                                        break;
-                                    case 2:
-                                        editor.putInt("filter", 0);
-                                        filter = 0;
-                                        filterTxtv.setText(filterOptions[which]);
-                                        break;
-                                }
-
-                                editor.commit();
-
-                                companies.clear();
-                                companies.addAll(db.getCompaniesListWithFilter(filter));
-                                adapter.notifyDataSetChanged();
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        dialog.dismiss();
-                                    }
-                                }, 200);
-                            }
-                        });
-
-                AlertDialog alert = builder.create();
-                alert.show();
+                showOptions("filter", R.drawable.ic_baseline_filter_alt_24, filterOptions, filterOption, filterTxtv);
             }
         });
 
@@ -147,6 +117,55 @@ public class CompaniesFragment extends Fragment {
         companyList.setAdapter(adapter);
 
         return view;
+    }
+
+    private void showOptions(String option, int icon, String[] items, int checkedItem, TextView textView){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MaterialThemeDialog);
+        builder.setTitle(option)
+                .setIcon(icon)
+                .setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(option.equals("filter")){
+                            textView.setText(items[which]);
+
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putInt("filterOption", which);
+
+                            switch (which){
+                                case 0:
+                                    editor.putInt("filter", -1);
+                                    filter = -1;
+                                    break;
+                                case 1:
+                                    editor.putInt("filter", 1);
+                                    filter = 1;
+                                    break;
+                                case 2:
+                                    editor.putInt("filter", 0);
+                                    filter = 0;
+                                    break;
+                            }
+                            editor.commit();
+                        }
+                        else
+                            textView.setText("by " + items[which]);
+
+                        companies.clear();
+                        companies.addAll(db.getCompaniesListWithFilter(filter));
+                        adapter.notifyDataSetChanged();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                            }
+                        }, 200);
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void checkEmptyCompaniesList(){
