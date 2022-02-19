@@ -100,18 +100,6 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-//    private int getNextId(){
-//        SQLiteDatabase db = getReadableDatabase();
-//        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME, null);
-//
-//        int nextId = cursor.getCount();
-//
-//        cursor.close();
-//        db.close();
-//
-//        return nextId;
-//    }
-
     public void editApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -166,40 +154,38 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    public ArrayList<ListObject> getCompaniesList(int filter){
+        String query;
 
-    public ArrayList<Company> getCompaniesListAll(){
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " ORDER BY company ASC", null);
-
-        ArrayList<Company> list = new ArrayList<>();
-
-        if(cursor.moveToFirst()){
-            do{
-                list.add(new Company(cursor.getString(0), cursor.getInt(1)));
-            }while(cursor.moveToNext());
-
-        }
-        else{
-            cursor.close();
-            db.close();
-        }
-
-        return list;
-    }
-
-
-    public ArrayList<Company> getCompaniesListWithFilter(int filter){
         if(filter == -1)
-            return getCompaniesListAll();
+            query = "SELECT * FROM " + COMPANIES_TABLE_NAME + " ORDER BY company ASC";
+        else
+            query = "SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC";
 
+        return getListObjects(query);
+    }
+
+    public ArrayList<ListObject> getLocationsList(int filter){
+        String query;
+
+        if(filter == -1)
+            query = "SELECT location, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " GROUP BY location ORDER BY location ASC";
+        else
+            query = "SELECT location, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY location ORDER BY location ASC";
+
+        return getListObjects(query);
+    }
+
+
+    private ArrayList<ListObject> getListObjects(String query){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC" , null);
+        Cursor cursor = db.rawQuery(query , null);
 
-        ArrayList<Company> list = new ArrayList<>();
+        ArrayList<ListObject> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){
             do{
-                list.add(new Company(cursor.getString(0), cursor.getInt(1)));
+                list.add(new ListObject(cursor.getString(0), cursor.getInt(1)));
             }while(cursor.moveToNext());
 
         }
@@ -211,20 +197,24 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Application> getAllApplicationsList(String companyName){
-        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "'";
+    public ArrayList<Application> getApplicationsListSortByCompany(String companyName, int filter){
+        String query;
+
+        if(filter == -1)
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "'";
+        else
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = " + filter;
 
         return getApplicationsList(query);
     }
 
-    public ArrayList<Application> getActiveApplicationsList(String companyName){
-        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = 1";
+    public ArrayList<Application> getApplicationsListSortByLocation(String locationName, int filter){
+        String query;
 
-        return getApplicationsList(query);
-    }
-
-    public ArrayList<Application> getInactiveApplicationsList(String companyName){
-        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = 0";
+        if(filter == -1)
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "'";
+        else
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "' AND active = " + filter;
 
         return getApplicationsList(query);
     }

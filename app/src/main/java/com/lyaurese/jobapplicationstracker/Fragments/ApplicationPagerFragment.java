@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class ApplicationPagerFragment extends Fragment {
     private ViewPager2 viewPager;
     private ViewPagerAdapter adapter;
-    private String companyName, jobNumber;
+    private String objectName, jobNumber;
     private ImageButton backButton;
     private ArrayList<Application> applicationsList = new ArrayList<>();
     private Database db;
@@ -41,7 +41,7 @@ public class ApplicationPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            companyName = getArguments().getString("company");
+            objectName = getArguments().getString("company");
             jobNumber = getArguments().getString("application");
         }
     }
@@ -104,8 +104,9 @@ public class ApplicationPagerFragment extends Fragment {
 
         SharedPreferences sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
         int filter = sp.getInt("filter", 0);
+        int sortOption = sp.getInt("sortOption", 0);
 
-        applicationsList = getList(companyName, filter);
+        applicationsList = getList(objectName, sortOption, filter);
 
         int index = -1;
 
@@ -165,14 +166,14 @@ public class ApplicationPagerFragment extends Fragment {
         return view;
     }
 
-    private ArrayList<Application> getList(String companyName, int filter){
-        switch (filter){
+    private ArrayList<Application> getList(String objectName, int sortOption, int filter){
+        switch (sortOption){
             case 0:
-                return db.getInactiveApplicationsList(companyName);
+                return db.getApplicationsListSortByCompany(objectName, filter);
             case 1:
-                return db.getActiveApplicationsList(companyName);
+                return db.getApplicationsListSortByLocation(objectName, filter);
             default:
-                return db.getAllApplicationsList(companyName);
+                return db.getApplicationsListSortByCompany(objectName, filter);
         }
     }
 }

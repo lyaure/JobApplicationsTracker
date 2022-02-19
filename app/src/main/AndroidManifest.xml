@@ -13,10 +13,12 @@
             android:name=".Activities.MainBoardActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true">
+            android:screenOrientation="portrait"
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

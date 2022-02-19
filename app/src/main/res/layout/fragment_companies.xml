@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_baseline_tune_24"
             android:gravity="center|start"
-            android:text=" Display"
+            android:text="Sort"
             android:textColor="@color/lightGray" />
 
         <TextView

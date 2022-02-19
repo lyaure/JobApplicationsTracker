@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
 import com.lyaurese.jobapplicationstracker.Fragments.ApplicationPagerFragment;
-import com.lyaurese.jobapplicationstracker.Objects.Company;
+import com.lyaurese.jobapplicationstracker.Objects.ListObject;
 import com.lyaurese.jobapplicationstracker.R;
 
 import java.util.ArrayList;
@@ -21,15 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-public class CompanyAdapter extends ArrayAdapter<Company> {
+public class ListObjectAdapter extends ArrayAdapter<ListObject> {
     private Context context;
-    private List<Company> companyList;
+    private List<ListObject> list;
     private MainBoardActivity activity;
 
-    public CompanyAdapter(@NonNull Context context, ArrayList<Company> list) {
+    public ListObjectAdapter(@NonNull Context context, ArrayList<ListObject> list) {
         super(context, 0, list);
         this.context = context;
-        this.companyList = list;
+        this.list = list;
     }
 
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
@@ -37,14 +37,14 @@ public class CompanyAdapter extends ArrayAdapter<Company> {
         if(listItem == null)
             listItem = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
 
-        final Company company = companyList.get(position);
+        final ListObject object = list.get(position);
 
         listItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ApplicationPagerFragment fragment = new ApplicationPagerFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("company", company.getName());
+                bundle.putString("company", object.getName());
                 bundle.putString("application", "none");
                 fragment.setArguments(bundle);
 
@@ -59,10 +59,10 @@ public class CompanyAdapter extends ArrayAdapter<Company> {
         });
 
         TextView name = (TextView)listItem.findViewById(R.id.companyName_ID);
-        name.setText(company.getName());
+        name.setText(object.getName());
 
         TextView num = (TextView)listItem.findViewById(R.id.numOfApplication_ID);
-        num.setText(Integer.toString(company.getNumOfApplications()));
+        num.setText(Integer.toString(object.getNumOfApplications()));
 
         return listItem;
     }

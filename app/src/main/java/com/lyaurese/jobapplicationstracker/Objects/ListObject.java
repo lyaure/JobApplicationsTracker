@@ -1,10 +1,10 @@
 package com.lyaurese.jobapplicationstracker.Objects;
 
-public class Company {
+public class ListObject {
     private String name;
     private int numOfApplications;
 
-    public Company(String name, int numOfApplications){
+    public ListObject(String name, int numOfApplications){
         this.name = name;
         this.numOfApplications = numOfApplications;
     }
