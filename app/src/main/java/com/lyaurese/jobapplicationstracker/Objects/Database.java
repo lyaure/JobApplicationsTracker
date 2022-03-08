@@ -34,6 +34,7 @@ public class Database extends SQLiteOpenHelper {
     private final int INTERVIEW_YEAR_COL_NUM = 13;
     private final int COMMENTS_COL_NUM = 14;
 
+    private final int COMPANY = 0, LOCATION = 1, DATE = 2, ALL = -1, INACTIVE = 0, ACTIVE = 1;
 
     private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
@@ -157,27 +158,27 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<ListObject> getCompaniesList(int filter){
         String query;
 
-        if(filter == -1)
+        if(filter == ALL)
             query = "SELECT * FROM " + COMPANIES_TABLE_NAME + " ORDER BY company ASC";
         else
             query = "SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC";
 
-        return getListObjects(query);
+        return getListObjects(COMPANY, query);
     }
 
     public ArrayList<ListObject> getLocationsList(int filter){
         String query;
 
-        if(filter == -1)
+        if(filter == ALL)
             query = "SELECT location, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " GROUP BY location ORDER BY location ASC";
         else
             query = "SELECT location, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY location ORDER BY location ASC";
 
-        return getListObjects(query);
+        return getListObjects(LOCATION, query);
     }
 
 
-    private ArrayList<ListObject> getListObjects(String query){
+    private ArrayList<ListObject> getListObjects(int type, String query){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query , null);
 
@@ -185,7 +186,7 @@ public class Database extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do{
-                list.add(new ListObject(cursor.getString(0), cursor.getInt(1)));
+                list.add(new ListObject(type, cursor.getString(0), cursor.getInt(1)));
             }while(cursor.moveToNext());
 
         }

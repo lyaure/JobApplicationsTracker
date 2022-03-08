@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
@@ -143,5 +144,14 @@ public class GraphView extends View {
 
     public void setBarsColors(int[] barsColors) {
         this.barsColors = barsColors;
+    }
+
+    public String getObjectLabelAt(float x, float y){
+        for(GraphEntry entry: entries){
+            if(x > entry.getPoint().x - barWidth && x < entry.getPoint().x + barWidth && y > (canvasHeight/10) + (graphHeight - entry.getPoint().y) - 20 && y < canvasHeight - (canvasHeight / 10) * 2){
+                return entry.getLabel();
+            }
+        }
+        return null;
     }
 }

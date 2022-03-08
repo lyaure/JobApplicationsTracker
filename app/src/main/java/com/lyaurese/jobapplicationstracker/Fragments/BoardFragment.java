@@ -1,15 +1,19 @@
 package com.lyaurese.jobapplicationstracker.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -46,6 +50,7 @@ public class BoardFragment extends Fragment {
 //        }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,6 +93,23 @@ public class BoardFragment extends Fragment {
         applicationsGraphView.setBarsColors(colors);
         applicationsGraphView.setEntries(applicationsEntries);
 
+        applicationsGraphView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    float x = event.getX();
+                    float y = event.getY();
+
+                    String label = applicationsGraphView.getObjectLabelAt(x, y);
+
+                    if(!label.equals("null")){
+                        changeFragment(2, label);
+                    }
+                }
+                return true;
+            }
+        });
+
 
         applicationsHSV.post(new Runnable() {
             @Override
@@ -103,6 +125,23 @@ public class BoardFragment extends Fragment {
             companiesGraphView.setMax(GraphUtil.getMax(companiesEntries));
         companiesGraphView.setBarsColors(colors);
         companiesGraphView.setEntries(companiesEntries);
+
+        companiesGraphView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    float x = event.getX();
+                    float y = event.getY();
+
+                    String label = companiesGraphView.getObjectLabelAt(x, y);
+
+                    if(!label.equals("null")){
+                        changeFragment(0, label);
+                    }
+                }
+                return true;
+            }
+        });
 
 //        applicationsHSV.post(new Runnable() {
 //            @Override
@@ -169,5 +208,21 @@ public class BoardFragment extends Fragment {
         interviewsPieChart.animate();
     }
 
+    private void changeFragment(int type, String label){
+        Fragment fragment = new ApplicationPagerFragment();
 
+        MainBoardActivity activity = (MainBoardActivity)getActivity();
+        activity.setFragmentID(R.layout.fragment_application_pager);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("filter", -1);
+        bundle.putInt("type", type);
+        bundle.putString("name", label);
+        fragment.setArguments(bundle);
+
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
+        transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+        transaction.commit();
+    }
 }

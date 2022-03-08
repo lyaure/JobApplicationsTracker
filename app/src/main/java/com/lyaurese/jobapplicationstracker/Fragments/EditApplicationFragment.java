@@ -38,9 +38,10 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
     private TextView appliedDate, interviewDate;
     private Button edit, changeAppliedDateBtn, changeInterviewDateBtn;
     private Calendar calendar;
-    private String oldJobNumber;
+    private String oldJobNumber, objectName;
     private boolean changeAppliedDate, changeInterviewDate;
     private Database db;
+    private int filter, sortOption;
 
     public EditApplicationFragment() {
         // Required empty public constructor
@@ -52,6 +53,9 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
         if (getArguments() != null) {
             Bundle bundle = getArguments();
             application = (Application) bundle.getSerializable("application");
+            filter = getArguments().getInt("filter", -1);
+            sortOption = getArguments().getInt("type", 0);
+            objectName = getArguments().getString("name");
             oldJobNumber = application.getJobNumber();
         }
     }
@@ -291,7 +295,10 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                         activity.setFragmentID(R.layout.fragment_application);
 
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("company", application.getCompanyName());
+                        //---todo - location/date
+                        bundle.putInt("filter", filter);
+                        bundle.putInt("type", sortOption);
+                        bundle.putString("name", objectName);
                         bundle.putString("application", application.getJobNumber());
                         fragment.setArguments(bundle);
 

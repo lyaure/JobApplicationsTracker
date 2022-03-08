@@ -1,6 +1,7 @@
 package com.lyaurese.jobapplicationstracker.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,10 +43,13 @@ public class ListObjectAdapter extends ArrayAdapter<ListObject> {
         listItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
+
                 ApplicationPagerFragment fragment = new ApplicationPagerFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("company", object.getName());
-                bundle.putString("application", "none");
+                bundle.putInt("filter", sp.getInt("filter", 0));
+                bundle.putInt("type", object.getType());
+                bundle.putString("name", object.getName());
                 fragment.setArguments(bundle);
 
                 FragmentActivity fragmentActivity = (FragmentActivity) v.getContext();

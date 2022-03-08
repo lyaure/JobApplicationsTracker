@@ -1,7 +1,5 @@
 package com.lyaurese.jobapplicationstracker.Fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -27,11 +25,13 @@ import java.util.ArrayList;
 public class ApplicationPagerFragment extends Fragment {
     private ViewPager2 viewPager;
     private ViewPagerAdapter adapter;
-    private String objectName, jobNumber;
+    private String objectName, application;
+    private int filter, sortOption;
     private ImageButton backButton;
     private ArrayList<Application> applicationsList = new ArrayList<>();
     private Database db;
     private MainBoardActivity activity;
+    private final int COMPANY = 0, LOCATION = 1, DATE = 2;
 
     public ApplicationPagerFragment() {
         // Required empty public constructor
@@ -41,8 +41,10 @@ public class ApplicationPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            objectName = getArguments().getString("company");
-            jobNumber = getArguments().getString("application");
+            filter = getArguments().getInt("filter", -1);
+            sortOption = getArguments().getInt("type", COMPANY);
+            objectName = getArguments().getString("name");
+            application = getArguments().getString("application", null);
         }
     }
 
@@ -79,7 +81,10 @@ public class ApplicationPagerFragment extends Fragment {
                 else{
                     ApplicationPagerFragment fragment = new ApplicationPagerFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("company", applicationsList.get(index).getCompanyName());
+                    //--todo - location/date
+                    bundle.putInt("filter", filter);
+                    bundle.putInt("type", sortOption);
+                    bundle.putString("name", objectName);
                     bundle.putString("application", applicationsList.get(index == 0? index+1 : index-1).getJobNumber());
                     fragment.setArguments(bundle);
 
@@ -102,20 +107,17 @@ public class ApplicationPagerFragment extends Fragment {
 
 //        Database db = new Database(getContext());
 
-        SharedPreferences sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
-        int filter = sp.getInt("filter", 0);
-        int sortOption = sp.getInt("sortOption", 0);
-
-        applicationsList = getList(objectName, sortOption, filter);
+        applicationsList = getList(sortOption, filter);
 
         int index = -1;
 
-        for(Application application : applicationsList){
-            if(jobNumber.equals(application.getJobNumber()))
-                index = applicationsList.indexOf(application);
+        for (Application a : applicationsList) {
+            if(this.application != null)
+                if (this.application.equals(a.getJobNumber()))
+                    index = applicationsList.indexOf(a);
             ApplicationFragment fragment = new ApplicationFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("application", application);
+            bundle.putSerializable("application", a);
             fragment.setArguments(bundle);
 
             adapter.addFrag(fragment);
@@ -137,6 +139,9 @@ public class ApplicationPagerFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("application", applicationsList.get(index));
+                bundle.putInt("filter", filter);
+                bundle.putInt("type", sortOption);
+                bundle.putString("name", objectName);
                 fragment.setArguments(bundle);
 
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -151,9 +156,15 @@ public class ApplicationPagerFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new CompaniesFragment();
-
-                activity.setFragmentID(R.layout.fragment_companies);
+                Fragment fragment;
+                if(activity.getLastFragmentID() == R.layout.fragment_board) {
+                    fragment = new BoardFragment();
+                    activity.setFragmentID(R.layout.fragment_board);
+                }
+                else {
+                    fragment = new CompaniesFragment();
+                    activity.setFragmentID(R.layout.fragment_companies);
+                }
 
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container_ID, fragment ); // give your fragment container id in first parameter
@@ -166,11 +177,11 @@ public class ApplicationPagerFragment extends Fragment {
         return view;
     }
 
-    private ArrayList<Application> getList(String objectName, int sortOption, int filter){
+    private ArrayList<Application> getList(int sortOption, int filter){
         switch (sortOption){
-            case 0:
+            case COMPANY:
                 return db.getApplicationsListSortByCompany(objectName, filter);
-            case 1:
+            case LOCATION:
                 return db.getApplicationsListSortByLocation(objectName, filter);
             default:
                 return db.getApplicationsListSortByCompany(objectName, filter);

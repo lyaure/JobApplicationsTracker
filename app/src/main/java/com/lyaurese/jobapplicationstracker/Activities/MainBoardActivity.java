@@ -18,7 +18,7 @@ import com.lyaurese.jobapplicationstracker.R;
 public class MainBoardActivity extends FragmentActivity {
     private BottomNavigationView bottomNavigation;
     private Fragment fragment;
-    private int fragmentID;
+    private int fragmentID, lastFragmentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +62,23 @@ public class MainBoardActivity extends FragmentActivity {
             };
 
     public void setFragmentID(int id){
+        this.lastFragmentID = this.fragmentID;
         this.fragmentID = id;
+    }
+
+    public int getLastFragmentID(){
+        return this.lastFragmentID;
     }
 
     @Override
     public void onBackPressed(){
-        // doesn't close the app
-        if(fragmentID == R.layout.fragment_add_application || fragmentID == R.layout.fragment_application_pager || fragmentID == R.layout.fragment_edit_application){
-            fragment = new CompaniesFragment();
+        if(fragmentID == R.layout.fragment_companies || (fragmentID == R.layout.fragment_application_pager && lastFragmentID == R.layout.fragment_board)){
+            fragment = new BoardFragment();
             loadFragment(fragment);
         }
-        else if(fragmentID == R.layout.fragment_companies){
-            fragment = new BoardFragment();
+        // doesn't close the app
+        else if(fragmentID == R.layout.fragment_add_application || fragmentID == R.layout.fragment_application_pager || fragmentID == R.layout.fragment_edit_application){
+            fragment = new CompaniesFragment();
             loadFragment(fragment);
         }
         else{ // close the app and go home
