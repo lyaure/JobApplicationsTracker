@@ -26,13 +26,14 @@ import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
 import com.lyaurese.jobapplicationstracker.Objects.Application;
 import com.lyaurese.jobapplicationstracker.Objects.Database;
 import com.lyaurese.jobapplicationstracker.R;
+import com.lyaurese.jobapplicationstracker.Utils.DateUtil;
 
 import java.util.Calendar;
 
 
 public class AddApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private EditText company, jobTitle, jobNumber, comments, jobLocation;
-    private CheckBox applied;
+    private Button changeDate;
     private LinearLayout dateLayout;
     private TextView date;
     private Button add;
@@ -53,7 +54,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         jobTitle = (EditText) view.findViewById(R.id.jobTitleInput_ID);
         jobNumber = (EditText) view.findViewById(R.id.jobNameInput_ID);
         jobLocation = (EditText) view.findViewById(R.id.jobNLocationInput_ID);
-        applied = (CheckBox) view.findViewById(R.id.appliedCheckBox_ID);
+        changeDate = (Button) view.findViewById(R.id.changeApplicationDateBtn_ID);
         dateLayout = (LinearLayout) view.findViewById(R.id.appliedDateLayout_ID);
         date = (TextView) view.findViewById(R.id.dateInputTxtv_ID);
         comments = (EditText) view.findViewById(R.id.commentsInput_ID);
@@ -64,19 +65,9 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         calendar = Calendar.getInstance();
         calendar.setTime(Calendar.getInstance().getTime());
 
-        applied.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (applied.isChecked()) {
-                    showDatePickerDialog();
-                }
-                else
-                    dateLayout.setVisibility(View.INVISIBLE);
-            }
-        });
+        date.setText(String.format(DateUtil.getDate(calendar.getTimeInMillis())));
 
-        date.setOnClickListener(new View.OnClickListener() {
+        changeDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
@@ -89,7 +80,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                 String companyInput = company.getText().toString();
                 String jobTitleInput = jobTitle.getText().toString();
                 String jobNumberInput = jobNumber.getText().toString();
-                boolean appliedInput = applied.isChecked();
+//                boolean appliedInput = applied.isChecked();
                 String commentsInput = comments.getText().toString();
                 String locationInput = jobLocation.getText().toString();
 
@@ -142,7 +133,8 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                         SharedPreferences sp = activity.getSharedPreferences("id", Context.MODE_PRIVATE);
                         int id = sp.getInt("lastId", -1) + 1;
 
-                        Application application = new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, appliedInput, calendar, commentsInput);
+                        //---TODO---- remove applied property
+                        Application application = new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar, commentsInput);
 
                         db.insertNewApplication(application);
 
@@ -168,13 +160,13 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
     private void showDatePickerDialog(){
         DatePickerDialog datePickerDialog = new DatePickerDialog
                 (getActivity(), this, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                applied.setChecked(false);
-            }
-        });
+//
+//        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                applied.setChecked(false);
+//            }
+//        });
 
         datePickerDialog.show();
     }
@@ -182,11 +174,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
     @SuppressLint("DefaultLocale")
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String s = "%d/%d/%d";
-
-        date.setText(String.format(s, dayOfMonth, month + 1, year));
-        dateLayout.setVisibility(View.VISIBLE);
-
         calendar.set(year, month, dayOfMonth);
+        date.setText(String.format(DateUtil.getDate(calendar.getTimeInMillis())));
     }
 }

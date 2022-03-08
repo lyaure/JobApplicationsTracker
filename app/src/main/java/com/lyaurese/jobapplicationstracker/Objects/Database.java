@@ -234,7 +234,7 @@ public class Database extends SQLiteOpenHelper {
                     appliedCalendar.set(cursor.getInt(APPLIED_YEAR_COL_NUM), cursor.getInt(APPLIED_MONTH_COL_NUM) - 1,cursor.getInt(APPLIED_DAY_COL_NUM));
                 }
 
-                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM), cursor.getInt(APPLIED_COL_NUM) == 1,
+                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM),
                         appliedCalendar, cursor.getString(COMMENTS_COL_NUM));
 
                 if(cursor.getInt(INTERVIEW_COL_NUM) == 1){

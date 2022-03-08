@@ -13,12 +13,12 @@ public class Application implements Serializable {
     private String comment, location;
     private boolean active;
 
-    public Application(int id, String companyName, String jobTitle, String jobNumber, String location, boolean applied, Calendar appliedDate, String comment){
+    public Application(int id, String companyName, String jobTitle, String jobNumber, String location, Calendar appliedDate, String comment){
         this.id = id;
         this.jobPosition = jobTitle;
         this.jobNumber = jobNumber;
         this.companyName = companyName;
-        this.applied = applied;
+        this.applied = true;
         this.interviewed = false;
         this.appliedDate = appliedDate;
         this.interviewedDate = null;
