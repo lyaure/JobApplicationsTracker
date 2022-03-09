@@ -9,19 +9,19 @@ public class Application implements Serializable {
     private String jobNumber;
     private String companyName;
     private boolean applied, interviewed;
-    private Calendar appliedDate, interviewedDate;
+    private long appliedDate, interviewedDate;
     private String comment, location;
     private boolean active;
 
-    public Application(int id, String companyName, String jobTitle, String jobNumber, String location, Calendar appliedDate, String comment){
+    public Application(int id, String companyName, String jobTitle, String jobNumber, String location, long timeInMillis, String comment){
         this.id = id;
         this.jobPosition = jobTitle;
         this.jobNumber = jobNumber;
         this.companyName = companyName;
         this.applied = true;
         this.interviewed = false;
-        this.appliedDate = appliedDate;
-        this.interviewedDate = null;
+        this.appliedDate = timeInMillis;
+        this.interviewedDate = 0;
         this.comment = comment;
         this.active = true;
         this.location = location;
@@ -51,11 +51,11 @@ public class Application implements Serializable {
         return interviewed;
     }
 
-    public Calendar getAppliedDate() {
+    public long getAppliedDate() {
         return appliedDate;
     }
 
-    public Calendar getInterviewDate() {
+    public long getInterviewDate() {
         return interviewedDate;
     }
 
@@ -87,17 +87,13 @@ public class Application implements Serializable {
         this.interviewed = interviewed;
     }
 
-    public void setAppliedDate(Calendar appliedDate) {
-        this.appliedDate = appliedDate;
-        if(appliedDate != null)
-            this.applied = true;
-        else
-            this.applied = false;
+    public void setAppliedDate(long timeInMillis) {
+        this.appliedDate = timeInMillis;
     }
 
-    public void setInterviewDate(Calendar interviewedDate) {
-        this.interviewedDate = interviewedDate;
-        if(interviewedDate != null)
+    public void setInterviewDate(long timeInMillis) {
+        this.interviewedDate = timeInMillis;
+        if(timeInMillis != 0)
             this.interviewed = true;
         else
             this.interviewed = false;

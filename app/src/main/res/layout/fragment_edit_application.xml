@@ -95,31 +95,20 @@
                 android:textColor="@color/lightGray" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/editAppliedCheckBox_ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:buttonTint="@color/green"
-            android:text="Applied"
-            android:textColor="@android:color/darker_gray"
-            android:textColorHighlight="@color/green"
-            android:textColorLink="@color/green" />
-
         <LinearLayout
             android:id="@+id/editAppliedDateLayout_ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="On: "
+                android:text="Applied on: "
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
@@ -178,7 +167,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:textColor="@color/lightGray"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/interviewChangeDateBtn_ID"

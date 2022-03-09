@@ -47,7 +47,7 @@ public class ListObjectAdapter extends ArrayAdapter<ListObject> {
 
                 ApplicationPagerFragment fragment = new ApplicationPagerFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("filter", sp.getInt("filter", 0));
+                bundle.putInt("filter", sp.getInt("filter", -1));
                 bundle.putInt("type", object.getType());
                 bundle.putString("name", object.getName());
                 fragment.setArguments(bundle);

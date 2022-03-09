@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -187,8 +186,8 @@ public class BoardFragment extends Fragment {
     private void drawInterviewsPieChart(){
         List<PieEntry> entries = new ArrayList<>();
 
-        entries.add(new PieEntry((float)db.getNoResponseApplications(), "Applications"));
-        entries.add(new PieEntry((float)db.getInterviewApplications(), "Interviews"));
+        entries.add(new PieEntry((float)db.getApplicationsCount(), "Applications"));
+        entries.add(new PieEntry((float)db.getInterviewApplicationsCount(), "Interviews"));
 
         PieDataSet set = new PieDataSet(entries, " ");
 //        GraphUtil.shuffleColors(colors);
@@ -201,7 +200,7 @@ public class BoardFragment extends Fragment {
         interviewsPieChart.getDescription().setEnabled(false);
         interviewsPieChart.setDrawEntryLabels(false);
         interviewsPieChart.getLegend().setTextColor(getResources().getColor(R.color.lightGray));
-        interviewsPieChart.setCenterText(db.getInterviewApplications() + "\nInterviews");
+        interviewsPieChart.setCenterText(db.getInterviewApplicationsCount() + "\nInterviews");
         interviewsPieChart.setCenterTextSize(18f);
         interviewsPieChart.setCenterTextColor(getResources().getColor(R.color.lightGray));
         interviewsPieChart.setHoleColor(getResources().getColor(R.color.dark_grey));

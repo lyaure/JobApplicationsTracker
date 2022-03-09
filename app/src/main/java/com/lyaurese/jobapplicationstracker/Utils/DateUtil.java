@@ -18,4 +18,18 @@ public abstract class DateUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(new Date(timeInMillis));
     }
+
+    public static int getMonth(long timeInMillis){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
+
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static int getYear(long timeInMillis){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
+
+        return calendar.get(Calendar.YEAR);
+    }
 }

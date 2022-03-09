@@ -68,15 +68,12 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         appliedTxt = (TextView) view.findViewById(R.id.appliedTxt_ID);
 
         appliedDate = (TextView) view.findViewById(R.id.appliedDateTxtv_ID);
-        if(application.getAppliedDate() != null)
-            appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
-        else
-            appliedDate.setText("Didn't applied yet");
+        appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
 
         interviewTxt = (TextView) view.findViewById(R.id.interviewTxt_ID);
 
         interviewedDate = (TextView) view.findViewById(R.id.interviewDateTxtv_ID);
-        if(application.getInterviewDate() != null)
+        if(application.getInterviewDate() != 0)
             interviewedDate.setText(DateUtil.getDate(application.getInterviewDate()));
         else
             interviewedDate.setText("-");

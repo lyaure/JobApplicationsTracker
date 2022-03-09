@@ -21,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
 import com.lyaurese.jobapplicationstracker.Objects.Application;
@@ -134,7 +135,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                         int id = sp.getInt("lastId", -1) + 1;
 
                         //---TODO---- remove applied property
-                        Application application = new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar, commentsInput);
+                        Application application = new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar.getTimeInMillis(), commentsInput);
 
                         db.insertNewApplication(application);
 
@@ -176,5 +177,6 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         calendar.set(year, month, dayOfMonth);
         date.setText(String.format(DateUtil.getDate(calendar.getTimeInMillis())));
+        Toast.makeText(getContext(), calendar.get(Calendar.MONTH) + " " +calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT).show();
     }
 }
