@@ -145,23 +145,6 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
 
         changeAppliedDate = false;
 
-//        applied = (CheckBox) view.findViewById(R.id.editAppliedCheckBox_ID);
-//        applied.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked && !application.applied()){
-//                    changeAppliedDate = true;
-//                    showDatePickerDialog();
-//                }
-//                else if(!isChecked && application.applied()){
-//                    appliedDateLayout.setVisibility(View.GONE);
-//                    application.setAppliedDate(0);
-//                    appliedDate.setText("");
-//                    changeAppliedDate = false;
-//                }
-//            }
-//        });
-
         appliedDateLayout = (LinearLayout) view.findViewById(R.id.editAppliedDateLayout_ID);
         appliedDate = (TextView) view.findViewById(R.id.editAppliedDateInputTxtv_ID);
         appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
@@ -265,7 +248,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                     alert.show();
                 }
                 else{
-                    Database db = new Database(getContext());
+                    Database db = Database.getInstance(getActivity());
 
                     if(application.getJobNumber() != oldJobNumber && db.isJobExists(application.getJobNumber(), application.getCompanyName()) && !application.getJobNumber().equals("")){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -293,7 +276,15 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                         //---todo - location/date
                         bundle.putInt("filter", filter);
                         bundle.putInt("type", sortOption);
-                        bundle.putString("name", objectName);
+
+                        switch (sortOption){
+                            case 0:
+                                bundle.putString("name", application.getCompanyName());
+                                break;
+                            case 1:
+                                bundle.putString("name", application.getLocation());
+                                break;
+                        }
                         bundle.putString("application", application.getJobNumber());
                         fragment.setArguments(bundle);
 

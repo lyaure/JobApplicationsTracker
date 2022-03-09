@@ -59,7 +59,7 @@ public class BoardFragment extends Fragment {
         MainBoardActivity activity = (MainBoardActivity)getActivity();
         activity.setFragmentID(R.layout.fragment_board);
 
-        db = new Database(getContext());
+        db = Database.getInstance(getActivity());
 
         ScrollView VSV = (ScrollView) view.findViewById(R.id.mainScrollView_ID);
         VSV.setVerticalScrollBarEnabled(false);

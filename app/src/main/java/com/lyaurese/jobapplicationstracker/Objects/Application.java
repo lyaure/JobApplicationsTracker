@@ -79,14 +79,6 @@ public class Application implements Serializable {
         this.companyName = companyName;
     }
 
-    public void setApplied(boolean applied) {
-        this.applied = applied;
-    }
-
-    public void setInterview(boolean interviewed) {
-        this.interviewed = interviewed;
-    }
-
     public void setAppliedDate(long timeInMillis) {
         this.appliedDate = timeInMillis;
     }

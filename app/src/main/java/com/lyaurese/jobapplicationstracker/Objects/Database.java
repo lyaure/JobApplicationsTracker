@@ -16,8 +16,8 @@ import java.util.LinkedHashMap;
 public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "JobOrganizerDB";
     private static final String APPLICATIONS_TABLE_NAME = "Applications";
-    private static final String COMPANIES_TABLE_NAME = "Companies";
     private static final int DB_VERSION = 1;
+    public static Database instance;
 
 
     private final int ID_COL_NUM = 0;
@@ -56,8 +56,14 @@ public class Database extends SQLiteOpenHelper {
                 "comments TEXT)";
         db.execSQL(query);
 
-        query = "CREATE TABLE IF NOT EXISTS " + COMPANIES_TABLE_NAME + "(company TEXT, count INTEGER)";
-        db.execSQL(query);
+    }
+
+    // ensures that only one Database will ever exist at any given time
+    public static synchronized Database getInstance(Context context){
+        if(instance == null)
+            instance = new Database(context.getApplicationContext());
+
+        return instance;
     }
 
     @Override
@@ -82,8 +88,6 @@ public class Database extends SQLiteOpenHelper {
 
         db.insert(APPLICATIONS_TABLE_NAME, null, values);
 
-        updateCompany(application.getCompanyName(), 1);
-
         db.close();
     }
 
@@ -94,8 +98,6 @@ public class Database extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + application.getId() + "'", null);
         cursor.moveToFirst();
-
-        oldCompanyName = cursor.getString(COMPANY_COL_NUM);
 
         values.put("company", application.getCompanyName());
         values.put("jobPosition", application.getJobPosition());
@@ -114,13 +116,7 @@ public class Database extends SQLiteOpenHelper {
         }
         values.put("comments", application.getComment());
 
-
         db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" +application.getId()});
-
-        if(!application.getCompanyName().equals(oldCompanyName)){
-            updateCompany(oldCompanyName, -1);
-            updateCompany(application.getCompanyName(), 1);
-        }
 
         cursor.close();
         db.close();
@@ -130,7 +126,7 @@ public class Database extends SQLiteOpenHelper {
         String query;
 
         if(filter == ALL)
-            query = "SELECT * FROM " + COMPANIES_TABLE_NAME + " ORDER BY company ASC";
+            query = "SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " GROUP BY company ORDER BY company ASC";
         else
             query = "SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC";
 
@@ -233,32 +229,6 @@ public class Database extends SQLiteOpenHelper {
         return exists;
     }
 
-    private void updateCompany(String name, int update){
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM " + COMPANIES_TABLE_NAME + " WHERE company = '" + name + "'", null);
-
-        if(!cursor.moveToFirst()){
-            values.put("company", name);
-            values.put("count", 1);
-            db.insert(COMPANIES_TABLE_NAME, null, values);
-        }
-        else{
-            int count = cursor.getInt(1) + update;
-            if(count == 0){
-                db.delete(COMPANIES_TABLE_NAME, "company = ?", new String[]{name});
-            }
-            else{
-                values.put("company", name);
-                values.put("count", count);
-                db.update(COMPANIES_TABLE_NAME, values, "company = ?", new String[]{name});
-            }
-        }
-        cursor.close();
-        db.close();
-    }
-
     public int getApplicationsCount(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME, null);
@@ -274,19 +244,6 @@ public class Database extends SQLiteOpenHelper {
     public int getActiveCount(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1", null);
-
-        int count = cursor.getCount();
-
-        cursor.close();
-        db.close();
-
-        return count;
-    }
-
-    //-----TODO---- remove
-    public int getNoResponseApplications(){
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 0", null);
 
         int count = cursor.getCount();
 
@@ -346,7 +303,7 @@ public class Database extends SQLiteOpenHelper {
                         year ++;
                     }
 
-                    String key = MONTHS_NAMES[lastMonth] + " " + year;
+                    String key = MONTHS_NAMES[lastMonth] + " " + (year - 2000);
                     map.put(key, 0);
                 }
             }while(cursor.moveToNext());
@@ -391,8 +348,6 @@ public class Database extends SQLiteOpenHelper {
     public void removeApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
         db.delete(APPLICATIONS_TABLE_NAME, "id = ?", new String[]{"" + application.getId()});
-
-        updateCompany(application.getCompanyName(), -1);
 
         db.close();
     }
