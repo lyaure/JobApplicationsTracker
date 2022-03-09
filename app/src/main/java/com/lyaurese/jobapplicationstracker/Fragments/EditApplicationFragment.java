@@ -33,7 +33,7 @@ import java.util.Calendar;
 public class EditApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
     private EditText company, jobTitle, jobNumber, comments, jobLocation;
-    private CheckBox applied, interview;
+    private CheckBox interview;
     private LinearLayout appliedDateLayout, interviewDateLayout;
     private TextView appliedDate, interviewDate;
     private Button edit, changeAppliedDateBtn, changeInterviewDateBtn;
@@ -145,31 +145,9 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
 
         changeAppliedDate = false;
 
-        applied = (CheckBox) view.findViewById(R.id.editAppliedCheckBox_ID);
-        applied.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked && !application.applied()){
-                    changeAppliedDate = true;
-                    showDatePickerDialog();
-                }
-                else if(!isChecked && application.applied()){
-                    appliedDateLayout.setVisibility(View.GONE);
-                    application.setAppliedDate(null);
-                    appliedDate.setText("");
-                    changeAppliedDate = false;
-                }
-            }
-        });
-
         appliedDateLayout = (LinearLayout) view.findViewById(R.id.editAppliedDateLayout_ID);
         appliedDate = (TextView) view.findViewById(R.id.editAppliedDateInputTxtv_ID);
-
-        if(application.applied()){
-            applied.setChecked(true);
-            appliedDateLayout.setVisibility(View.VISIBLE);
-            appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
-        }
+        appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
 
         changeAppliedDateBtn = (Button) view.findViewById(R.id.appliedChangeDateBtn_ID);
         changeAppliedDateBtn.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +170,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                 }
                 else if(!isChecked && application.interview()){
                     interviewDateLayout.setVisibility(View.GONE);
-                    application.setInterviewDate(null);
+                    application.setInterviewDate(0);
                     interviewDate.setText("");
                     changeInterviewDate = false;
                 }
@@ -270,7 +248,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                     alert.show();
                 }
                 else{
-                    Database db = new Database(getContext());
+                    Database db = Database.getInstance(getActivity());
 
                     if(application.getJobNumber() != oldJobNumber && db.isJobExists(application.getJobNumber(), application.getCompanyName()) && !application.getJobNumber().equals("")){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -298,7 +276,15 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                         //---todo - location/date
                         bundle.putInt("filter", filter);
                         bundle.putInt("type", sortOption);
-                        bundle.putString("name", objectName);
+
+                        switch (sortOption){
+                            case 0:
+                                bundle.putString("name", application.getCompanyName());
+                                break;
+                            case 1:
+                                bundle.putString("name", application.getLocation());
+                                break;
+                        }
                         bundle.putString("application", application.getJobNumber());
                         fragment.setArguments(bundle);
 
@@ -321,18 +307,11 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(!application.applied() && changeAppliedDate) {
-                    applied.setChecked(false);
-                    appliedDateLayout.setVisibility(View.GONE);
-                    changeAppliedDate = false;
-                    application.setAppliedDate(null);
-                }
-
                 if(!application.interview() && changeInterviewDate){
                     interview.setChecked(false);
                     interviewDateLayout.setVisibility(View.GONE);
                     changeInterviewDate = false;
-                    application.setInterviewDate(null);
+                    application.setInterviewDate(0);
                 }
             }
         });
@@ -343,21 +322,19 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
     @SuppressLint("DefaultLocale")
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String s = "%d/%d/%d";
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
 
         if(changeAppliedDate) {
-            appliedDate.setText(String.format(s, dayOfMonth, month + 1, year));
-            appliedDateLayout.setVisibility(View.VISIBLE);
-            application.setAppliedDate(calendar);
+            appliedDate.setText(DateUtil.getDate(calendar.getTimeInMillis()));
+            application.setAppliedDate(calendar.getTimeInMillis());
             changeAppliedDate = false;
         }
 
         if(changeInterviewDate) {
-            interviewDate.setText(String.format(s, dayOfMonth, month + 1, year));
+            interviewDate.setText(DateUtil.getDate(calendar.getTimeInMillis()));
             interviewDateLayout.setVisibility(View.VISIBLE);
-            application.setInterviewDate(calendar);
+            application.setInterviewDate(calendar.getTimeInMillis());
             changeInterviewDate = false;
         }
     }

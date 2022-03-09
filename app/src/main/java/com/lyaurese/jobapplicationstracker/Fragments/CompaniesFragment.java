@@ -111,7 +111,7 @@ public class CompaniesFragment extends Fragment {
         noData = (LinearLayout) view.findViewById(R.id.noDataLayout_ID);
         companyList = (ListView) view.findViewById(R.id.companyList_ID);
 
-        db = new Database(getContext());
+        db = Database.getInstance(getActivity());
 
         list = getList();
 

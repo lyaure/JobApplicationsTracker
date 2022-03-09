@@ -54,7 +54,7 @@ public class ApplicationPagerFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_application_pager, container, false);
 
-        db = new Database(getContext());
+        db = Database.getInstance(getActivity());;
 
         activity = (MainBoardActivity)getActivity();
 
@@ -104,8 +104,6 @@ public class ApplicationPagerFragment extends Fragment {
         // indicates number  of fragments
         DotsIndicator dotsIndicator = (DotsIndicator) view.findViewById(R.id.applicationsDotsIndicator_ID);
         dotsIndicator.setViewPager2(viewPager);
-
-//        Database db = new Database(getContext());
 
         applicationsList = getList(sortOption, filter);
 

@@ -68,15 +68,12 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         appliedTxt = (TextView) view.findViewById(R.id.appliedTxt_ID);
 
         appliedDate = (TextView) view.findViewById(R.id.appliedDateTxtv_ID);
-        if(application.getAppliedDate() != null)
-            appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
-        else
-            appliedDate.setText("Didn't applied yet");
+        appliedDate.setText(DateUtil.getDate(application.getAppliedDate()));
 
         interviewTxt = (TextView) view.findViewById(R.id.interviewTxt_ID);
 
         interviewedDate = (TextView) view.findViewById(R.id.interviewDateTxtv_ID);
-        if(application.getInterviewDate() != null)
+        if(application.getInterviewDate() != 0)
             interviewedDate.setText(DateUtil.getDate(application.getInterviewDate()));
         else
             interviewedDate.setText("-");
@@ -87,7 +84,7 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
         active.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Database db = new Database(getContext());
+                Database db = Database.getInstance(getActivity());
                 application.setActive(isChecked);
                 db.setActive(application.getId(), isChecked);
             }
