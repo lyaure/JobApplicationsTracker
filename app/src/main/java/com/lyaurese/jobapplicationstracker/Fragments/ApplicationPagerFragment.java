@@ -177,8 +177,8 @@ public class ApplicationPagerFragment extends Fragment {
 
     private ArrayList<Application> getList(int sortOption, int filter){
         switch (sortOption){
-            case COMPANY:
-                return db.getApplicationsListSortByCompany(objectName, filter);
+            case DATE:
+                return db.getApplicationsListSortByDate(objectName, filter);
             case LOCATION:
                 return db.getApplicationsListSortByLocation(objectName, filter);
             default:

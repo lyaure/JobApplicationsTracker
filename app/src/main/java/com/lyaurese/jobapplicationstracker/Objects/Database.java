@@ -33,7 +33,7 @@ public class Database extends SQLiteOpenHelper {
 
     private final int COMPANY = 0, LOCATION = 1, DATE = 2, ALL = -1, INACTIVE = 0, ACTIVE = 1;
 
-    private static final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    private final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 
 
@@ -94,7 +94,6 @@ public class Database extends SQLiteOpenHelper {
     public void editApplication(Application application){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        String oldCompanyName;
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + application.getId() + "'", null);
         cursor.moveToFirst();
@@ -169,9 +168,9 @@ public class Database extends SQLiteOpenHelper {
         String query;
 
         if(filter == -1)
-            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "'";
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' ORDER BY appliedDate DESC";
         else
-            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = " + filter;
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = " + filter + " ORDER BY appliedDate DESC";
 
         return getApplicationsList(query);
     }
@@ -180,9 +179,22 @@ public class Database extends SQLiteOpenHelper {
         String query;
 
         if(filter == -1)
-            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "'";
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "' ORDER BY appliedDate DESC";
         else
-            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "' AND active = " + filter;
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "' AND active = " + filter + " ORDER BY appliedDate DESC";
+
+        return getApplicationsList(query);
+    }
+
+    public ArrayList<Application> getApplicationsListSortByDate(String date, int filter){
+        String query;
+
+        long[] monthIntervalsInMillis = DateUtil.getMonthIntervalsInMillis(date);
+
+        if(filter == -1)
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + monthIntervalsInMillis[0] + "' AND appliedDate <= '" + monthIntervalsInMillis[1] + "' ORDER BY appliedDate ASC";
+        else
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + monthIntervalsInMillis[0] + "' AND appliedDate <= '" + monthIntervalsInMillis[1] + "' AND active = " + filter + " ORDER BY appliedDate ASC";
 
         return getApplicationsList(query);
     }
@@ -191,7 +203,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        if(cursor.moveToLast()){
+        if(cursor.moveToFirst()){
             ArrayList<Application> list = new ArrayList<>();
             do{
                 Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM),
@@ -205,7 +217,7 @@ public class Database extends SQLiteOpenHelper {
                     application.setActive(false);
 
                 list.add(application);
-            }while(cursor.moveToPrevious());
+            }while(cursor.moveToNext());
 
             return list;
         }

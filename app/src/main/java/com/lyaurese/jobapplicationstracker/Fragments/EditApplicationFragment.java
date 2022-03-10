@@ -324,6 +324,10 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
         if(changeAppliedDate) {
             appliedDate.setText(DateUtil.getDate(calendar.getTimeInMillis()));

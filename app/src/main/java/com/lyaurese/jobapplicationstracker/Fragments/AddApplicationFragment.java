@@ -81,7 +81,6 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                 String companyInput = company.getText().toString();
                 String jobTitleInput = jobTitle.getText().toString();
                 String jobNumberInput = jobNumber.getText().toString();
-//                boolean appliedInput = applied.isChecked();
                 String commentsInput = comments.getText().toString();
                 String locationInput = jobLocation.getText().toString();
 
@@ -169,6 +168,11 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         calendar.set(year, month, dayOfMonth);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         date.setText(String.format(DateUtil.getDate(calendar.getTimeInMillis())));
         Toast.makeText(getContext(), calendar.get(Calendar.MONTH) + " " +calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT).show();
     }
