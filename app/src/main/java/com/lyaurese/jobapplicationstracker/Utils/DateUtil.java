@@ -16,16 +16,30 @@ public abstract class DateUtil {
         return dateFormat.format(new Date(timeInMillis));
     }
 
-    public static int getMonth(long timeInMillis){
+    public static int getDayOfWeek(long dateInMillis){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(timeInMillis);
+        calendar.setTimeInMillis(dateInMillis);
+
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public static int getDayOfMonth(long dateInMillis){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getMonth(long dateInMillis){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
 
         return calendar.get(Calendar.MONTH);
     }
 
-    public static int getYear(long timeInMillis){
+    public static int getYear(long dateInMillis){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(timeInMillis);
+        calendar.setTimeInMillis(dateInMillis);
 
         return calendar.get(Calendar.YEAR);
     }
@@ -59,6 +73,52 @@ public abstract class DateUtil {
         intervals[1] = calendar.getTimeInMillis();
 
         return intervals;
+    }
+
+    public static long[] getDayIntervals(String date){
+        long[] intervals = new long[2];
+        int month = Integer.parseInt(date.substring(4, 6)) - 1;
+        int day = Integer.parseInt(date.substring(7, date.length()));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int year = calendar.get(Calendar.YEAR);
+
+        if(calendar.get(Calendar.MONTH) == 0 && month > calendar.get(Calendar.MONTH))
+            year = calendar.get(Calendar.YEAR) - 1;
+
+        calendar.set(year, month, day);
+        setToMidnight(calendar);
+        intervals[0] = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        intervals[1] = calendar.getTimeInMillis();
+
+        return intervals;
+    }
+
+    public static long[] getLastSevenDaysIntervalsInMillis(){
+        long[] intervals = new long[2];
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        setToMidnight(calendar);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        intervals[1] = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+
+        intervals[0] = calendar.getTimeInMillis();
+
+        return intervals;
+    }
+
+    public static int getNumOfDaysInMonth(long dateInMillis){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     private static void setToMidnight(Calendar calendar){

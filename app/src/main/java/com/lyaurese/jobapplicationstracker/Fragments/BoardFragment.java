@@ -1,6 +1,8 @@
 package com.lyaurese.jobapplicationstracker.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -30,10 +34,14 @@ import java.util.List;
 
 public class BoardFragment extends Fragment {
     private PieChart sumPieChart, interviewsPieChart;
-    private GraphView applicationsGraphView, companiesGraphView;
+    private GraphView lastSevenDaysGraphView, applicationsByMonthsGraphView, companiesGraphView;
     private final String months[] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private Database db;
-    private int[] colors;
+    private SharedPreferences sp;
+    private TextView lastApplications;
+    private Button swapChart;
+    private final int COMPANY = 0, MONTHS = 2, LAST_SEVEN_DAYS = 3;
+    private HorizontalScrollView applicationsHSV;
 
 
     public BoardFragment() {
@@ -61,15 +69,46 @@ public class BoardFragment extends Fragment {
 
         db = Database.getInstance(getActivity());
 
+        sp = activity.getSharedPreferences("applicationsChart", Context.MODE_PRIVATE);
+
         ScrollView VSV = (ScrollView) view.findViewById(R.id.mainScrollView_ID);
         VSV.setVerticalScrollBarEnabled(false);
 
         sumPieChart = (PieChart)view.findViewById(R.id.sumPieChart_ID);
         interviewsPieChart = (PieChart)view.findViewById(R.id.interviewsPieChart_ID);
-        applicationsGraphView = (GraphView)view.findViewById(R.id.applicationsGraphView_ID);
+        lastApplications = (TextView) view.findViewById(R.id.lastApplicationsChartTxtv_ID);
+        lastSevenDaysGraphView = (GraphView) view.findViewById(R.id.lastSevenDaysApplicationsGraphView_ID);
+        applicationsByMonthsGraphView = (GraphView)view.findViewById(R.id.applicationsByMonthsGraphView_ID);
         companiesGraphView = (GraphView)view.findViewById(R.id.companiesGraphView_ID);
 
-        HorizontalScrollView applicationsHSV = (HorizontalScrollView) view.findViewById(R.id.applicationsGraphViewHSV_ID);
+        swapChart = (Button) view.findViewById(R.id.swapChartBtn_ID);
+        swapChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int chartViewBy = sp.getInt("applicationsChart", LAST_SEVEN_DAYS);
+                SharedPreferences.Editor editor = sp.edit();
+
+                if(chartViewBy == LAST_SEVEN_DAYS) {
+                    editor.putInt("applicationsChart", MONTHS);
+                    applicationsByMonthsGraphView.setVisibility(View.VISIBLE);
+                    lastSevenDaysGraphView.setVisibility(View.GONE);
+                }
+                else {
+                    editor.putInt("applicationsChart", LAST_SEVEN_DAYS);
+                    applicationsByMonthsGraphView.setVisibility(View.GONE);
+                    lastSevenDaysGraphView.setVisibility(View.VISIBLE);
+                }
+
+                editor.commit();
+
+                updateApplicationsChartViews();
+                scrollViewRight(applicationsHSV);
+            }
+        });
+
+        updateApplicationsChartViews();
+
+        applicationsHSV = (HorizontalScrollView) view.findViewById(R.id.applicationsGraphViewHSV_ID);
         applicationsHSV.setHorizontalScrollBarEnabled(false);
 
         HorizontalScrollView companiesHSV = (HorizontalScrollView) view.findViewById(R.id.companiesGraphViewHSV_ID);
@@ -80,50 +119,53 @@ public class BoardFragment extends Fragment {
         // indicates to the graph the scree size
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels, height = dm.heightPixels;
+        int[] colors = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)};
 
-        GraphEntry[] applicationsEntries = GraphUtil.getInitializedArray(db.getApplicationsByMonth());
+        GraphEntry[] applicationsByMonthsEntries = GraphUtil.getInitializedArray(db.getApplicationsByMonth());
+        setupGraphView(applicationsByMonthsGraphView, width, height, applicationsByMonthsEntries, colors);
 
-        applicationsGraphView.setScreenDimensions(width, height);
-        if(applicationsEntries != null)
-            applicationsGraphView.setMax(GraphUtil.getMax(applicationsEntries));
-
-        colors = new int[]{getResources().getColor(R.color.blue), getResources().getColor(R.color.green), getResources().getColor(R.color.yellow), getResources().getColor(R.color.red)};
-
-        applicationsGraphView.setBarsColors(colors);
-        applicationsGraphView.setEntries(applicationsEntries);
-
-        applicationsGraphView.setOnTouchListener(new View.OnTouchListener() {
+        applicationsByMonthsGraphView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_UP){
                     float x = event.getX();
                     float y = event.getY();
 
-                    String label = applicationsGraphView.getObjectLabelAt(x, y);
+                    String label = applicationsByMonthsGraphView.getObjectLabelAt(x, y);
 
                     if(!label.equals("null")){
-                        changeFragment(2, label);
+                        changeFragment(MONTHS, label);
                     }
                 }
                 return true;
             }
         });
 
+        GraphEntry[] lastSevenDaysEntries = GraphUtil.getInitializedArray(db.getLastSevenDaysApplications());
+        setupGraphView(lastSevenDaysGraphView, width, height, lastSevenDaysEntries, colors);
 
-        applicationsHSV.post(new Runnable() {
+        lastSevenDaysGraphView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void run() {
-                applicationsHSV.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    float x = event.getX();
+                    float y = event.getY();
+
+                    String label = lastSevenDaysGraphView.getObjectLabelAt(x, y);
+
+                    if(!label.equals("null")){
+                        changeFragment(LAST_SEVEN_DAYS, label);
+                    }
+                }
+                return true;
             }
         });
 
+        scrollViewRight(applicationsHSV);
+
         GraphEntry[] companiesEntries = GraphUtil.getInitializedArray(db.getApplicationsByCompany());
 
-        companiesGraphView.setScreenDimensions(width, height);
-        if(companiesEntries != null)
-            companiesGraphView.setMax(GraphUtil.getMax(companiesEntries));
-        companiesGraphView.setBarsColors(colors);
-        companiesGraphView.setEntries(companiesEntries);
+        setupGraphView(companiesGraphView, width, height, companiesEntries, colors);
 
         companiesGraphView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -135,24 +177,50 @@ public class BoardFragment extends Fragment {
                     String label = companiesGraphView.getObjectLabelAt(x, y);
 
                     if(!label.equals("null")){
-                        changeFragment(0, label);
+                        changeFragment(COMPANY, label);
                     }
                 }
                 return true;
             }
         });
 
-//        applicationsHSV.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                companiesHSV.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-//            }
-//        });
-
         drawSummaryPieChart();
         drawInterviewsPieChart();
 
         return view;
+    }
+
+    private void setupGraphView(GraphView graphView, int width, int height, GraphEntry[] entries, int[] colors){
+        graphView.setScreenDimensions(width, height);
+        if(entries != null)
+            graphView.setMax(GraphUtil.getMax(entries));
+
+        graphView.setBarsColors(colors);
+        graphView.setEntries(entries);
+    }
+
+    private void scrollViewRight(HorizontalScrollView scrollView){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+            }
+        });
+    }
+
+    private void updateApplicationsChartViews(){
+        int chartViewBy = sp.getInt("applicationsChart", LAST_SEVEN_DAYS);
+
+        if(chartViewBy == LAST_SEVEN_DAYS) {
+            swapChart.setText("Months");
+            lastApplications.setText("Last 7 days applications");
+            lastSevenDaysGraphView.setVisibility(View.VISIBLE);
+        }
+        else{
+            swapChart.setText("Days");
+            lastApplications.setText("Last applications by month");
+            applicationsByMonthsGraphView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void drawSummaryPieChart(){

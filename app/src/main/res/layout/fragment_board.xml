@@ -47,7 +47,7 @@
                 android:layout_marginBottom="30dp" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/lastApplicationsChartTxtv_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -55,6 +55,12 @@
                 android:textAlignment="center"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/swapChartBtn_ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
 
             <HorizontalScrollView
                 android:id="@+id/applicationsGraphViewHSV_ID"
@@ -69,9 +75,16 @@
                     android:orientation="vertical">
 
                     <com.lyaurese.jobapplicationstracker.CustomViews.GraphView
-                        android:id="@+id/applicationsGraphView_ID"
+                        android:id="@+id/applicationsByMonthsGraphView_ID"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+
+                    <com.lyaurese.jobapplicationstracker.CustomViews.GraphView
+                        android:id="@+id/lastSevenDaysApplicationsGraphView_ID"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

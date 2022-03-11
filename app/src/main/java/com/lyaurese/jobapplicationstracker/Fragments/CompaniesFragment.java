@@ -38,12 +38,8 @@ public class CompaniesFragment extends Fragment {
     private String sortOptions[];
     private Database db;
 
-    private final int ALL = -1;
-    private final int ACTIVE = 1;
-    private final int INACTIVE = 0;
-    private final int COMPANY = 0;
-    private final int LOCATION = 1;
-    private final int DATE = 2;
+    private final int ALL = -1, ACTIVE = 1, INACTIVE = 0;
+    private final int COMPANY = 0, LOCATION = 1, MONTHS = 2, LAST_SEVEN_DAYS = 3;
 
 
     public CompaniesFragment() {
@@ -199,7 +195,7 @@ public class CompaniesFragment extends Fragment {
                 return db.getCompaniesList(filter);
             case LOCATION:
                 return db.getLocationsList(filter);
-            case DATE:
+            case MONTHS:
                 return null;
             default:
                 return db.getCompaniesList(filter);

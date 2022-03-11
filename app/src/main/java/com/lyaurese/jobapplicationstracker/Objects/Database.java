@@ -1,5 +1,6 @@
 package com.lyaurese.jobapplicationstracker.Objects;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import com.lyaurese.jobapplicationstracker.Utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 
@@ -34,7 +36,7 @@ public class Database extends SQLiteOpenHelper {
     private final int COMPANY = 0, LOCATION = 1, DATE = 2, ALL = -1, INACTIVE = 0, ACTIVE = 1;
 
     private final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
+    private final String[] DAYS_OF_WEEK = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
 
     public Database(Context context){
@@ -186,15 +188,25 @@ public class Database extends SQLiteOpenHelper {
         return getApplicationsList(query);
     }
 
-    public ArrayList<Application> getApplicationsListSortByDate(String date, int filter){
-        String query;
-
+    public ArrayList<Application> getApplicationsListSortByMonths(String date, int filter){
         long[] monthIntervalsInMillis = DateUtil.getMonthIntervalsInMillis(date);
 
+        return getApplicationsListSortByDate(monthIntervalsInMillis, filter);
+    }
+
+    public ArrayList<Application> getApplicationsListSortByDay(String date, int filter) {
+        long[] daysIntervalsInMillis = DateUtil.getDayIntervals(date);
+
+        return getApplicationsListSortByDate(daysIntervalsInMillis, filter);
+    }
+
+    private ArrayList<Application> getApplicationsListSortByDate(long[] dateIntervalsInMillis, int filter){
+        String query;
+
         if(filter == -1)
-            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + monthIntervalsInMillis[0] + "' AND appliedDate <= '" + monthIntervalsInMillis[1] + "' ORDER BY appliedDate ASC";
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + dateIntervalsInMillis[0] + "' AND appliedDate <= '" + dateIntervalsInMillis[1] + "' ORDER BY appliedDate ASC";
         else
-            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + monthIntervalsInMillis[0] + "' AND appliedDate <= '" + monthIntervalsInMillis[1] + "' AND active = " + filter + " ORDER BY appliedDate ASC";
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + dateIntervalsInMillis[0] + "' AND appliedDate <= '" + dateIntervalsInMillis[1] + "' AND active = " + filter + " ORDER BY appliedDate ASC";
 
         return getApplicationsList(query);
     }
@@ -290,6 +302,59 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    public LinkedHashMap<String, Integer> getLastSevenDaysApplications(){
+        SQLiteDatabase db = getReadableDatabase();
+        long[] lastSevenDaysIntervalsInMillis = DateUtil.getLastSevenDaysIntervalsInMillis();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= " + lastSevenDaysIntervalsInMillis[0] + " AND appliedDate < " + lastSevenDaysIntervalsInMillis[1] + " ORDER BY appliedDate ASC", null);
+
+        if(cursor.moveToFirst()){
+            LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+
+            int lastDayOfWeek = DateUtil.getDayOfWeek(cursor.getLong(APPLIED_DATE_COL_NUM)),
+                    dayOfMonth = DateUtil.getDayOfMonth(cursor.getLong(APPLIED_DATE_COL_NUM)),
+                    month = DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM)) + 1;
+
+            do{
+                if(lastDayOfWeek == DateUtil.getDayOfWeek(cursor.getLong(APPLIED_DATE_COL_NUM))){
+                    @SuppressLint("DefaultLocale")
+                    String key = DAYS_OF_WEEK[lastDayOfWeek] + " " + String.format("%02d", month) + "/" + String.format("%02d", dayOfMonth);
+                    if(!map.containsKey(key))
+                        map.put(key, 1);
+                    else
+                        map.put(key, map.get(key)+1);
+                }
+                else{
+                    cursor.moveToPrevious();
+                    lastDayOfWeek++;
+                    if(lastDayOfWeek == DAYS_OF_WEEK.length + 1)
+                        lastDayOfWeek = 0;
+
+                    dayOfMonth++;
+                    if(dayOfMonth == DateUtil.getNumOfDaysInMonth(cursor.getLong(APPLIED_DATE_COL_NUM)) + 1) {
+                        dayOfMonth = 1;
+                        month++;
+                        if(month == MONTHS_NAMES.length + 1)
+                            month = 1;
+                    }
+
+                    String key = DAYS_OF_WEEK[lastDayOfWeek] + " " + String.format("%02d", month) + "/" + String.format("%02d", dayOfMonth);
+                    map.put(key, 0);
+                }
+           }while(cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+
+            return map;
+        }
+
+        cursor.close();
+        db.close();
+
+        return null;
+    }
+
     public LinkedHashMap<String, Integer> getApplicationsByMonth(){
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " ORDER BY appliedDate ASC", null);
@@ -297,11 +362,11 @@ public class Database extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
-            int lastMonth = DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM)), year = DateUtil.getYear(cursor.getLong(APPLIED_DATE_COL_NUM) - 2000);
+            int lastMonth = DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM)), year = DateUtil.getYear(cursor.getLong(APPLIED_DATE_COL_NUM)) - 2000;
 
             do{
                 if(lastMonth == DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM))){
-                    String key = MONTHS_NAMES[DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM))] + " " + (DateUtil.getYear(cursor.getLong(APPLIED_DATE_COL_NUM)) - 2000);
+                    String key = MONTHS_NAMES[lastMonth] + " " + year;
                     if(!map.containsKey(key))
                         map.put(key, 1);
                     else
@@ -310,12 +375,12 @@ public class Database extends SQLiteOpenHelper {
                 else{
                     cursor.moveToPrevious();
                     lastMonth++;
-                    if(lastMonth == 13){
-                        lastMonth = 1;
+                    if(lastMonth == MONTHS_NAMES.length + 1){
+                        lastMonth = 0;
                         year ++;
                     }
 
-                    String key = MONTHS_NAMES[lastMonth] + " " + (year - 2000);
+                    String key = MONTHS_NAMES[lastMonth] + " " + year;
                     map.put(key, 0);
                 }
             }while(cursor.moveToNext());

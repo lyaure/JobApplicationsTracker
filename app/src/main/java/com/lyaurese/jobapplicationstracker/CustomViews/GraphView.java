@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
@@ -13,10 +12,10 @@ import com.lyaurese.jobapplicationstracker.R;
 
 public class GraphView extends View {
     private Paint pWhite, pRED, pBottom, pBlack, pBars;
-    private int canvasHeight, canvasWidth;
+    private int height, width;
     private int screenWidth, screenHeight;
     private GraphEntry[] entries;
-    private int width, height, graphHeight, barWidth, space;
+    private int graphHeight, barWidth, space;
     private int max;
     private Context context;
     private int[] barsColors;
@@ -56,7 +55,7 @@ public class GraphView extends View {
 
         pWhite.setTextAlign(Paint.Align.CENTER);
 
-        graphHeight = canvasHeight - ((canvasHeight / 10) * 3);
+        graphHeight = height - ((height / 10) * 3);
 
         int index = 0;
 
@@ -74,15 +73,15 @@ public class GraphView extends View {
             
             drawBars(canvas);
         } else {
-            canvas.drawText("No data yet", (float)(canvasWidth / 2), (float)(canvasHeight / 2), pBlack);
+            canvas.drawText("No data yet", (float)(width / 2), (float)(height / 2), pBlack);
         }
         invalidate();
     }
 
     /* access modifiers changed from: protected */
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        canvasWidth = w;
-        canvasHeight = h;
+        width = w;
+        height = h;
     }
 
     /* access modifiers changed from: protected */
@@ -133,11 +132,11 @@ public class GraphView extends View {
                     colorIdx = 0;
             }
 
-            canvas.drawRect(entry.getPoint().x - barWidth, (canvasHeight/10) +(graphHeight - entry.getPoint().y), entry.getPoint().x + barWidth, canvasHeight - (canvasHeight / 10) * 2, pBars);
-            canvas.drawText(entry.getLabel(), entry.getPoint().x, canvasHeight - (canvasHeight / 30), pWhite);
+            canvas.drawRect(entry.getPoint().x - barWidth, (height /10) +(graphHeight - entry.getPoint().y), entry.getPoint().x + barWidth, height - (height / 10) * 2, pBars);
+            canvas.drawText(entry.getLabel(), entry.getPoint().x, height - (height / 30), pWhite);
 
             if (entry.getData() != 0) {
-                canvas.drawText(Integer.toString((int)entry.getData()), entry.getPoint().x, (canvasHeight/10) + (graphHeight - entry.getPoint().y) - 20, pBlack);
+                canvas.drawText(Integer.toString((int)entry.getData()), entry.getPoint().x, (height /10) + (graphHeight - entry.getPoint().y) - 20, pBlack);
             }
         }
     }
@@ -148,7 +147,7 @@ public class GraphView extends View {
 
     public String getObjectLabelAt(float x, float y){
         for(GraphEntry entry: entries){
-            if(x > entry.getPoint().x - barWidth && x < entry.getPoint().x + barWidth && y > (canvasHeight/10) + (graphHeight - entry.getPoint().y) - 20 && y < canvasHeight - (canvasHeight / 10) * 2){
+            if(x > entry.getPoint().x - barWidth && x < entry.getPoint().x + barWidth && y > (height /10) + (graphHeight - entry.getPoint().y) - 20 && y < height - (height / 10) * 2){
                 return entry.getLabel();
             }
         }
