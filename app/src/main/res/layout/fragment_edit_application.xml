@@ -20,192 +20,199 @@
         android:textColor="@color/blue"
         android:textSize="34sp" />
 
+    <ScrollView
+        android:id="@+id/editScrollView_ID"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@android:color/darker_gray"
+                app:boxStrokeColor="@color/blue"
+                app:hintTextColor="@color/blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editCompanyNameInput_ID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#00FFFFFF"
+                    android:hint="Company name"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/lightGray" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@android:color/darker_gray"
+                app:boxStrokeColor="@color/blue"
+                app:hintTextColor="@color/blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editJobTitleInput_ID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#00FFFFFF"
+                    android:hint="Job title"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/lightGray" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@android:color/darker_gray"
+                app:boxStrokeColor="@color/blue"
+                app:hintTextColor="@color/blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editJobNameInput_ID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#00FFFFFF"
+                    android:hint="Job ID"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/lightGray" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@android:color/darker_gray"
+                app:boxStrokeColor="@color/blue"
+                app:hintTextColor="@color/blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editJobLocationInput_ID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#00FFFFFF"
+                    android:hint="Job location"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/lightGray" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/editAppliedDateLayout_ID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Applied on: "
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/editAppliedDateInputTxtv_ID"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textColor="@color/lightGray"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/appliedChangeDateBtn_ID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
+                    android:text="CHANGE DATE"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/editInterviewCheckBox_ID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/green"
+                android:text="Got interview date"
+                android:textColor="@android:color/darker_gray"
+                android:textColorHighlight="@color/green"
+                android:textColorLink="@color/green" />
+
+
+            <LinearLayout
+                android:id="@+id/editInterviewDateLayout_ID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Interview on: "
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/editInterviewDateInputTxtv_ID"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textColor="@color/lightGray"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/interviewChangeDateBtn_ID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
+                    android:text="CHANGE DATE"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/editCommentsInput_ID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/border_black"
+                android:gravity="top|left"
+                android:hint="Add comment"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="6"
+                android:overScrollMode="always"
+                android:padding="10dp"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false"
+                android:textColor="@color/lightGray"
+                android:textColorHighlight="@color/blue"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColorLink="@color/blue" />
+        </LinearLayout>
+    </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:orientation="vertical">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@android:color/darker_gray"
-            app:boxStrokeColor="@color/blue"
-            app:hintTextColor="@color/blue">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editCompanyNameInput_ID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:hint="Company name"
-                android:inputType="textCapSentences"
-                android:textColor="@color/lightGray" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@android:color/darker_gray"
-            app:boxStrokeColor="@color/blue"
-            app:hintTextColor="@color/blue">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editJobTitleInput_ID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:hint="Job title"
-                android:inputType="textCapSentences"
-                android:textColor="@color/lightGray" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@android:color/darker_gray"
-            app:boxStrokeColor="@color/blue"
-            app:hintTextColor="@color/blue">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editJobNameInput_ID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:hint="Job ID"
-                android:inputType="textCapSentences"
-                android:textColor="@color/lightGray" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@android:color/darker_gray"
-            app:boxStrokeColor="@color/blue"
-            app:hintTextColor="@color/blue">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editJobLocationInput_ID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:hint="Job location"
-                android:inputType="textCapSentences"
-                android:textColor="@color/lightGray" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/editAppliedDateLayout_ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Applied on: "
-                android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/editAppliedDateInputTxtv_ID"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textColor="@color/lightGray"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/appliedChangeDateBtn_ID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00FFFFFF"
-                android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
-                android:text="CHANGE DATE"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/editInterviewCheckBox_ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/green"
-            android:text="Got interview date"
-            android:textColor="@android:color/darker_gray"
-            android:textColorHighlight="@color/green"
-            android:textColorLink="@color/green" />
-
-
-        <LinearLayout
-            android:id="@+id/editInterviewDateLayout_ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Interview on: "
-                android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/editInterviewDateInputTxtv_ID"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textColor="@color/lightGray"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/interviewChangeDateBtn_ID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00FFFFFF"
-                android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
-                android:text="CHANGE DATE"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/editCommentsInput_ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/border_black"
-            android:gravity="top|left"
-            android:hint="Add comment"
-            android:inputType="textMultiLine|textCapSentences"
-            android:lines="6"
-            android:overScrollMode="always"
-            android:padding="10dp"
-            android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical"
-            android:scrollHorizontally="false"
-            android:textColor="@color/lightGray"
-            android:textColorHighlight="@color/blue"
-            android:textColorHint="@android:color/darker_gray"
-            android:textColorLink="@color/blue" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_gravity="bottom"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
@@ -215,7 +222,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/green"
-            android:text="EDIT" />
+            android:text="EDIT"
+            tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
 </LinearLayout>

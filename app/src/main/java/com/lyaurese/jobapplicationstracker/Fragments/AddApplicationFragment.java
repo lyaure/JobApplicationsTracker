@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
     private Button add;
     private Database db;
     private Calendar calendar;
+    private ScrollView addScrollView;
 
     public AddApplicationFragment() {
         // Required empty public constructor
@@ -50,6 +52,8 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_add_application, container, false);
+
+        addScrollView = (ScrollView) view.findViewById(R.id.addScrollView_ID);
 
         company = (EditText) view.findViewById(R.id.companyNameInput_ID);
         jobTitle = (EditText) view.findViewById(R.id.jobTitleInput_ID);
@@ -157,6 +161,15 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         return view;
     }
 
+    private void scrollViewDown(ScrollView scrollView){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+    }
+
     private void showDatePickerDialog(){
         DatePickerDialog datePickerDialog = new DatePickerDialog
                 (getActivity(), this, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
@@ -174,6 +187,6 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         calendar.set(Calendar.MILLISECOND, 0);
 
         date.setText(String.format(DateUtil.getDate(calendar.getTimeInMillis())));
-        Toast.makeText(getContext(), calendar.get(Calendar.MONTH) + " " +calendar.get(Calendar.YEAR), Toast.LENGTH_SHORT).show();
+        scrollViewDown(addScrollView);
     }
 }

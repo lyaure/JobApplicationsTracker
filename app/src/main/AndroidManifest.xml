@@ -12,7 +12,7 @@
         <activity
             android:name=".Activities.MainBoardActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             />
         <activity

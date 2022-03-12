@@ -19,7 +19,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
@@ -37,11 +39,10 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
     private LinearLayout appliedDateLayout, interviewDateLayout;
     private TextView appliedDate, interviewDate;
     private Button edit, changeAppliedDateBtn, changeInterviewDateBtn;
-    private Calendar calendar;
     private String oldJobNumber, objectName;
     private boolean changeAppliedDate, changeInterviewDate;
-    private Database db;
     private int filter, sortOption;
+    private ScrollView editScrollView;
 
     public EditApplicationFragment() {
         // Required empty public constructor
@@ -66,6 +67,8 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_application, container, false);
+
+        editScrollView = (ScrollView) view.findViewById(R.id.editScrollView_ID);
 
         company = (EditText) view.findViewById(R.id.editCompanyNameInput_ID);
         company.setText(application.getCompanyName());
@@ -214,6 +217,14 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
             }
         });
 
+        comments.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    scrollViewDown(editScrollView);
+            }
+        });
+
         edit = (Button) view.findViewById(R.id.finishEditApplicationBtn_ID);
 
         edit.setOnClickListener(new View.OnClickListener() {
@@ -300,6 +311,15 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
         return view;
     }
 
+    private void scrollViewDown(ScrollView scrollView){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+    }
+
     private void showDatePickerDialog(){
         DatePickerDialog datePickerDialog = new DatePickerDialog
                 (getActivity(), this, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
@@ -341,5 +361,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
             application.setInterviewDate(calendar.getTimeInMillis());
             changeInterviewDate = false;
         }
+
+        scrollViewDown(editScrollView);
     }
 }
