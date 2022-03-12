@@ -36,10 +36,10 @@ public class Database extends SQLiteOpenHelper {
     private final int COMPANY = 0, LOCATION = 1, DATE = 2, ALL = -1, INACTIVE = 0, ACTIVE = 1;
 
     private final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    private final String[] DAYS_OF_WEEK = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    private final String[] DAYS_OF_WEEK = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
 
-    public Database(Context context){
+    public Database(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -61,8 +61,8 @@ public class Database extends SQLiteOpenHelper {
     }
 
     // ensures that only one Database will ever exist at any given time
-    public static synchronized Database getInstance(Context context){
-        if(instance == null)
+    public static synchronized Database getInstance(Context context) {
+        if (instance == null)
             instance = new Database(context.getApplicationContext());
 
         return instance;
@@ -73,7 +73,7 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public void insertNewApplication(Application application){
+    public void insertNewApplication(Application application) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -93,7 +93,7 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void editApplication(Application application){
+    public void editApplication(Application application) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -107,26 +107,25 @@ public class Database extends SQLiteOpenHelper {
         values.put("active", application.isActive() ? 1 : 0);
         values.put("appliedDate", application.getAppliedDate());
 
-        if(application.interview() && application.getInterviewDate() != 0) {
+        if (application.interview() && application.getInterviewDate() != 0) {
             values.put("interview", 1);
             values.put("interviewDate", application.getInterviewDate());
-        }
-        else {
+        } else {
             values.put("interview", 0);
             values.put("interviewDate", 0);
         }
         values.put("comments", application.getComment());
 
-        db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" +application.getId()});
+        db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" + application.getId()});
 
         cursor.close();
         db.close();
     }
 
-    public ArrayList<ListObject> getCompaniesList(int filter){
+    public ArrayList<ListObject> getCompaniesList(int filter) {
         String query;
 
-        if(filter == ALL)
+        if (filter == ALL)
             query = "SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " GROUP BY company ORDER BY company ASC";
         else
             query = "SELECT company, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY company ORDER BY company ASC";
@@ -134,10 +133,10 @@ public class Database extends SQLiteOpenHelper {
         return getListObjects(COMPANY, query);
     }
 
-    public ArrayList<ListObject> getLocationsList(int filter){
+    public ArrayList<ListObject> getLocationsList(int filter) {
         String query;
 
-        if(filter == ALL)
+        if (filter == ALL)
             query = "SELECT location, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " GROUP BY location ORDER BY location ASC";
         else
             query = "SELECT location, COUNT(*) FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = " + filter + " GROUP BY location ORDER BY location ASC";
@@ -146,19 +145,18 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-    private ArrayList<ListObject> getListObjects(int type, String query){
+    private ArrayList<ListObject> getListObjects(int type, String query) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(query , null);
+        Cursor cursor = db.rawQuery(query, null);
 
         ArrayList<ListObject> list = new ArrayList<>();
 
-        if(cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 list.add(new ListObject(type, cursor.getString(0), cursor.getInt(1)));
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
 
-        }
-        else{
+        } else {
             cursor.close();
             db.close();
         }
@@ -166,10 +164,10 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Application> getApplicationsListSortByCompany(String companyName, int filter){
+    public ArrayList<Application> getApplicationsListSortByCompany(String companyName, int filter) {
         String query;
 
-        if(filter == -1)
+        if (filter == -1)
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' ORDER BY appliedDate DESC";
         else
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE company = '" + companyName + "' AND active = " + filter + " ORDER BY appliedDate DESC";
@@ -177,10 +175,10 @@ public class Database extends SQLiteOpenHelper {
         return getApplicationsList(query);
     }
 
-    public ArrayList<Application> getApplicationsListSortByLocation(String locationName, int filter){
+    public ArrayList<Application> getApplicationsListSortByLocation(String locationName, int filter) {
         String query;
 
-        if(filter == -1)
+        if (filter == -1)
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "' ORDER BY appliedDate DESC";
         else
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE location = '" + locationName + "' AND active = " + filter + " ORDER BY appliedDate DESC";
@@ -188,7 +186,7 @@ public class Database extends SQLiteOpenHelper {
         return getApplicationsList(query);
     }
 
-    public ArrayList<Application> getApplicationsListSortByMonths(String date, int filter){
+    public ArrayList<Application> getApplicationsListSortByMonths(String date, int filter) {
         long[] monthIntervalsInMillis = DateUtil.getMonthIntervalsInMillis(date);
 
         return getApplicationsListSortByDate(monthIntervalsInMillis, filter);
@@ -200,10 +198,10 @@ public class Database extends SQLiteOpenHelper {
         return getApplicationsListSortByDate(daysIntervalsInMillis, filter);
     }
 
-    private ArrayList<Application> getApplicationsListSortByDate(long[] dateIntervalsInMillis, int filter){
+    private ArrayList<Application> getApplicationsListSortByDate(long[] dateIntervalsInMillis, int filter) {
         String query;
 
-        if(filter == -1)
+        if (filter == -1)
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + dateIntervalsInMillis[0] + "' AND appliedDate <= '" + dateIntervalsInMillis[1] + "' ORDER BY appliedDate ASC";
         else
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + dateIntervalsInMillis[0] + "' AND appliedDate <= '" + dateIntervalsInMillis[1] + "' AND active = " + filter + " ORDER BY appliedDate ASC";
@@ -211,29 +209,28 @@ public class Database extends SQLiteOpenHelper {
         return getApplicationsList(query);
     }
 
-    private ArrayList<Application> getApplicationsList(String query){
+    private ArrayList<Application> getApplicationsList(String query) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             ArrayList<Application> list = new ArrayList<>();
-            do{
+            do {
                 Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM),
                         cursor.getLong(APPLIED_DATE_COL_NUM), cursor.getString(COMMENTS_COL_NUM));
 
-                if(cursor.getInt(INTERVIEW_COL_NUM) == 1)
+                if (cursor.getInt(INTERVIEW_COL_NUM) == 1)
                     application.setInterviewDate(cursor.getLong(INTERVIEW_DATE_COL_NUM));
 
 
-                if(cursor.getInt(ACTIVE_COL_NUM) == 0)
+                if (cursor.getInt(ACTIVE_COL_NUM) == 0)
                     application.setActive(false);
 
                 list.add(application);
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
 
             return list;
-        }
-        else{
+        } else {
             cursor.close();
             db.close();
 
@@ -242,7 +239,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     //----TODO----
-    public boolean isJobExists(String jobNumber, String company){
+    public boolean isJobExists(String jobNumber, String company) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "' AND company = '" + company + "'", null);
 
@@ -253,7 +250,7 @@ public class Database extends SQLiteOpenHelper {
         return exists;
     }
 
-    public int getApplicationsCount(){
+    public int getApplicationsCount() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME, null);
 
@@ -265,7 +262,7 @@ public class Database extends SQLiteOpenHelper {
         return count;
     }
 
-    public int getActiveCount(){
+    public int getActiveCount() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1", null);
 
@@ -277,7 +274,7 @@ public class Database extends SQLiteOpenHelper {
         return count;
     }
 
-    public int getInterviewApplicationsCount(){
+    public int getInterviewApplicationsCount() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 1", null);
 
@@ -289,7 +286,7 @@ public class Database extends SQLiteOpenHelper {
         return count;
     }
 
-    public void setActive(int id, boolean active){
+    public void setActive(int id, boolean active) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + id + "'", null);
 
@@ -302,46 +299,45 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public LinkedHashMap<String, Integer> getLastSevenDaysApplications(){
+    public LinkedHashMap<String, Integer> getLastSevenDaysApplications() {
         SQLiteDatabase db = getReadableDatabase();
         long[] lastSevenDaysIntervalsInMillis = DateUtil.getLastSevenDaysIntervalsInMillis();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= " + lastSevenDaysIntervalsInMillis[0] + " AND appliedDate < " + lastSevenDaysIntervalsInMillis[1] + " ORDER BY appliedDate ASC", null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
-            int lastDayOfWeek = DateUtil.getDayOfWeek(cursor.getLong(APPLIED_DATE_COL_NUM)),
-                    dayOfMonth = DateUtil.getDayOfMonth(cursor.getLong(APPLIED_DATE_COL_NUM)),
-                    month = DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM)) + 1;
+            int dayOfWeek = DateUtil.getDayOfWeek(lastSevenDaysIntervalsInMillis[0]) - 1,
+                    dayOfMonth = DateUtil.getDayOfMonth(lastSevenDaysIntervalsInMillis[0]),
+                    month = DateUtil.getMonth(lastSevenDaysIntervalsInMillis[0]) + 1;
+
+            if (dayOfWeek < 0)
+                dayOfWeek = 0;
+
+            for (int i = 0; i < 7; i++) {
+                String key = DAYS_OF_WEEK[dayOfWeek] + " " + String.format("%02d", month) + "/" + String.format("%02d", dayOfMonth);
+                map.put(key, 0);
+
+                dayOfWeek++;
+                if (dayOfWeek == DAYS_OF_WEEK.length)
+                    dayOfWeek = 0;
+
+                dayOfMonth++;
+                if (dayOfMonth > DateUtil.getNumOfDaysInMonth(lastSevenDaysIntervalsInMillis[0])) {
+                    dayOfMonth = 1;
+                    month++;
+                }
+            }
 
             do{
-                if(lastDayOfWeek == DateUtil.getDayOfWeek(cursor.getLong(APPLIED_DATE_COL_NUM))){
-                    @SuppressLint("DefaultLocale")
-                    String key = DAYS_OF_WEEK[lastDayOfWeek] + " " + String.format("%02d", month) + "/" + String.format("%02d", dayOfMonth);
-                    if(!map.containsKey(key))
-                        map.put(key, 1);
-                    else
-                        map.put(key, map.get(key)+1);
-                }
-                else{
-                    cursor.moveToPrevious();
-                    lastDayOfWeek++;
-                    if(lastDayOfWeek == DAYS_OF_WEEK.length + 1)
-                        lastDayOfWeek = 0;
+                dayOfWeek = DateUtil.getDayOfWeek(cursor.getLong(APPLIED_DATE_COL_NUM)) - 1;
+                dayOfMonth = DateUtil.getDayOfMonth(cursor.getLong(APPLIED_DATE_COL_NUM));
+                month = DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM)) + 1;
 
-                    dayOfMonth++;
-                    if(dayOfMonth == DateUtil.getNumOfDaysInMonth(cursor.getLong(APPLIED_DATE_COL_NUM)) + 1) {
-                        dayOfMonth = 1;
-                        month++;
-                        if(month == MONTHS_NAMES.length + 1)
-                            month = 1;
-                    }
-
-                    String key = DAYS_OF_WEEK[lastDayOfWeek] + " " + String.format("%02d", month) + "/" + String.format("%02d", dayOfMonth);
-                    map.put(key, 0);
-                }
-           }while(cursor.moveToNext());
+                String key = DAYS_OF_WEEK[dayOfWeek] + " " + String.format("%02d", month) + "/" + String.format("%02d", dayOfMonth);
+                map.put(key, map.get(key) + 1);
+            }while (cursor.moveToNext());
 
             cursor.close();
             db.close();
@@ -355,35 +351,34 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public LinkedHashMap<String, Integer> getApplicationsByMonth(){
+    public LinkedHashMap<String, Integer> getApplicationsByMonth() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " ORDER BY appliedDate ASC", null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
             int lastMonth = DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM)), year = DateUtil.getYear(cursor.getLong(APPLIED_DATE_COL_NUM)) - 2000;
 
-            do{
-                if(lastMonth == DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM))){
+            do {
+                if (lastMonth == DateUtil.getMonth(cursor.getLong(APPLIED_DATE_COL_NUM))) {
                     String key = MONTHS_NAMES[lastMonth] + " " + year;
-                    if(!map.containsKey(key))
+                    if (!map.containsKey(key))
                         map.put(key, 1);
                     else
-                        map.put(key, map.get(key)+1);
-                }
-                else{
+                        map.put(key, map.get(key) + 1);
+                } else {
                     cursor.moveToPrevious();
                     lastMonth++;
-                    if(lastMonth == MONTHS_NAMES.length + 1){
+                    if (lastMonth == MONTHS_NAMES.length + 1) {
                         lastMonth = 0;
-                        year ++;
+                        year++;
                     }
 
                     String key = MONTHS_NAMES[lastMonth] + " " + year;
                     map.put(key, 0);
                 }
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
 
             cursor.close();
             db.close();
@@ -397,21 +392,21 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public LinkedHashMap<String,Integer> getApplicationsByCompany(){
+    public LinkedHashMap<String, Integer> getApplicationsByCompany() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " ORDER BY company ASC" , null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " ORDER BY company ASC", null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
-            do{
+            do {
                 String key = cursor.getString(COMPANY_COL_NUM);
-                if(!map.containsKey(key))
+                if (!map.containsKey(key))
                     map.put(key, 1);
                 else
-                    map.put(key, map.get(key)+1);
+                    map.put(key, map.get(key) + 1);
             }
-            while(cursor.moveToNext());
+            while (cursor.moveToNext());
 
             return map;
         }
@@ -422,7 +417,7 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public void removeApplication(Application application){
+    public void removeApplication(Application application) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(APPLICATIONS_TABLE_NAME, "id = ?", new String[]{"" + application.getId()});
 
