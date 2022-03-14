@@ -5,12 +5,15 @@ import android.graphics.Point;
 public class GraphEntry {
     private int data;
     private String label;
+    private String[] labelParts;
     private Point point = new Point();
 
     public GraphEntry(int data, String label) {
         this.data = data;
         this.label = label;
+        this.labelParts = label.split(" ");
     }
+
 
     public int getData() {
         return this.data;
@@ -18,6 +21,10 @@ public class GraphEntry {
 
     public String getLabel() {
         return this.label;
+    }
+
+    public String[] getLabelParts() {
+        return labelParts;
     }
 
     public Point getPoint() {

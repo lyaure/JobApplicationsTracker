@@ -11,13 +11,13 @@ import com.lyaurese.jobapplicationstracker.Objects.GraphEntry;
 import com.lyaurese.jobapplicationstracker.R;
 
 public class GraphView extends View {
-    private Paint pWhite, pRED, pBottom, pBlack, pBars;
+    private Context context;
+    private Paint pWhite, pBlack, pBars;
     private int height, width;
     private int screenWidth, screenHeight;
     private GraphEntry[] entries;
     private int graphHeight, barWidth, space;
     private int max;
-    private Context context;
     private int[] barsColors;
 
     public GraphView(Context context, AttributeSet attrs) {
@@ -27,10 +27,6 @@ public class GraphView extends View {
 
         barWidth = 50;
         space = 250;
-
-        pRED = new Paint();
-        pRED.setColor(Color.RED);
-        pRED.setTextAlign(Paint.Align.CENTER);
 
         pWhite = new Paint();
         pWhite.setColor(getResources().getColor(R.color.white));
@@ -51,10 +47,8 @@ public class GraphView extends View {
 
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
-//        canvas.drawColor(this.context.getResources().getColor(R.color.lightGray));
-
         pWhite.setTextAlign(Paint.Align.CENTER);
-
+        
         graphHeight = height - ((height / 10) * 3);
 
         int index = 0;
@@ -108,7 +102,6 @@ public class GraphView extends View {
     private void setSize(int size) {
         pBlack.setTextSize(size);
         pWhite.setTextSize(size);
-        pRED.setTextSize(size);
     }
 
     public void setEntries(GraphEntry[] entries) {
@@ -133,7 +126,10 @@ public class GraphView extends View {
             }
 
             canvas.drawRect(entry.getPoint().x - barWidth, (height /10) +(graphHeight - entry.getPoint().y), entry.getPoint().x + barWidth, height - (height / 10) * 2, pBars);
-            canvas.drawText(entry.getLabel(), entry.getPoint().x, height - (height / 30), pWhite);
+            // ----------- TODO ----------------
+            canvas.drawText(entry.getLabelParts()[0], entry.getPoint().x, height - (height / 30) *3, pWhite);
+            if(entry.getLabelParts().length > 1)
+                canvas.drawText(entry.getLabelParts()[1], entry.getPoint().x, height - (height / 30), pWhite);
 
             if (entry.getData() != 0) {
                 canvas.drawText(Integer.toString((int)entry.getData()), entry.getPoint().x, (height /10) + (graphHeight - entry.getPoint().y) - 20, pBlack);
