@@ -153,7 +153,7 @@ public class BoardFragment extends Fragment {
 
                     String label = lastSevenDaysGraphView.getObjectLabelAt(x, y);
 
-                    if(!label.equals("null")){
+                    if(!label.isEmpty()){
                         changeFragment(LAST_SEVEN_DAYS, label);
                     }
                 }
@@ -176,7 +176,7 @@ public class BoardFragment extends Fragment {
 
                     String label = companiesGraphView.getObjectLabelAt(x, y);
 
-                    if(!label.equals("null")){
+                    if(!label.isEmpty()){
                         changeFragment(COMPANY, label);
                     }
                 }
