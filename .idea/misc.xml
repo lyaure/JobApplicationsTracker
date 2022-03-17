@@ -4,7 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/default_dot.xml" value="0.3351851851851852" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_add_circle_75.xml" value="0.537962962962963" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.43385416666666665" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.537962962962963" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.225" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_radio_button_checked_24.xml" value="0.537962962962963" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_radio_button_unchecked_24.xml" value="0.537962962962963" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_rotation_24.xml" value="0.5287037037037037" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/ic_baseline_tune_24.xml" value="0.33611111111111114" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/drawable/selected_dot.xml" value="0.3351851851851852" />
@@ -15,8 +20,13 @@
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_board.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_companies.xml" value="0.453125" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_edit_application.xml" value="0.3234375" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_edit_tag_dialog.xml" value="0.5421875" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_edit_tags.xml" value="0.41770833333333335" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_edit_tags_fragments.xml" value="0.528125" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/fragment_filter.xml" value="0.5421875" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/list_item.xml" value="0.41770833333333335" />
         <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/selected_dot.xml" value="0.5421875" />
+        <entry key="..\:/Users/Lyaure/AndroidStudioProjects/JobApplicationsTracker/app/src/main/res/layout/tag_list_item.xml" value="0.5421875" />
       </map>
     </option>
   </component>

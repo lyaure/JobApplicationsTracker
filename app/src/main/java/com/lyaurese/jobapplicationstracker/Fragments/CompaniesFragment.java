@@ -71,7 +71,7 @@ public class CompaniesFragment extends Fragment {
                 activity.setFragmentID(R.layout.fragment_add_application);
 
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container_ID, addApplication ); // give your fragment container id in first parameter
+                transaction.replace(R.id.container_ID, addApplication, "addApplication"); // give your fragment container id in first parameter
                 transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
                 transaction.commit();
             }

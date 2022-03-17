@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.lyaurese.jobapplicationstracker.Fragments.BoardFragment;
 import com.lyaurese.jobapplicationstracker.Fragments.CompaniesFragment;
+import com.lyaurese.jobapplicationstracker.Fragments.EditTagsFragments;
 import com.lyaurese.jobapplicationstracker.R;
 
 public class MainBoardActivity extends FragmentActivity {
@@ -80,6 +81,9 @@ public class MainBoardActivity extends FragmentActivity {
         else if(fragmentID == R.layout.fragment_add_application || fragmentID == R.layout.fragment_application_pager || fragmentID == R.layout.fragment_edit_application){
             fragment = new CompaniesFragment();
             loadFragment(fragment);
+        }
+        else if(fragmentID == R.layout.fragment_edit_tags){
+            getSupportFragmentManager().popBackStack();
         }
         else{ // close the app and go home
             Intent intent = new Intent(Intent.ACTION_MAIN);

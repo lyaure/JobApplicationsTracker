@@ -1,6 +1,7 @@
 package com.lyaurese.jobapplicationstracker.Objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Application implements Serializable {
@@ -12,6 +13,7 @@ public class Application implements Serializable {
     private long appliedDate, interviewedDate;
     private String comment, location;
     private boolean active;
+    private ArrayList<String> tags;
 
     public Application(int id, String companyName, String jobTitle, String jobNumber, String location, long timeInMillis, String comment){
         this.id = id;
@@ -63,6 +65,19 @@ public class Application implements Serializable {
         return comment;
     }
 
+    public String tagsToString(){
+        String s = "Tags: ";
+
+        for(String tag : this.tags)
+            s += "#" + tag + " ";
+
+        return s;
+    }
+
+    public ArrayList<String> getTags(){
+        return this.tags;
+    }
+
     public String getLocation(){
         return this.location;
     }
@@ -105,5 +120,9 @@ public class Application implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 }

@@ -48,7 +48,7 @@ public class GraphView extends View {
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
         pWhite.setTextAlign(Paint.Align.CENTER);
-        
+
         graphHeight = height - ((height / 10) * 3);
 
         int index = 0;
