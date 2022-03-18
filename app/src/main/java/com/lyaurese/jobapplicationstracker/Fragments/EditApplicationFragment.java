@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import com.lyaurese.jobapplicationstracker.Objects.Database;
 import com.lyaurese.jobapplicationstracker.R;
 import com.lyaurese.jobapplicationstracker.Utils.DateUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class EditApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
@@ -43,6 +45,8 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
     private boolean changeAppliedDate, changeInterviewDate;
     private int filter, sortOption;
     private ScrollView editScrollView;
+    private TextView tags;
+    private ImageButton editTags;
 
     public EditApplicationFragment() {
         // Required empty public constructor
@@ -143,6 +147,33 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
             @Override
             public void afterTextChanged(Editable s) {
                 application.setLocation(s.toString());
+            }
+        });
+
+        tags = (TextView) view.findViewById(R.id.editApplicationTagsTxtView_ID);
+        tags.setText(application.tagsToString());
+
+        editTags = (ImageButton) view.findViewById(R.id.editApplicationEditTagsBtn_ID);
+        editTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditTagsFragments fragment = new EditTagsFragments();
+
+                MainBoardActivity activity = (MainBoardActivity)getActivity();
+                activity.setFragmentID(R.layout.fragment_edit_tags);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("application", application);
+                bundle.putString("fragmentName", "editApplication");
+                bundle.putInt("filter", filter);
+                bundle.putInt("type", sortOption);
+                bundle.putString("name", objectName);
+                fragment.setArguments(bundle);
+
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container_ID, fragment, "editTags"); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
             }
         });
 

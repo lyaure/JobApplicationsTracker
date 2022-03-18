@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Application implements Serializable {
-    private int id;
+    private long id;
     private String jobPosition;
     private String jobNumber;
     private String companyName;
@@ -27,9 +27,10 @@ public class Application implements Serializable {
         this.comment = comment;
         this.active = true;
         this.location = location;
+        this.tags = new ArrayList<>();
     }
 
-    public int getId(){
+    public long getId(){
         return this.id;
     }
 
@@ -66,7 +67,7 @@ public class Application implements Serializable {
     }
 
     public String tagsToString(){
-        String s = "Tags: ";
+        String s = "";
 
         for(String tag : this.tags)
             s += "#" + tag + " ";
@@ -123,6 +124,7 @@ public class Application implements Serializable {
     }
 
     public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
+        this.tags.clear();
+        this.tags.addAll(tags);
     }
 }

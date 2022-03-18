@@ -46,7 +46,7 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE IF NOT EXISTS " + APPLICATIONS_TABLE_NAME +
-                "(id INTEGER, " +
+                "(appId INTEGER, " +
                 "company TEXT, " +
                 "jobPosition TEXT, " +
                 "jobNumber TEXT, " +
@@ -58,7 +58,7 @@ public class Database extends SQLiteOpenHelper {
                 "comments TEXT)";
         db.execSQL(query);
 
-        query = "CREATE TABLE IF NOT EXISTS " + TAGS_TABLE + "(id INTEGER, name TEXT)";
+        query = "CREATE TABLE IF NOT EXISTS " + TAGS_TABLE + "(tagId INTEGER, name TEXT)";
         db.execSQL(query);
 
         query = "CREATE TABLE IF NOT EXISTS " + JUNCTION_TABLE + "(appId INTEGER, tagId INTEGER)";
@@ -83,7 +83,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("id", -1);
+        values.put("appId", application.getId());
         values.put("company", application.getCompanyName());
         values.put("jobPosition", application.getJobPosition());
         values.put("jobNumber", application.getJobNumber());
@@ -94,45 +94,15 @@ public class Database extends SQLiteOpenHelper {
         values.put("interviewDate", 0);
         values.put("comments", application.getComment());
 
-        long appId, tagId;
+        long appId;
         appId = db.insert(APPLICATIONS_TABLE_NAME, null, values);
 
         values.clear();
-        values.put("id", appId);
+        values.put("appId", appId);
 
-        db.update(APPLICATIONS_TABLE_NAME, values, "id = -1", null);
+        db.update(APPLICATIONS_TABLE_NAME, values, "appId = -1", null);
 
-        ArrayList<String> tags = application.getTags();
-        if (tags.size() > 0) {
-            values.clear();
-
-            for (String tag : tags) {
-                Cursor cursor = db.rawQuery("SELECT * FROM " + TAGS_TABLE + " WHERE name = '" + tag + "'", null);
-
-
-                if(cursor.moveToFirst()){
-                    tagId = cursor.getLong(0);
-                }
-                else{
-                    values.put("id", -1);
-                    values.put("name", tag);
-                    tagId = db.insert(TAGS_TABLE, null, values);
-
-                    values.clear();
-                    values.put("id", tagId);
-
-                    db.update(TAGS_TABLE, values, "id = -1", null);
-                }
-
-                values.clear();
-                values.put("appId", appId);
-                values.put("tagId", tagId);
-
-                db.insert(JUNCTION_TABLE, null, values);
-
-                values.clear();
-            }
-        }
+        insertTags(db, appId, application.getTags());
 
         db.close();
     }
@@ -141,7 +111,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + application.getId() + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appId = '" + application.getId() + "'", null);
         cursor.moveToFirst();
 
         values.put("company", application.getCompanyName());
@@ -160,9 +130,74 @@ public class Database extends SQLiteOpenHelper {
         }
         values.put("comments", application.getComment());
 
-        db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" + application.getId()});
+        db.update(APPLICATIONS_TABLE_NAME, values, "appId = ?", new String[]{"" + application.getId()});
+
+        editTags(db, application.getId(), application.getTags());
 
         cursor.close();
+    }
+
+    public void editTags(SQLiteDatabase db, long appId, ArrayList<String> tags) {
+        ArrayList<String> oldTags = getAppTags(appId);
+
+        ArrayList<String> delete = new ArrayList<>();
+        delete.addAll(oldTags);
+        delete.removeAll(tags);
+
+        ArrayList<String> tagIds = new ArrayList<>();
+
+        for(String tag : delete) {
+            Cursor cursor = db.rawQuery("SELECT tagId FROM " + TAGS_TABLE + " WHERE name = '" + tag + "'", null);
+            cursor.moveToFirst();
+
+            do{
+                tagIds.add(String.valueOf(cursor.getLong(0)));
+            }while(cursor.moveToNext());
+        }
+
+        for(String id : tagIds)
+            db.delete(JUNCTION_TABLE, "appId = " + appId + " AND tagId = " + id, null);
+
+        deleteIfNeeded(db, delete);
+
+        tags.removeAll(oldTags);
+
+        insertTags(db, appId, tags);
+    }
+
+    private void insertTags(SQLiteDatabase db, long appId, ArrayList<String> tags) {
+        if (tags.size() > 0) {
+            ContentValues values = new ContentValues();
+
+            long tagId;
+
+            for (String tag : tags) {
+                Cursor cursor = db.rawQuery("SELECT tagId FROM " + TAGS_TABLE + " WHERE name = '" + tag + "'", null);
+
+
+                if (cursor.moveToFirst()) {
+                    tagId = cursor.getLong(0);
+                } else {
+                    values.put("tagId", -1);
+                    values.put("name", tag);
+                    tagId = db.insert(TAGS_TABLE, null, values);
+
+                    values.clear();
+                    values.put("tagId", tagId);
+
+                    db.update(TAGS_TABLE, values, "tagId = -1", null);
+                }
+
+                values.clear();
+                values.put("appId", appId);
+                values.put("tagId", tagId);
+
+                db.insert(JUNCTION_TABLE, null, values);
+
+                values.clear();
+                cursor.close();
+            }
+        }
         db.close();
     }
 
@@ -187,7 +222,6 @@ public class Database extends SQLiteOpenHelper {
 
         return getListObjects(LOCATION, query);
     }
-
 
     private ArrayList<ListObject> getListObjects(int type, String query) {
         SQLiteDatabase db = getReadableDatabase();
@@ -266,9 +300,10 @@ public class Database extends SQLiteOpenHelper {
                 if (cursor.getInt(INTERVIEW_COL_NUM) == 1)
                     application.setInterviewDate(cursor.getLong(INTERVIEW_DATE_COL_NUM));
 
-
                 if (cursor.getInt(ACTIVE_COL_NUM) == 0)
                     application.setActive(false);
+
+                application.setTags(getAppTags(application.getId()));
 
                 list.add(application);
             } while (cursor.moveToNext());
@@ -279,6 +314,44 @@ public class Database extends SQLiteOpenHelper {
             db.close();
 
             return null;
+        }
+    }
+
+    public ArrayList<String> getAppTags(long appId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT tagId FROM " + JUNCTION_TABLE + " WHERE appId = " + appId, null);
+
+        ArrayList<String> tags = new ArrayList<>();
+        ArrayList<Long> tagsId = new ArrayList<>();
+
+        if (cursor.moveToFirst())
+            do{
+                tagsId.add(cursor.getLong(0));
+            }while(cursor.moveToNext());
+
+        for (long id : tagsId) {
+            cursor = db.rawQuery("SELECT name FROM " + TAGS_TABLE + " WHERE tagId = " + id, null);
+            cursor.moveToFirst();
+            tags.add(cursor.getString(0));
+        }
+
+        cursor.close();
+//        db.close();
+
+        return tags;
+    }
+
+    private void deleteIfNeeded(SQLiteDatabase db, ArrayList<String> tags){
+        for(String tag : tags){
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TAGS_TABLE + " WHERE name = '" + tag + "'", null);
+            cursor.moveToNext();
+            long tagId = cursor.getLong(0);
+
+            cursor = db.rawQuery("SELECT * FROM " + JUNCTION_TABLE + " WHERE tagId = " + tagId, null);
+            if(cursor.getCount() == 0)
+                db.delete(TAGS_TABLE,"name = '" + tag + "'", null);
+
+            cursor.close();
         }
     }
 
@@ -330,14 +403,14 @@ public class Database extends SQLiteOpenHelper {
         return count;
     }
 
-    public void setActive(int id, boolean active) {
+    public void setActive(long appId, boolean active) {
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE id = '" + id + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appId = '" + appId + "'", null);
 
         ContentValues values = new ContentValues();
         values.put("active", active ? 1 : 0);
 
-        db.update(APPLICATIONS_TABLE_NAME, values, "id = ?", new String[]{"" + id});
+        db.update(APPLICATIONS_TABLE_NAME, values, "appId = ?", new String[]{"" + appId});
 
         cursor.close();
         db.close();
@@ -461,18 +534,54 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public ArrayList<Tag> getTagsList() {
+    public ArrayList<Tag> getTagsListWithId(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT name FROM " + TAGS_TABLE, null);
+
+        ArrayList<String> allTags = new ArrayList<>();
+
+        if(cursor.moveToFirst()){
+            do{
+                allTags.add(cursor.getString(0));
+            }while(cursor.moveToNext());
+        }
+
+        ArrayList<String> appTags = getAppTags(id);
+
+        allTags.removeAll(appTags);
+
         ArrayList<Tag> tags = new ArrayList<>();
 
-        tags.add(new Tag("hello", true));
-        tags.add(new Tag("hi", false));
+        for(String tag : appTags)
+            tags.add(new Tag(tag, true));
+
+        for(String tag : allTags)
+            tags.add(new Tag(tag, false));
+
+        cursor.close();
+        db.close();
+
+        return tags;
+    }
+
+    public ArrayList<Tag> getAllTags() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT name FROM " + TAGS_TABLE, null);
+
+        ArrayList<Tag> tags = new ArrayList<>();
+
+        if(cursor.moveToFirst()){
+            do{
+                tags.add(new Tag(cursor.getString(0), false));
+            }while(cursor.moveToNext());
+        }
 
         return tags;
     }
 
     public void removeApplication(Application application) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(APPLICATIONS_TABLE_NAME, "id = ?", new String[]{"" + application.getId()});
+        db.delete(APPLICATIONS_TABLE_NAME, "appId = " + application.getId(), null);
 
         db.close();
     }

@@ -26,10 +26,10 @@ import java.util.Calendar;
 
 public class ApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private Application application;
-    private ImageButton editButton;
     private TextView company, title, number, appliedDate, interviewedDate, appliedTxt, interviewTxt, comments, location;
     private Calendar calendar;
     private CheckBox active;
+    private TextView tags;
 
 
     public ApplicationFragment() {
@@ -89,6 +89,9 @@ public class ApplicationFragment extends Fragment implements DatePickerDialog.On
                 db.setActive(application.getId(), isChecked);
             }
         });
+
+        tags = (TextView)view.findViewById(R.id.applicationTagsTxtv_ID);
+        tags.setText(application.tagsToString());
 
         comments = (TextView) view.findViewById(R.id.commentsInput_ID);
         comments.setMovementMethod(new ScrollingMovementMethod());

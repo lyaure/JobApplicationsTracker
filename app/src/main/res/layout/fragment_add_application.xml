@@ -112,16 +112,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tags: "
+                    android:textColor="@android:color/darker_gray" />
 
                 <TextView
                     android:id="@+id/addApplicationTagsTxtView_ID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="10dp"
                     android:text="Tags: "
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@color/lightGray" />
 
                 <ImageButton
                     android:id="@+id/addApplicationEditTagsBtn_ID"
@@ -131,6 +138,7 @@
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_baseline_edit_24" />
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/appliedDateLayout_ID"
@@ -176,7 +184,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-
 
             <EditText
                 android:id="@+id/commentsInput_ID"

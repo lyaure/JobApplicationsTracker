@@ -101,6 +101,36 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tags: "
+                    android:textColor="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/editApplicationTagsTxtView_ID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tags: "
+                    android:textColor="@color/lightGray" />
+
+                <ImageButton
+                    android:id="@+id/editApplicationEditTagsBtn_ID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_edit_24" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/editAppliedDateLayout_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

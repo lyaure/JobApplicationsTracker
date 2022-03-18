@@ -170,18 +170,11 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                         MainBoardActivity activity = (MainBoardActivity)getActivity();
                         activity.setFragmentID(R.layout.fragment_companies);
 
-                        SharedPreferences sp = activity.getSharedPreferences("id", Context.MODE_PRIVATE);
-                        int id = sp.getInt("lastId", -1) + 1;
-
                         //---TODO---- remove applied property
-                        Application application = new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar.getTimeInMillis(), commentsInput);
+                        Application application = new Application(-1, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar.getTimeInMillis(), commentsInput);
                         application.setTags(tempApplication != null ? tempApplication.getTags() : new ArrayList<String>());
 
                         db.insertNewApplication(application);
-
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putInt("lastId", id);
-                        editor.commit();
 
                         Fragment CompaniesFragment = new CompaniesFragment();
 

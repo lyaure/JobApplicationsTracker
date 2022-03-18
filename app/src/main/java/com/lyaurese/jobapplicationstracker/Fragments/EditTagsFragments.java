@@ -23,7 +23,6 @@ import com.lyaurese.jobapplicationstracker.Adapters.TagListAdapter;
 import com.lyaurese.jobapplicationstracker.Objects.Application;
 import com.lyaurese.jobapplicationstracker.Objects.Database;
 import com.lyaurese.jobapplicationstracker.Objects.Tag;
-import com.lyaurese.jobapplicationstracker.Objects.TagList;
 import com.lyaurese.jobapplicationstracker.R;
 
 import java.util.ArrayList;
@@ -40,6 +39,10 @@ public class EditTagsFragments extends Fragment {
     private TextView newTag;
     private Application application;
     private String fragmentName;
+    private int filter;
+    private int sortOption;
+    private String objectName;
+    private ArrayList<Tag> originalTagsList;
 
     public EditTagsFragments() {
         // Required empty public constructor
@@ -53,6 +56,9 @@ public class EditTagsFragments extends Fragment {
             Bundle bundle = getArguments();
             application = (Application) bundle.getSerializable("application");
             fragmentName = getArguments().getString("fragmentName");
+            filter = getArguments().getInt("filter", -1);
+            sortOption = getArguments().getInt("type", 0);
+            objectName = getArguments().getString("name", "");
         }
 
     }
@@ -82,6 +88,7 @@ public class EditTagsFragments extends Fragment {
                         returnTags.add(tag.getName());
 
                 application.setTags(returnTags);
+
                 goBack();
             }
         });
@@ -158,7 +165,12 @@ public class EditTagsFragments extends Fragment {
 
         Database db = Database.getInstance(getContext());
 
-        tags = db.getTagsList();
+        if(application.getId() != -1)
+            originalTagsList = db.getTagsListWithId(application.getId());
+        else
+            originalTagsList = db.getAllTags();
+        tags = new ArrayList<>();
+        tags.addAll(originalTagsList);
         tagsCopy = new ArrayList<>();
         tagsCopy.addAll(tags);
 
@@ -197,6 +209,7 @@ public class EditTagsFragments extends Fragment {
     private void goBack(){
         Fragment fragment;
         MainBoardActivity activity = (MainBoardActivity)getActivity();
+        Bundle bundle = new Bundle();
 
         if(fragmentName.equals("addApplication")) {
             fragment = new AddApplicationFragment();
@@ -205,9 +218,11 @@ public class EditTagsFragments extends Fragment {
         else{
             fragment = new EditApplicationFragment();
             activity.setFragmentID(R.layout.fragment_edit_application);
+            bundle.putInt("filter", filter);
+            bundle.putInt("type", sortOption);
+            bundle.putString("name", objectName);
         }
 
-        Bundle bundle = new Bundle();
         bundle.putSerializable("application", application);
         fragment.setArguments(bundle);
 
