@@ -54,7 +54,7 @@ public class Database extends SQLiteOpenHelper {
                 "active INTEGER, " +
                 "appliedDate INTEGER," +
                 "interview INTEGER, " +
-                "interviewDate, INTEGER, " +
+                "interviewDate INTEGER, " +
                 "comments TEXT)";
         db.execSQL(query);
 
@@ -294,8 +294,8 @@ public class Database extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             ArrayList<Application> list = new ArrayList<>();
             do {
-                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL), cursor.getString(LOCATION_COL_NUM),
-                        cursor.getLong(APPLIED_DATE_COL_NUM), cursor.getString(COMMENTS_COL_NUM));
+                Application application = new Application(cursor.getInt(ID_COL_NUM), cursor.getString(COMPANY_COL_NUM), cursor.getString(JOB_POSITION_COL_NUM), cursor.getString(JOB_NUMBER_COL),
+                        cursor.getString(LOCATION_COL_NUM), cursor.getLong(APPLIED_DATE_COL_NUM), cursor.getString(COMMENTS_COL_NUM));
 
                 if (cursor.getInt(INTERVIEW_COL_NUM) == 1)
                     application.setInterviewDate(cursor.getLong(INTERVIEW_DATE_COL_NUM));
@@ -487,7 +487,7 @@ public class Database extends SQLiteOpenHelper {
                 } else {
                     cursor.moveToPrevious();
                     lastMonth++;
-                    if (lastMonth == MONTHS_NAMES.length + 1) {
+                    if (lastMonth == MONTHS_NAMES.length) {
                         lastMonth = 0;
                         year++;
                     }
