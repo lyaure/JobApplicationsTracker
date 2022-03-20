@@ -32,8 +32,7 @@ public class Database extends SQLiteOpenHelper {
     private final int INTERVIEW_COL_NUM = 7;
     private final int INTERVIEW_DATE_COL_NUM = 8;
     private final int COMMENTS_COL_NUM = 9;
-
-    private final int COMPANY = 0, LOCATION = 1, DATE = 2, ALL = -1, INACTIVE = 0, ACTIVE = 1;
+    private final int COMPANY = 0, LOCATION = 1, DATE = 3, TAGS = 2, ALL = -1, INACTIVE = 0, ACTIVE = 1;
 
     private final String[] MONTHS_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private final String[] DAYS_OF_WEEK = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -225,6 +224,24 @@ public class Database extends SQLiteOpenHelper {
         return getListObjects(LOCATION, query);
     }
 
+    public ArrayList<ListObject> getTagsList(int filter){
+        String query;
+
+        if (filter == ALL)
+            query = "SELECT " + TAGS_TABLE + ".name, COUNT(*) FROM " + TAGS_TABLE +
+                    " JOIN " + JUNCTION_TABLE + " ON " + JUNCTION_TABLE + ".tagId = " + TAGS_TABLE + ".tagId" +
+                    " JOIN " + APPLICATIONS_TABLE_NAME + " ON " + APPLICATIONS_TABLE_NAME + ".appId = " + JUNCTION_TABLE + ".appId" +
+                    " GROUP BY " + TAGS_TABLE + ".name";
+        else
+            query = "SELECT " + TAGS_TABLE + ".name, COUNT(*) FROM " + TAGS_TABLE +
+                    " JOIN " + JUNCTION_TABLE + " ON " + JUNCTION_TABLE + ".tagId = " + TAGS_TABLE + ".tagId" +
+                    " JOIN " + APPLICATIONS_TABLE_NAME + " ON " + APPLICATIONS_TABLE_NAME + ".appId = " + JUNCTION_TABLE + ".appId" +
+                    " WHERE " + APPLICATIONS_TABLE_NAME + ".active = " + filter +
+                    " GROUP BY " + TAGS_TABLE + ".name";
+
+        return getListObjects(TAGS, query);
+    }
+
     private ArrayList<ListObject> getListObjects(int type, String query) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -285,6 +302,23 @@ public class Database extends SQLiteOpenHelper {
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + dateIntervalsInMillis[0] + "' AND appliedDate <= '" + dateIntervalsInMillis[1] + "' ORDER BY appliedDate ASC";
         else
             query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE appliedDate >= '" + dateIntervalsInMillis[0] + "' AND appliedDate <= '" + dateIntervalsInMillis[1] + "' AND active = " + filter + " ORDER BY appliedDate ASC";
+
+        return getApplicationsList(query);
+    }
+
+    public ArrayList<Application> getApplicationsListByTag(String tagName, int filter){
+        String query;
+
+        if(filter ==  -1)
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME +
+                    " JOIN " + JUNCTION_TABLE + " ON " + APPLICATIONS_TABLE_NAME + ".appId = " + JUNCTION_TABLE + ".appId" +
+                    " JOIN " + TAGS_TABLE + " ON " + JUNCTION_TABLE + ".tagId = " + TAGS_TABLE + ".tagId" +
+                    " WHERE " + TAGS_TABLE + ".name = '" + tagName + "'";
+        else
+            query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME +
+                    " JOIN " + JUNCTION_TABLE + " ON " + APPLICATIONS_TABLE_NAME + ".appId = " + JUNCTION_TABLE + ".appId" +
+                    " JOIN " + TAGS_TABLE + " ON " + JUNCTION_TABLE + ".tagId = " + TAGS_TABLE + ".tagId" +
+                    " WHERE " + TAGS_TABLE + ".name = '" + tagName + "' AND " + APPLICATIONS_TABLE_NAME + ".active = " + filter;
 
         return getApplicationsList(query);
     }
@@ -418,7 +452,7 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    public LinkedHashMap<String, Integer> getLastSevenDaysApplications() {
+    public LinkedHashMap<String, Integer> getLastSevenDaysApplicationsCount() {
         SQLiteDatabase db = getReadableDatabase();
         long[] lastSevenDaysIntervalsInMillis = DateUtil.getLastSevenDaysIntervalsInMillis();
 
@@ -470,7 +504,7 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public LinkedHashMap<String, Integer> getApplicationsByMonth() {
+    public LinkedHashMap<String, Integer> getApplicationsCountByMonth() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " ORDER BY appliedDate ASC", null);
 
@@ -511,7 +545,7 @@ public class Database extends SQLiteOpenHelper {
         return null;
     }
 
-    public LinkedHashMap<String, Integer> getApplicationsByCompany() {
+    public LinkedHashMap<String, Integer> getApplicationsCountByCompany() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " ORDER BY company ASC", null);
 
@@ -524,6 +558,30 @@ public class Database extends SQLiteOpenHelper {
                     map.put(key, 1);
                 else
                     map.put(key, map.get(key) + 1);
+            }
+            while (cursor.moveToNext());
+
+            return map;
+        }
+
+        cursor.close();
+        db.close();
+
+        return null;
+    }
+
+    public LinkedHashMap<String, Integer> getApplicationsCountByTag(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + TAGS_TABLE + ".name, COUNT(*) FROM " + TAGS_TABLE +
+                " INNER JOIN " + JUNCTION_TABLE + " ON " + TAGS_TABLE + ".tagId = " + JUNCTION_TABLE + ".tagId " +
+                "GROUP BY " + TAGS_TABLE + ".name ORDER BY " + TAGS_TABLE + ".name ASC", null);
+
+        if (cursor.moveToFirst()) {
+            LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+
+            do {
+                String key = cursor.getString(0);
+                map.put(key, cursor.getInt(1));
             }
             while (cursor.moveToNext());
 

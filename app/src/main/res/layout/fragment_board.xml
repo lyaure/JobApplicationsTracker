@@ -47,7 +47,7 @@
                 android:layout_marginBottom="30dp" />
 
             <TextView
-                android:id="@+id/lastApplicationsChartTxtv_ID"
+                android:id="@+id/titleChart1Txtv_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -57,7 +57,7 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/swapChartBtn_ID"
+                android:id="@+id/swapChartBtn1_ID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end" />
@@ -91,7 +91,7 @@
             </HorizontalScrollView>
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/titleChart2Txtv_ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -100,8 +100,14 @@
                 android:textColor="@android:color/darker_gray"
                 android:textSize="20sp" />
 
+            <Button
+                android:id="@+id/swapChartBtn2_ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+
             <HorizontalScrollView
-                android:id="@+id/companiesGraphViewHSV_ID"
+                android:id="@+id/categoriesGraphViewHSV_ID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp">
@@ -114,6 +120,12 @@
 
                     <com.lyaurese.jobapplicationstracker.CustomViews.GraphView
                         android:id="@+id/companiesGraphView_ID"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+
+                    <com.lyaurese.jobapplicationstracker.CustomViews.GraphView
+                        android:id="@+id/tagsGraphView_ID"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 

@@ -39,7 +39,7 @@ public class CompaniesFragment extends Fragment {
     private Database db;
 
     private final int ALL = -1, ACTIVE = 1, INACTIVE = 0;
-    private final int COMPANY = 0, LOCATION = 1, MONTHS = 2, LAST_SEVEN_DAYS = 3;
+    private final int COMPANY = 0, LOCATION = 1, TAGS = 2;
 
 
     public CompaniesFragment() {
@@ -80,7 +80,7 @@ public class CompaniesFragment extends Fragment {
         displayTxtv = (TextView) view.findViewById(R.id.displayTxtv_ID);
         filterTxtv = (TextView) view.findViewById(R.id.filterTxtv_ID);
 
-        sortOptions = new String[]{"Company", "Location"};
+        sortOptions = new String[]{"Company", "Location", "Tags"};
         String filterOptions[] = new String[]{"All", "Active", "Inactive"};
 
         displayTxtv.setText("by " + sortOptions[sortOption]);
@@ -195,8 +195,8 @@ public class CompaniesFragment extends Fragment {
                 return db.getCompaniesList(filter);
             case LOCATION:
                 return db.getLocationsList(filter);
-            case MONTHS:
-                return null;
+            case TAGS:
+                return db.getTagsList(filter);
             default:
                 return db.getCompaniesList(filter);
         }

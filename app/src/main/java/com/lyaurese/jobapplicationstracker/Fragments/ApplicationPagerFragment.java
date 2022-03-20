@@ -32,7 +32,7 @@ public class ApplicationPagerFragment extends Fragment {
     private ArrayList<Application> applicationsList = new ArrayList<>();
     private Database db;
     private MainBoardActivity activity;
-    private final int COMPANY = 0, LOCATION = 1, MONTHS = 2, LAST_SEVEN_DAYS = 3;
+    private final int COMPANY = 0, LOCATION = 1, MONTHS = 4, LAST_SEVEN_DAYS = 3, TAGS = 2;
 
     public ApplicationPagerFragment() {
         // Required empty public constructor
@@ -184,6 +184,8 @@ public class ApplicationPagerFragment extends Fragment {
                 return db.getApplicationsListSortByMonths(objectName, filter);
             case LOCATION:
                 return db.getApplicationsListSortByLocation(objectName, filter);
+            case TAGS:
+                return db.getApplicationsListByTag(objectName, filter);
             default:
                 return db.getApplicationsListSortByCompany(objectName, filter);
         }
