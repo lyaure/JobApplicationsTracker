@@ -25,7 +25,8 @@ import java.util.ArrayList;
 public class ApplicationPagerFragment extends Fragment {
     private ViewPager2 viewPager;
     private ViewPagerAdapter adapter;
-    private String objectName, application;
+    private String objectName;
+    private long application;
     private int filter, sortOption;
     private ImageButton backButton;
     private ArrayList<Application> applicationsList = new ArrayList<>();
@@ -44,7 +45,7 @@ public class ApplicationPagerFragment extends Fragment {
             filter = getArguments().getInt("filter", -1);
             sortOption = getArguments().getInt("type", COMPANY);
             objectName = getArguments().getString("name");
-            application = getArguments().getString("application", null);
+            application = getArguments().getLong("application", -1);
         }
     }
 
@@ -85,7 +86,7 @@ public class ApplicationPagerFragment extends Fragment {
                     bundle.putInt("filter", filter);
                     bundle.putInt("type", sortOption);
                     bundle.putString("name", objectName);
-                    bundle.putString("application", applicationsList.get(index == 0? index+1 : index-1).getJobNumber());
+                    bundle.putLong("application", applicationsList.get(index == 0? index+1 : index-1).getId());
                     fragment.setArguments(bundle);
 
                     FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -110,8 +111,8 @@ public class ApplicationPagerFragment extends Fragment {
         int index = -1;
 
         for (Application a : applicationsList) {
-            if(this.application != null)
-                if (this.application.equals(a.getJobNumber()))
+            if(this.application != -1)
+                if (this.application == a.getId())
                     index = applicationsList.indexOf(a);
             ApplicationFragment fragment = new ApplicationFragment();
             Bundle bundle = new Bundle();

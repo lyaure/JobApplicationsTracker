@@ -79,7 +79,7 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public void insertNewApplication(Application application) {
+    public long insertNewApplication(Application application) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -105,6 +105,8 @@ public class Database extends SQLiteOpenHelper {
         insertTags(db, appId, application.getTags());
 
         db.close();
+
+        return appId;
     }
 
     public void editApplication(Application application) {

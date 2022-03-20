@@ -316,7 +316,6 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                         activity.setFragmentID(R.layout.fragment_application);
 
                         Bundle bundle = new Bundle();
-                        //---todo - location/date
                         bundle.putInt("filter", filter);
                         bundle.putInt("type", sortOption);
 
@@ -328,7 +327,7 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
                                 bundle.putString("name", application.getLocation());
                                 break;
                         }
-                        bundle.putString("application", application.getJobNumber());
+                        bundle.putLong("application", application.getId());
                         fragment.setArguments(bundle);
 
                         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

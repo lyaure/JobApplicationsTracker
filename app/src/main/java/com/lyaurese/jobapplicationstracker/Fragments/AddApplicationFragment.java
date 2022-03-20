@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class AddApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+public class AddApplicationFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
     private EditText company, jobPosition, jobNumber, comments, jobLocation;
     private Button changeDate;
     private LinearLayout dateLayout;
@@ -74,17 +74,14 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         dateLayout = (LinearLayout) view.findViewById(R.id.appliedDateLayout_ID);
         date = (TextView) view.findViewById(R.id.dateInputTxtv_ID);
         comments = (EditText) view.findViewById(R.id.commentsInput_ID);
-        comments.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    scrollViewDown(addScrollView);
-            }
-        });
+//        comments.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus)
+//                    scrollViewDown(addScrollView);
+//            }
+//        });
         add = (Button) view.findViewById(R.id.finishAddApplicationBtn_ID);
-
-        if(tempApplication != null)
-            updateViews();
 
         editTags.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +90,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
 
                 EditTagsFragments fragment = new EditTagsFragments();
 
-                MainBoardActivity activity = (MainBoardActivity)getActivity();
+                MainBoardActivity activity = (MainBoardActivity) getActivity();
                 activity.setFragmentID(R.layout.fragment_edit_tags);
 
                 Bundle bundle = new Bundle();
@@ -108,7 +105,8 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
             }
         });
 
-        db = Database.getInstance(getActivity());;
+        db = Database.getInstance(getActivity());
+        ;
 
         calendar = Calendar.getInstance();
         calendar.setTime(Calendar.getInstance().getTime());
@@ -131,7 +129,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
                 String commentsInput = comments.getText().toString();
                 String locationInput = jobLocation.getText().toString();
 
-                if(companyInput.equals("")){
+                if (companyInput.equals("")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error")
                             .setMessage("Company name is a required field.")
@@ -144,8 +142,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
 
                     AlertDialog alert = builder.create();
                     alert.show();
-                }
-                else if(jobTitleInput.equals("")){
+                } else if (jobTitleInput.equals("")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Error")
                             .setMessage("Job Position is a required field.")
@@ -158,47 +155,50 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
 
                     AlertDialog alert = builder.create();
                     alert.show();
+                } else if (db.isJobExists(jobNumberInput, companyInput) && !jobNumberInput.equals("")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Error")
+                            .setMessage("Job ID already exists.\nPlease insert a new job ID.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    Application application = new Application(-1, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar.getTimeInMillis(), commentsInput);
+                    application.setTags(tempApplication != null ? tempApplication.getTags() : new ArrayList<String>());
+
+                    Long id = db.insertNewApplication(application);
+
+                    Fragment fragment = new ApplicationPagerFragment();
+
+                    MainBoardActivity activity = (MainBoardActivity) getActivity();
+                    activity.setFragmentID(R.layout.fragment_application);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", application.getCompanyName());
+                    bundle.putLong("application", id);
+                    fragment.setArguments(bundle);
+
+                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_ID, fragment); // give your fragment container id in first parameter
+                    transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                    transaction.commit();
                 }
-                else if(db.isJobExists(jobNumberInput, companyInput) && !jobNumberInput.equals("")){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Error")
-                                .setMessage("Job ID already exists.\nPlease insert a new job ID.")
-                                .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                });
-
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                    else{
-                        MainBoardActivity activity = (MainBoardActivity)getActivity();
-                        activity.setFragmentID(R.layout.fragment_companies);
-
-                        //---TODO---- remove applied property
-                        Application application = new Application(-1, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar.getTimeInMillis(), commentsInput);
-                        application.setTags(tempApplication != null ? tempApplication.getTags() : new ArrayList<String>());
-
-                        db.insertNewApplication(application);
-
-                        Fragment CompaniesFragment = new CompaniesFragment();
-
-                        activity.setFragmentID(R.layout.fragment_companies);
-
-                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container_ID, CompaniesFragment); // give your fragment container id in first parameter
-                        transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                        transaction.commit();
-                    }
             }
         });
+
+        if (tempApplication != null)
+            updateViews();
 
         return view;
     }
 
-    private void scrollViewDown(ScrollView scrollView){
+    private void scrollViewDown(ScrollView scrollView) {
         scrollView.post(new Runnable() {
             @Override
             public void run() {
@@ -207,7 +207,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         });
     }
 
-    private void showDatePickerDialog(){
+    private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog
                 (getActivity(), this, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
@@ -227,7 +227,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         scrollViewDown(addScrollView);
     }
 
-    private Application getTempApplication(int id){
+    private Application getTempApplication(int id) {
         String companyInput = company.getText().toString();
         String jobTitleInput = jobPosition.getText().toString();
         String jobNumberInput = jobNumber.getText().toString();
@@ -237,7 +237,7 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         return new Application(id, companyInput, jobTitleInput, jobNumberInput, locationInput, calendar.getTimeInMillis(), commentsInput);
     }
 
-    private void updateViews(){
+    private void updateViews() {
         company.setText(tempApplication.getCompanyName());
         jobPosition.setText(tempApplication.getJobPosition());
         jobNumber.setText(tempApplication.getJobNumber());
