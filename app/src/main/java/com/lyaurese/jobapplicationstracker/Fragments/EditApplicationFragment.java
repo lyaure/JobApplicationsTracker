@@ -251,8 +251,9 @@ public class EditApplicationFragment extends Fragment implements DatePickerDialo
         comments.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    scrollViewDown(editScrollView);
+//                if(hasFocus)
+//                    scrollViewDown(editScrollView);
+                comments.computeScroll();
             }
         });
 

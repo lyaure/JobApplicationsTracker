@@ -74,6 +74,13 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         dateLayout = (LinearLayout) view.findViewById(R.id.appliedDateLayout_ID);
         date = (TextView) view.findViewById(R.id.dateInputTxtv_ID);
         comments = (EditText) view.findViewById(R.id.commentsInput_ID);
+        comments.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    scrollViewDown(addScrollView);
+            }
+        });
         add = (Button) view.findViewById(R.id.finishAddApplicationBtn_ID);
 
         if(tempApplication != null)
