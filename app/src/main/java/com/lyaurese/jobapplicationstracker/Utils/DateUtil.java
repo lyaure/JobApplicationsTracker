@@ -47,7 +47,7 @@ public abstract class DateUtil {
     public static long[] getMonthIntervalsInMillis(String date){
         long[] intervals = new long[2];
         Calendar calendar = Calendar.getInstance();
-        int month = 0, year = 2000;
+        int month = 0, year = 0;
 
         String monthName = date.substring(0, 3);
 

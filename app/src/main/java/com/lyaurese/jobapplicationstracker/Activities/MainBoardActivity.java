@@ -78,7 +78,7 @@ public class MainBoardActivity extends FragmentActivity {
             loadFragment(fragment);
         }
         // doesn't close the app
-        else if(fragmentID == R.layout.fragment_add_application || fragmentID == R.layout.fragment_application_pager || fragmentID == R.layout.fragment_edit_application){
+        else if(fragmentID == R.layout.fragment_add_application || fragmentID == R.layout.fragment_application_pager || fragmentID == R.layout.fragment_edit_application || fragmentID == R.layout.fragment_application){
             fragment = new CompaniesFragment();
             loadFragment(fragment);
         }

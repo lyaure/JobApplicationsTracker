@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#00FFFFFF"
                     android:hint="Company name"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapWords"
                     android:textColor="@color/lightGray"
                     android:textColorHint="@color/lightGray"
                     android:textCursorDrawable="@color/blue" />
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#00FFFFFF"
                     android:hint="Job ID"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapWords"
                     android:textColor="@color/lightGray"
                     android:textColorHint="@color/lightGray"
                     android:textCursorDrawable="@color/blue" />
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#00FFFFFF"
                     android:hint="Job location"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapWords"
                     android:textColor="@color/lightGray"
                     android:textColorHint="@color/lightGray"
                     android:textCursorDrawable="@color/blue" />
