@@ -202,6 +202,34 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    public long getApplicationId(String jobNumber){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT appId FROM " + APPLICATIONS_TABLE_NAME + " WHERE jobNumber = '" + jobNumber + "' COLLATE NOCASE", null);
+
+        long id = -1;
+
+        if(cursor.moveToFirst())
+            id = cursor.getLong(0);
+
+        cursor.close();
+        db.close();
+
+        return id;
+    }
+
+    public String getApplicationCompanyName(long id){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT company FROM " + APPLICATIONS_TABLE_NAME + " WHERE appId = " + id, null);
+
+        cursor.moveToFirst();
+        String name = cursor.getString(0);
+
+        cursor.close();
+        db.close();
+
+        return name;
+    }
+
     public ArrayList<ListObject> getCompaniesList(int filter) {
         String query;
 

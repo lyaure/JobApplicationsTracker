@@ -13,10 +13,12 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
 import com.lyaurese.jobapplicationstracker.Objects.ListObject;
@@ -101,6 +103,47 @@ public class CompaniesFragment extends Fragment {
             public void onClick(View v) {
                 filterOption = sp.getInt("filterOption", 0);
                 showOptions("filter", R.drawable.ic_baseline_filter_alt_24, filterOptions, filterOption, filterTxtv);
+            }
+        });
+
+        TextView searchBtn = (TextView) view.findViewById(R.id.searchJobBtn_ID);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText jobNumber = new EditText(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MaterialThemeDialog);
+                builder.setTitle("Search by job number")
+                        .setIcon(R.drawable.ic_baseline_search_24_gray)
+                        .setView(jobNumber)
+                        .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                long id = db.getApplicationId(jobNumber.getText().toString());
+
+                                if(id != -1){
+                                    Fragment fragment = new ApplicationPagerFragment();
+
+                                    MainBoardActivity activity = (MainBoardActivity) getActivity();
+                                    activity.setFragmentID(R.layout.fragment_application);
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("name", db.getApplicationCompanyName(id));
+                                    bundle.putLong("application", id);
+                                    fragment.setArguments(bundle);
+
+                                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.container_ID, fragment); // give your fragment container id in first parameter
+                                    transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                                    transaction.commit();
+                                }
+                                else
+                                    Toast.makeText(getContext(), "Job doesn't exist", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null);
+
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
