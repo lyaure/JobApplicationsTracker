@@ -54,10 +54,7 @@ public class BoardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -299,7 +296,7 @@ public class BoardFragment extends Fragment {
         List<PieEntry> entries = new ArrayList<>();
 
         int appSum = db.getApplicationsCount();
-        int active = db.getActiveCount();
+        int active = db.getActiveApplicationsCount();
         int inactive = appSum - active;
 
         entries.add(new PieEntry((float) active, "Active"));

@@ -11,9 +11,11 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.lyaurese.jobapplicationstracker.Fragments.ArchivesFragment;
 import com.lyaurese.jobapplicationstracker.Fragments.BoardFragment;
 import com.lyaurese.jobapplicationstracker.Fragments.CompaniesFragment;
 import com.lyaurese.jobapplicationstracker.Fragments.EditTagsFragments;
+import com.lyaurese.jobapplicationstracker.Fragments.SettingsFragment;
 import com.lyaurese.jobapplicationstracker.R;
 
 public class MainBoardActivity extends FragmentActivity {
@@ -57,6 +59,16 @@ public class MainBoardActivity extends FragmentActivity {
                             loadFragment(fragment);
                             fragmentID = R.layout.fragment_companies;
                             return true;
+                        case R.id.nav_archives:
+                            fragment = new ArchivesFragment();
+                            loadFragment(fragment);
+                            fragmentID = R.layout.fragment_archives;
+                            return true;
+                        case R.id.nav_settings:
+                            fragment = new SettingsFragment();
+                            loadFragment(fragment);
+                            fragmentID = R.layout.fragment_settings;
+                            return true;
                     }
                     return false;
                 }
@@ -65,6 +77,10 @@ public class MainBoardActivity extends FragmentActivity {
     public void setFragmentID(int id){
         this.lastFragmentID = this.fragmentID;
         this.fragmentID = id;
+    }
+
+    public void setNavigationItemSelected(int id){
+        bottomNavigation.setSelectedItemId(id);
     }
 
     public int getLastFragmentID(){

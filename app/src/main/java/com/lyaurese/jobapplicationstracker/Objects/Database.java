@@ -1,6 +1,5 @@
 package com.lyaurese.jobapplicationstracker.Objects;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,17 +9,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.lyaurese.jobapplicationstracker.Utils.DateUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 
 public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "JobOrganizerDB";
-    private static final String APPLICATIONS_TABLE_NAME = "Applications", TAGS_TABLE = "Tags", JUNCTION_TABLE = "Junction";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     public static Database instance;
 
+    private static final String APPLICATIONS_TABLE_NAME = "Applications", TAGS_TABLE = "Tags", JUNCTION_TABLE = "Junction";
+    private static final String ARCHIVE_APPLICATIONS_TABLE = "Applications_archive", ARCHIVE_TAGS_TABLE = "Tags_archive", ARCHIVE_JUNCTION_TABLE = "Junction_archive", ARCHIVE_TABLE_NAMES = "Archives_tables";
 
     private final int ID_COL_NUM = 0;
     private final int COMPANY_COL_NUM = 1;
@@ -54,13 +52,37 @@ public class Database extends SQLiteOpenHelper {
                 "appliedDate INTEGER," +
                 "interview INTEGER, " +
                 "interviewDate INTEGER, " +
-                "comments TEXT)";
+                "comments TEXT," +
+                "archiveName TEXT)";
         db.execSQL(query);
 
-        query = "CREATE TABLE IF NOT EXISTS " + TAGS_TABLE + "(tagId INTEGER, name TEXT)";
+        query = "CREATE TABLE IF NOT EXISTS " + TAGS_TABLE + "(tagId INTEGER, name TEXT, archiveName TEXT)";
         db.execSQL(query);
 
-        query = "CREATE TABLE IF NOT EXISTS " + JUNCTION_TABLE + "(appId INTEGER, tagId INTEGER)";
+        query = "CREATE TABLE IF NOT EXISTS " + JUNCTION_TABLE + "(appId INTEGER, tagId INTEGER, archiveName TEXT)";
+        db.execSQL(query);
+
+        query = "CREATE TABLE IF NOT EXISTS " + ARCHIVE_APPLICATIONS_TABLE +
+                "(appId INTEGER, " +
+                "company TEXT, " +
+                "jobPosition TEXT, " +
+                "jobNumber TEXT, " +
+                "location TEXT, " +
+                "active INTEGER, " +
+                "appliedDate INTEGER," +
+                "interview INTEGER, " +
+                "interviewDate INTEGER, " +
+                "comments TEXT," +
+                "archiveName TEXT)";
+        db.execSQL(query);
+
+        query = "CREATE TABLE IF NOT EXISTS " + ARCHIVE_TAGS_TABLE + "(tagId INTEGER, name TEXT, archiveName TEXT)";
+        db.execSQL(query);
+
+        query = "CREATE TABLE IF NOT EXISTS " + ARCHIVE_JUNCTION_TABLE + "(appId INTEGER, tagId INTEGER, archiveName TEXT)";
+        db.execSQL(query);
+
+        query = "CREATE TABLE IF NOT EXISTS " + ARCHIVE_TABLE_NAMES + "(tableName TEXT, count INTEGER)";
         db.execSQL(query);
 
     }
@@ -75,7 +97,67 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        String query = "CREATE TABLE IF NOT EXISTS " + ARCHIVE_TABLE_NAMES + "(tableName TEXT, count INTEGER)";
+        db.execSQL(query);
+    }
 
+//    @Override
+//    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//
+//    }
+
+    public void moveToArchive(String archiveName){
+        int count = this.getApplicationsCount();
+
+        if( count > 0){
+            SQLiteDatabase db = getWritableDatabase();
+
+            copyAndDelete(db, APPLICATIONS_TABLE_NAME, ARCHIVE_APPLICATIONS_TABLE, archiveName);
+            copyAndDelete(db, JUNCTION_TABLE, ARCHIVE_JUNCTION_TABLE, archiveName);
+            copyAndDelete(db, TAGS_TABLE, ARCHIVE_TAGS_TABLE, archiveName);
+
+            ContentValues values = new ContentValues();
+            values.put("tableName", archiveName);
+            values.put("count", count);
+            db.insert(ARCHIVE_TABLE_NAMES, null, values);
+
+            db.close();
+        }
+    }
+
+    private void copyAndDelete(SQLiteDatabase db, String fromTable, String toTable, String archiveName){
+        String query = "UPDATE " + fromTable + " SET archiveName = '" + archiveName + "'";
+        db.execSQL(query);
+
+        query = "INSERT INTO " + toTable + " SELECT * FROM " + fromTable;
+        db.execSQL(query);
+
+        query = "DELETE FROM " + fromTable;
+        db.execSQL(query);
+    }
+
+    public void restore(String tableName){
+        SQLiteDatabase db = getWritableDatabase();
+
+        restoreAndDelete(db, ARCHIVE_APPLICATIONS_TABLE, APPLICATIONS_TABLE_NAME, tableName);
+        restoreAndDelete(db, ARCHIVE_JUNCTION_TABLE, JUNCTION_TABLE, tableName);
+        restoreAndDelete(db, ARCHIVE_TAGS_TABLE, TAGS_TABLE, tableName);
+
+        String query = "DELETE FROM " + ARCHIVE_TABLE_NAMES + " WHERE tableName = '" + tableName + "'";
+        db.execSQL(query);
+
+        db.close();
+    }
+
+    private void restoreAndDelete(SQLiteDatabase db, String fromTable, String toTable, String archiveName){
+        String query = "INSERT INTO " + toTable + " SELECT * FROM " + fromTable + " WHERE archiveName = '" + archiveName + "'";
+        db.execSQL(query);
+
+        query = "UPDATE " + toTable + " SET archiveName = 'main'";
+        db.execSQL(query);
+
+        query = "DELETE FROM " + fromTable + " WHERE archiveName = '" + archiveName + "'";
+        db.execSQL(query);
     }
 
     public long insertNewApplication(Application application) {
@@ -92,6 +174,7 @@ public class Database extends SQLiteOpenHelper {
         values.put("interview", 0);
         values.put("interviewDate", 0);
         values.put("comments", application.getComment());
+        values.put("archiveName", "main");
 
         long appId;
         appId = db.insert(APPLICATIONS_TABLE_NAME, null, values);
@@ -432,8 +515,18 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public int getApplicationsCount() {
+        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME;
+        return getApplicationsCount(query);
+    }
+
+    public int getArchiveApplicationsCount(String tableName){
+        String query = "SELECT * FROM " + ARCHIVE_APPLICATIONS_TABLE + " WHERE archiveName = '" + tableName + "'";
+        return getApplicationsCount(query);
+    }
+
+    private int getApplicationsCount(String query){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME, null);
+        Cursor cursor = db.rawQuery(query, null);
 
         int count = cursor.getCount();
 
@@ -443,9 +536,19 @@ public class Database extends SQLiteOpenHelper {
         return count;
     }
 
-    public int getActiveCount() {
+    public int getActiveApplicationsCount() {
+        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1";
+        return getActiveCount(query);
+    }
+
+    public int getActiveArchiveCount(String tableName){
+        String query = "SELECT * FROM " + ARCHIVE_APPLICATIONS_TABLE + " WHERE active = 1 AND archiveName = '" + tableName + "'";
+        return getActiveCount(query);
+    }
+
+    private int getActiveCount(String query){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE active = 1", null);
+        Cursor cursor = db.rawQuery(query, null);
 
         int count = cursor.getCount();
 
@@ -456,8 +559,18 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public int getInterviewApplicationsCount() {
+        String query = "SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 1";
+        return getInterviewCount(query);
+    }
+
+    public int getInterviewArchiveCount(String tableName){
+        String query = "SELECT * FROM " + ARCHIVE_APPLICATIONS_TABLE + " WHERE interview = 1 AND archiveName = '" + tableName + "'";
+        return getInterviewCount(query);
+    }
+
+    private int getInterviewCount(String query){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + APPLICATIONS_TABLE_NAME + " WHERE interview = 1", null);
+        Cursor cursor = db.rawQuery(query, null);
 
         int count = cursor.getCount();
 
@@ -664,6 +777,8 @@ public class Database extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
 
+        db.close();
+        cursor.close();
         return tags;
     }
 
@@ -672,5 +787,23 @@ public class Database extends SQLiteOpenHelper {
         db.delete(APPLICATIONS_TABLE_NAME, "appId = " + application.getId(), null);
 
         db.close();
+    }
+
+    public ArrayList<ListObject> getArchiveTableNames(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ARCHIVE_TABLE_NAMES, null);
+
+        if(cursor.moveToFirst()){
+            ArrayList<ListObject> names = new ArrayList<>();
+
+            do{
+                ListObject object = new ListObject(-1, cursor.getString(0), cursor.getInt(1));
+                names.add(object);
+            }while(cursor.moveToNext());
+
+            return names;
+        }
+
+        return null;
     }
 }

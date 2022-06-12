@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lyaurese.jobapplicationstracker.Activities.MainBoardActivity;
 import com.lyaurese.jobapplicationstracker.Fragments.ApplicationPagerFragment;
+import com.lyaurese.jobapplicationstracker.Fragments.RestoreFragment;
 import com.lyaurese.jobapplicationstracker.Objects.ListObject;
 import com.lyaurese.jobapplicationstracker.R;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -43,17 +45,27 @@ public class ListObjectAdapter extends ArrayAdapter<ListObject> {
         listItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
-
-                ApplicationPagerFragment fragment = new ApplicationPagerFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("filter", sp.getInt("filter", -1));
-                bundle.putInt("type", object.getType());
-                bundle.putString("name", object.getName());
-                fragment.setArguments(bundle);
-
+                Fragment fragment;
                 FragmentActivity fragmentActivity = (FragmentActivity) v.getContext();
-                activity.setFragmentID(R.layout.fragment_application_pager);
+
+                if(object.getType() != -1){
+                    SharedPreferences sp = activity.getSharedPreferences("applications filter", Context.MODE_PRIVATE);
+
+                    fragment = new ApplicationPagerFragment();
+                    bundle.putInt("filter", sp.getInt("filter", -1));
+                    bundle.putInt("type", object.getType());
+                    bundle.putString("name", object.getName());
+
+                    activity.setFragmentID(R.layout.fragment_application_pager);
+                }
+                else{
+                    fragment = new RestoreFragment();
+                    bundle.putString("title", object.getName());
+
+                    activity.setFragmentID(R.layout.fragment_restore);
+                }
+                fragment.setArguments(bundle);
 
                 FragmentTransaction transaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container_ID, fragment);

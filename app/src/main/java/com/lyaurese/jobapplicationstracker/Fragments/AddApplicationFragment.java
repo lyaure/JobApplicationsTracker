@@ -106,7 +106,6 @@ public class AddApplicationFragment extends Fragment implements DatePickerDialog
         });
 
         db = Database.getInstance(getActivity());
-        ;
 
         calendar = Calendar.getInstance();
         calendar.setTime(Calendar.getInstance().getTime());
